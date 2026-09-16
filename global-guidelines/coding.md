@@ -85,3 +85,8 @@ Gunakan struktur direktori terpisah berikut sebagai acuan logika pemisahan ruang
 
 > **Catatan Penting Terkait Direktori Proyek:**
 > Isi dan struktur aplikasi asli (seperti `frontend-app/` atau `backend-api/`) di luar template ini tidak diatur secara ketat. Aturan mutlak pada pedoman ini hanyalah menegakkan **pemisahan letak lingkungan secara fisik** antara lingkup *source code* aplikasi Anda dengan direktori `ai-orchestrator-template/`.
+
+### Isolasi Tooling Pemetaan Kode (Graphify & Node-Level Artifacts)
+1. **Lokasi Eksklusif & Kewajiban Penggunaan:** Seluruh artefak Knowledge Graph (`.graphify`), proses inisialisasi/generasi (`graphify build`), kueri arsitektur, serta pemutakhiran graf (`graphify update`) **WAJIB MUTLAK** hanya berada dan dieksekusi di dalam direktori *source code* proyek/node asli (*Path Codebase*). Jika direktori `.graphify` ditemukan di direktori node, AI **WAJIB** memakainya untuk navigasi kode. Jika tidak ditemukan, AI **WAJIB** men-generate-nya terlebih dahulu (`graphify build`) di direktori node tersebut.
+2. **Larangan Mutlak di Repositori Orchestrator:** AI Agent **DILARANG KERAS** mengeksekusi `graphify build`, `graphify init`, atau membuat folder `.graphify` di dalam root direktori repositori `ai-orchestrator-template/`. Repositori orchestrator adalah lingkungan pusat kendali dokumentasi dan pedoman, bukan target pemetaan arsitektur kode aplikasi.
+

@@ -68,6 +68,7 @@ Jangan buang token Anda untuk membaca file ini jika instruksi pengguna tidak ber
 *   **Ditugaskan membuat tiket Bug?** Baca `../../global-docs/templates/bug_report_template.md`.
 *   **Ditugaskan membuat deskripsi PR/Commit?** Baca `../../global-docs/templates/pull_request_template.md` & `../../global-docs/templates/commit_message_template.md`.
 *   **Ditugaskan menjawab pertanyaan pengguna seputar implementasi/arsitektur (Q&A)?** Baca dan patuhi protokol pencatatan di `../../global-docs/LEARN.md`.
+*   **Pengerjaan & Navigasi Kode (Graphify):** Anda **WAJIB** menggunakan `graphify query` untuk navigasi arsitektur dan pelacakan fungsi/dependensi. Jika direktori `.graphify` belum ada di *Path Codebase*, Anda **WAJIB** men-generate-nya terlebih dahulu via `graphify build` di *Path Codebase*.
 
 ---
 
@@ -87,8 +88,13 @@ Anda **DIWAJIBKAN SECARA MUTLAK** untuk mematuhi alur kerja berikut tanpa terkec
 ### E.1: Membaca Changelog (Wajib Awal)
 Anda **WAJIB SELALU** membaca `CHANGELOG.md` terlebih dahulu untuk memahami konteks dan progres terakhir sebelum melakukan eksekusi apa pun.
 
-### E.2: Pengecekan Graphify (Kondisional)
-Sebelum melakukan pemindaian atau eksekusi manual yang memakan banyak *token*, Anda **WAJIB** mengecek apakah terdapat direktori `.graphify` di dalam *Path Codebase* (direktori proyek asli) dari node ini. JIKA ADA, gunakan fitur CLI `graphify` (contoh: `graphify query`) di dalam direktori tersebut untuk memahami konteks dan arsitektur alih-alih membaca file secara manual.
+### E.2: Kewajiban Penggunaan & Generasi Graphify (Wajib)
+Sebelum melakukan pemindaian manual atau pengerjaan instruksi, Anda **WAJIB** mengecek apakah terdapat direktori `.graphify` di dalam *Path Codebase* (direktori proyek asli) dari node ini.
+
+1. **JIKA DITEMUKAN (`.graphify` ada):** Anda **WAJIB** menggunakan fitur CLI `graphify` (contoh: `graphify query`) di dalam direktori *Path Codebase* tersebut untuk memahami alur kode, melacak relasi pemanggil (*callers*), menelusuri dependensi antarmodul, dan mengidentifikasi komponen terdampak alih-alih membaca puluhan file secara manual.
+2. **JIKA TIDAK DITEMUKAN (`.graphify` belum ada):** Anda **WAJIB** men-generate-nya terlebih dahulu! Masuk ke direktori *Path Codebase* (`cd`), pastikan `graphify --version` terpasang (instal via `npm install -g @sentropic/graphify` jika belum ada), dan jalankan perintah `graphify build` untuk membangun Knowledge Graph node ini. Setelah selesai di-generate, gunakan hasilnya untuk menavigasi kode.
+3. **Wajib Dipakai Selama Pengerjaan:** Gunakan hasil kueri Graphify ini sebagai landasan utama penyusunan *Implementation Plan* (E.5) dan saat memodifikasi kode (E.6) agar tidak memutus relasi antar-komponen yang terpetakan.
+4. **Larangan Mutlak di Repositori Orchestrator:** Direktori `.graphify`, generasi graf (`graphify build`), kueri, maupun pembaruan (`graphify update`) **HANYA** boleh berada dan dieksekusi di dalam *Path Codebase* proyek/node asli. Anda **DILARANG KERAS** mengeksekusi `graphify build`, `graphify init`, atau membuat folder `.graphify` di dalam repositori `ai-orchestrator-template/`.
 
 ### E.3: Berhenti & Bertanya (Stop & Ask)
 Rujuk dan patuhi secara mutlak seluruh aturan di `../../global-guidelines/error-handling.md`, khususnya seksi **"Stop-and-Ask (Anti-Looping)"** dan **"Larangan Inisiatif Liar (No Wild Initiative)"**.
@@ -100,10 +106,10 @@ Rujuk dan patuhi secara mutlak seluruh aturan di `../../global-guidelines/versio
 - Anda **WAJIB MUTLAK** menyalin utuh struktur `Boilerplate (Templat)` dari `tickets/README.md`. DILARANG mengarang format *markdown* sendiri.
 
 ### E.5: Pembuatan Implementation Plan (Wajib)
-Anda **DIWAJIBKAN MUTLAK** untuk membuat rencana implementasi (*implementation plan*) yang detail mengenai apa yang akan dikerjakan, dan menunggu persetujuan pengguna sebelum mengeksekusi kode atau membuat perubahan file apa pun. *Implementation Plan* ini adalah file markdown sementara (misalnya `implementation_plan.md` di root workspace) yang **WAJIB ANDA HAPUS** dari disk setelah instruksi sesuai/selesai dilakukan atau sesi berakhir (sebagaimana kebiasaan pendekatan *review-driven* pada AI agent).
+Anda **DIWAJIBKAN MUTLAK** untuk membuat rencana implementasi (*implementation plan*) yang detail mengenai apa yang akan dikerjakan, dan menunggu persetujuan pengguna sebelum mengeksekusi kode atau membuat perubahan file apa pun. Anda **WAJIB** memanfaatkan hasil `graphify query` (generate terlebih dahulu via `graphify build` jika belum ada sesuai SOP E.2) untuk memetakan file-file sasaran yang terdampak (*affected files*) dan ketergantungan antarkomponen di dalam rencana. *Implementation Plan* ini adalah file markdown sementara (misalnya `implementation_plan.md` di root workspace) yang **WAJIB ANDA HAPUS** dari disk setelah instruksi sesuai/selesai dilakukan atau sesi berakhir (sebagaimana kebiasaan pendekatan *review-driven* pada AI agent).
 
 ### E.6: Pengerjaan & Pengujian Kode
-Selesaikan instruksi pengguna secara tuntas, lalu Anda **WAJIB LANGSUNG** melakukan *testing* sesuai standar di `../../global-guidelines/testing.md` untuk memastikan fungsionalitas berjalan normal.
+Selesaikan instruksi pengguna secara tuntas. Anda **WAJIB** memanfaatkan kueri CLI `graphify` jika membutuhkan navigasi atau penelusuran referensi kode saat pengerjaan. Setelah selesai, Anda **WAJIB LANGSUNG** melakukan *testing* sesuai standar di `../../global-guidelines/testing.md` untuk memastikan fungsionalitas berjalan normal.
 
 ### E.7: Penyelesaian & Sinkronisasi Tiket
 Rujuk dan patuhi aturan pemutakhiran status tiket di `../../global-guidelines/version-control.md` seksi **"Ticket-Driven Development Workflow"** poin 3–5. Pastikan:
@@ -121,5 +127,5 @@ Rujuk dan patuhi secara mutlak seluruh aturan di `../../global-guidelines/versio
 ### E.9: Kebijakan Version Control (Git)
 Rujuk dan patuhi secara mutlak seluruh aturan di `../../global-guidelines/version-control.md` seksi **"Larangan Eksekusi Git Otonom"**, **"Kewajiban Commit"**, dan **"Prosedur Konfirmasi Pembuatan Branch"**.
 
-### E.10: Sinkronisasi Konteks (Kondisional — Graphify)
-JIKA di dalam *Path Codebase* node ini terdapat direktori tersembunyi `.graphify`, maka setelah tugas selesai dan di-commit, kamu WAJIB masuk ke direktori tersebut (`cd`) dan menjalankan perintah `graphify update` di terminal. Jika folder tersebut tidak ada, maka abaikan langkah ini sepenuhnya.
+### E.10: Sinkronisasi Konteks (Graphify Update)
+Setelah tugas selesai dan di-commit, Anda **WAJIB** masuk ke dalam direktori *Path Codebase* (`cd`) dan menjalankan perintah `graphify update` di terminal untuk menyinkronkan Knowledge Graph dengan perubahan kode terbaru. DILARANG KERAS menjalankan `graphify update` di dalam repositori orchestrator.

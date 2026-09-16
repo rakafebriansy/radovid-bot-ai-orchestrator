@@ -33,6 +33,12 @@ Setiap penambahan log versi terbaru **WAJIB MUTLAK** diletakkan di baris **PALIN
 
 *(⚠️ PERHATIAN AI AGENT: TAMBAHKAN ENTRI LOG BARU ANDA TEPAT DI BAWAH BARIS INI. JANGAN DI PALING BAWAH DOKUMEN!)*
 
+### [2026-09-16 21:22:00] - Guideline: Mandatory Graphify Utilization & Auto-Generation Standard
+> **Trigger:** Prompt Driven | **Branch:** `main` | **Repo:** `ai-orchestrator-template`
+- **Konteks:** "ubah kalimatnya, jika ada graphify ditemukan di directory node, harus pakai. jika tidak ditemukan, maka generate lah"
+- **Perubahan:** `[Changed]` Menetapkan kebijakan mutlak untuk Graphify: AI **WAJIB** memakai CLI `graphify query` untuk navigasi kode, pelacakan pemanggil/dependensi, dan penyusunan Implementation Plan jika direktori `.graphify` ditemukan di direktori project/node (*Path Codebase*). Jika direktori `.graphify` TIDAK ditemukan, AI **WAJIB** men-generate-nya terlebih dahulu dengan menjalankan `graphify build` di dalam *Path Codebase* node tersebut. `[Added]` Menegaskan aturan larangan mutlak pembatas direktori bahwa folder `.graphify`, pembuatan (`graphify build`), maupun pembaruan (`graphify update`) DILARANG KERAS dieksekusi di dalam repositori orchestrator.
+- **Path File:** `global-guidelines/coding.md`, `README.md`, `nodes/_template/main.md`, `nodes/_template/CHANGELOG.md`
+
 ### [2026-09-07 17:47:00] - Guideline: Database & Datetime Storage Standard
 > **Trigger:** Prompt Driven | **Branch:** `main` | **Repo:** `ai-orchestrator-template`
 - **Konteks:** "tambahkan panduan di orchestrator, untuk menyimpan datetime di aplikasi database buatlah dua opsi, yakni menggunakan epoch time millis (konversi jam saat ini ke epoch time) dan menyimpan timestamp + timezone utc di database (konversi jam saat ini di timezone user ke utc, baru di insert)"
