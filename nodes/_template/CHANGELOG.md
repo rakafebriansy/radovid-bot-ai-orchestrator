@@ -33,6 +33,12 @@ Setiap penambahan log versi terbaru **WAJIB MUTLAK** diletakkan di baris **PALIN
 
 *(⚠️ PERHATIAN AI AGENT: TAMBAHKAN ENTRI LOG BARU ANDA TEPAT DI BAWAH BARIS INI. JANGAN DI PALING BAWAH DOKUMEN!)*
 
+### [2026-09-21 13:10:00] - Guideline: LEARN.md Strict Trigger & Project Commit Term Cleanliness
+> **Trigger:** Prompt Driven | **Branch:** `main` | **Repo:** `ai-orchestrator-template`
+- **Konteks:** "tambahkan rules baru untuk LEARN.md agar hanya diisi saat menggunakan template README.md, dan perbaiki kebocoran istilah orchestrator pada commit git milik node/project"
+- **Perubahan:** `[Changed]` Menetapkan kebijakan anti-agresivitas pada `global-docs/LEARN.md` di mana file hanya boleh diisi saat menggunakan template baku FASE 4 dari `README.md`, dan dilarang keras diisi pada instruksi biasa. `[Changed]` Menghapus kontradiksi kewajiban referensi tiket pada pesan commit di `global-guidelines/version-control.md`, memperbarui `global-docs/templates/commit_message_template.md` dengan contoh terpisah yang bersih untuk Project/Node vs Orchestrator, serta menegaskan larangan istilah orchestrator/tiket pada commit node di `nodes/_template/main.md` dan `README.md`.
+- **Path File:** `global-docs/LEARN.md`, `global-guidelines/version-control.md`, `global-docs/templates/commit_message_template.md`, `nodes/_template/main.md`, `README.md`, `nodes/_template/CHANGELOG.md`
+
 ### [2026-09-16 21:22:00] - Guideline: Mandatory Graphify Utilization & Auto-Generation Standard
 > **Trigger:** Prompt Driven | **Branch:** `main` | **Repo:** `ai-orchestrator-template`
 - **Konteks:** "ubah kalimatnya, jika ada graphify ditemukan di directory node, harus pakai. jika tidak ditemukan, maka generate lah"

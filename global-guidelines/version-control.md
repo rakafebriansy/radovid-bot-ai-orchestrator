@@ -24,8 +24,12 @@ Sebelum mengeksekusi aksi Git apa pun (commit, branch, push, PR), Anda **WAJIB M
 ## Aturan Penggunaan Istilah Orchestrator (seperti ticket, prd, design system, guideline, dll)
 Istilah-istilah yang dimaksud meliputi namun tidak terbatas pada: *ticket*, *prd*, *design system*, *guideline*, *system design*, *development planning*, *changelog* (dalam konteks orchestrator), *retrospective*, *prototype*, *node*, *orchestrator*, *template*, dan seluruh terminologi yang merujuk pada artefak ekosistem AI Orchestrator ini.
 Untuk seluruh aksi Git (*commit*, penamaan *branch*, *Pull Request*, dsb):
-- **Di Project/Node:** Anda **DILARANG KERAS** menggunakan istilah dari ai orchestrator di dalam *commit message*, *branch*, *PR*, dan semua aksi Git.
-- **Di Repositori Orchestrator:** Anda **WAJIB** menggunakan istilah dari ai orchestrator sebagai scope dalam *commit message* (misal: `docs(template): update`), *branch*, *PR*, dan aksi Git terkait lainnya.
+- **Di Project/Node:** Anda **DILARANG KERAS** menggunakan istilah dari AI orchestrator di dalam *commit message*, *branch*, *PR*, dan semua aksi Git. Pesan commit di Project/Node harus murni mencerminkan domain teknis aplikasi.
+  - ❌ **SALAH di Project/Node:** `feat(node-auth): implement login based on prd guideline (TICKET-01)`
+  - ❌ **SALAH di Project/Node:** `fix(ticket-03): resolve auth looping issue in orchestrator`
+  - ✅ **BENAR di Project/Node:** `feat(auth): add jwt authentication and refresh token handler`
+  - ✅ **BENAR di Project/Node:** `fix(auth): handle expired token on api client interceptor`
+- **Di Repositori Orchestrator:** Anda **WAJIB** menggunakan istilah dari AI orchestrator sebagai scope dalam *commit message* (misal: `docs(template): update`), *branch*, *PR*, dan aksi Git terkait lainnya.
 
 ## Prosedur Konfirmasi Pembuatan Branch (Branch Switching)
 
@@ -52,7 +56,9 @@ Anda **DILARANG KERAS** mengajukan permohonan `commit` atau `push` jika tahapan 
 ## Larangan Eksekusi Git Otonom (Mandatory User Approval)
 1. **Dilarang Auto-Commit:** Anda **DILARANG KERAS** melakukan `git add`, `git commit`, maupun `git push` secara otomatis tanpa sepengetahuan dan izin eksplisit dari pengguna.
 2. **Wajib Menjelaskan Terlebih Dahulu:** Anda juga **DILARANG** meminta, mengeluarkan *prompt*, atau mengeksekusi perintah `git add` sebelum memberikan penjelasan secara terperinci kepada pengguna terlebih dahulu mengenai apa saja yang akan diproses.
-3. **Wajib Referensi Tiket:** Setiap instruksi *commit* yang telah disetujui pengguna diwajibkan untuk merujuk pada nama/ID tiket terkait di dalam pesan *commit*-nya.
+3. **Pemisahan Referensi Tiket & Pesan Commit:**
+   - **Di Project/Node:** Pesan *commit* **DILARANG KERAS** memuat referensi ID tiket (seperti `TICKET-01`), kata kunci penutup tiket (`Resolves TICKET-XX`), maupun istilah orchestrator lainnya. Pelacakan ID tiket **HANYA** dicatat di repositori orchestrator melalui `CHANGELOG.md` dan file tiket lokal (`tickets/TICKET-XX.md`).
+   - **Di Repositori Orchestrator:** Pesan *commit* dapat merujuk cakupan pembaruan orchestrator (misal: `docs(orchestrator): update version control guideline`).
 
 ## Format Log Pembaruan di Respons
 Setelah Anda menuntaskan sebuah tugas atau instruksi, Anda wajib menyertakan log pembaruan di bagian akhir respons Anda. Hindari penggunaan format tabel; gunakan format daftar berstruktur (*structured list*) yang rapi guna memaksimalkan keterbacaan (*readability*) dan kemudahan pengarsipan tiket internal. 

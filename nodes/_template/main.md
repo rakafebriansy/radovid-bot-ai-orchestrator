@@ -67,7 +67,7 @@ Jangan buang token Anda untuk membaca file ini jika instruksi pengguna tidak ber
 *   **Terjebak error yang sama berkali-kali?** Baca `retrospectives/RETROSPECTIVE.md` untuk melihat apakah AI sebelumnya pernah memecahkan masalah ini di node ini.
 *   **Ditugaskan membuat tiket Bug?** Baca `../../global-docs/templates/bug_report_template.md`.
 *   **Ditugaskan membuat deskripsi PR/Commit?** Baca `../../global-docs/templates/pull_request_template.md` & `../../global-docs/templates/commit_message_template.md`.
-*   **Ditugaskan menjawab pertanyaan pengguna seputar implementasi/arsitektur (Q&A)?** Baca dan patuhi protokol pencatatan di `../../global-docs/LEARN.md`.
+*   **Ditugaskan menjawab pertanyaan pengguna seputar implementasi/arsitektur (Q&A)?** Baca dan patuhi protokol di `../../global-docs/LEARN.md` (HANYA diisi jika pengguna menggunakan format template resmi FASE 4 dari `README.md`; DILARANG KERAS mengisi file ini pada instruksi biasa, pertanyaan kasual, atau tugas koding!).
 *   **Pengerjaan & Navigasi Kode (Graphify):** Anda **WAJIB** menggunakan `graphify query` untuk navigasi arsitektur dan pelacakan fungsi/dependensi. Jika direktori `.graphify` belum ada di *Path Codebase*, Anda **WAJIB** men-generate-nya terlebih dahulu via `graphify build` di *Path Codebase*.
 
 ---
@@ -125,7 +125,7 @@ Rujuk dan patuhi secara mutlak seluruh aturan di `../../global-guidelines/versio
 - Anda **WAJIB MUTLAK** menyalin dan mematuhi struktur baku dari referensi berikut untuk format log Anda: `../../global-docs/templates/changelog_entry_template.md`. Dilarang mengarang format sendiri!
 
 ### E.9: Kebijakan Version Control (Git)
-Rujuk dan patuhi secara mutlak seluruh aturan di `../../global-guidelines/version-control.md` seksi **"Larangan Eksekusi Git Otonom"**, **"Kewajiban Commit"**, dan **"Prosedur Konfirmasi Pembuatan Branch"**.
+Rujuk dan patuhi secara mutlak seluruh aturan di `../../global-guidelines/version-control.md` seksi **"Larangan Eksekusi Git Otonom"**, **"Kewajiban Commit"**, **"Prosedur Konfirmasi Pembuatan Branch"**, serta **"Aturan Penggunaan Istilah Orchestrator"** (Pesan *commit* di Project/Node **WAJIB 100% BERSIH** dari istilah orchestrator, tiket, PRD, atau guideline; referensi ID tiket HANYA dicatat di `CHANGELOG.md` dan file tiket lokal, bukan di pesan Git!).
 
 ### E.10: Sinkronisasi Konteks (Graphify Update)
 Setelah tugas selesai dan di-commit, Anda **WAJIB** masuk ke dalam direktori *Path Codebase* (`cd`) dan menjalankan perintah `graphify update` di terminal untuk menyinkronkan Knowledge Graph dengan perubahan kode terbaru. DILARANG KERAS menjalankan `graphify update` di dalam repositori orchestrator.

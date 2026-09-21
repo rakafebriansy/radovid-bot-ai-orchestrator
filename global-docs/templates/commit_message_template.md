@@ -16,14 +16,20 @@
 # - test: Menambahkan/mengubah skrip testing
 # - chore: Perbaikan build process, dependencies, tooling
 # 
-# ATURAN ISTILAH ORCHESTRATOR (contoh: ticket, prd, design system, guideline, dll):
-# - Project/Node: DILARANG menggunakan istilah orchestrator pada seluruh bagian commit.
-# - Orchestrator: WAJIB menggunakan istilah orchestrator sebagai scope (contoh: docs(template): update template).
-
-# Format Penuh:
+# ATURAN ISTILAH ORCHESTRATOR:
+# Istilah-istilah orchestrator meliputi: ticket, TICKET-XX, prd, design system, guideline, node, retrospective, orchestrator, template, dll.
+#
+# 1. CONTOH UNTUK REPOSITORI PROJECT / NODE (WAJIB 100% BERSIH DARI ISTILAH ORCHESTRATOR):
+# DILARANG memuat kata 'orchestrator', 'ticket', 'TICKET-XX', 'Resolves TICKET-XX', 'prd', 'node', dll.
+#
 # feat(auth): add google oauth integration
 # 
 # Mengimplementasikan alur masuk menggunakan kredensial Google, 
 # menyimpan token ke secure storage lokal.
+#
+# 2. CONTOH UNTUK REPOSITORI ORCHESTRATOR:
+# WAJIB menggunakan istilah orchestrator sebagai scope:
+#
+# docs(orchestrator): update version control guideline
 # 
-# Resolves TICKET-02
+# Memperbarui aturan commit message agar bersih dari istilah orchestrator pada node.
