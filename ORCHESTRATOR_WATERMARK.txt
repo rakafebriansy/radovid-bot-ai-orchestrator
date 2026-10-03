@@ -1,0 +1,4 @@
+AI-ORCHESTRATOR-SIGNATURE: v1
+ISSUER: rakafebriansy/ai-orchestrator-template
+# Project-to-Machine ID mappings
+# Format: <project-name> => <machine-id-1>, <machine-id-2>, ...
