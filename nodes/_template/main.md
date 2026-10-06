@@ -54,7 +54,7 @@ Hukum besi operasional Anda. Pelanggaran terhadap pedoman ini akan merusak integ
 
 ### C.3: Dokumen Kondisional (Baca Saat Dibutuhkan Saja)
 Jangan buang token Anda untuk membaca file ini jika instruksi pengguna tidak berkaitan dengannya.
-*   **Akan menulis atau memodifikasi source code (coding)?** Baca `../../global-guidelines/coding.md` (khususnya: **ZERO-COMMENT POLICY** dan **No Hacks**).
+*   **Akan menulis atau memodifikasi source code (coding)?** Baca `../../global-guidelines/coding.md`.
 *   **Akan mengedit file secara massal, menjalankan script perubahan, atau menggunakan perintah Git yang memodifikasi file (termasuk `sed`, `git restore`, `git checkout <file>`)?** Baca `../../global-guidelines/safe-file-operations.md`. Pelanggaran terhadap pedoman ini menghilangkan kesempatan review pengguna secara permanen.
 *   **Akan melakukan aktivitas Git (commit, branch, push, pengelolaan tiket)?** Baca `../../global-guidelines/version-control.md`.
 *   **Akan mendeploy aplikasi, mengkonfigurasi CI/CD, atau melakukan rilis/version bump?** Baca `../../global-guidelines/deployment.md` dan `../../global-guidelines/pipeline.md`.
@@ -83,33 +83,50 @@ Ekosistem ini beroperasi dalam salah satu dari dua mode. Anda **WAJIB** mengecek
 
 ## BAGIAN E — STANDARD OPERATING PROCEDURE (SOP) EKSEKUSI
 
-Anda **DIWAJIBKAN SECARA MUTLAK** untuk mematuhi alur kerja berikut tanpa terkecuali setiap kali menerima *Execution Prompt* atau penugasan:
+Anda **DIWAJIBKAN SECARA MUTLAK** untuk mematuhi alur kerja kronologis berikut (*Sequential Execution Gate*) tanpa terkecuali setiap kali menerima *Execution Prompt* atau penugasan:
 
-### E.1: Membaca Changelog (Wajib Awal)
-Anda **WAJIB SELALU** membaca `CHANGELOG.md` terlebih dahulu untuk memahami konteks dan progres terakhir sebelum melakukan eksekusi apa pun.
+### E.1: Pemuatan Konteks Dasar (Context Ingestion — Wajib Awal)
+Sebelum memikirkan solusi atau membuat rencana, Anda **WAJIB MEMBUKA & MEMBACA** file-file berikut untuk memuat memori kerja:
+1. `CHANGELOG.md` (Untuk memahami riwayat dan konteks pekerjaan terakhir)
+2. `guidelines/project-context.md` (Untuk memahami arsitektur lokal, hasil pemindaian, dan aturan khusus node ini)
+3. `docs/system-design.md` (Untuk memahami struktur dan rancangan teknis node ini)
 
-### E.2: Kewajiban Penggunaan & Generasi Graphify (Wajib)
-Sebelum melakukan pemindaian manual atau pengerjaan instruksi, Anda **WAJIB** mengecek apakah terdapat direktori `.graphify` di dalam *Path Codebase* (direktori proyek asli) dari node ini.
+### E.2: Penentuan & Pembacaan Pedoman Domain (Domain Guidelines Ingestion — Wajib)
+Identifikasi cakupan dan domain dari instruksi tugas pengguna, lalu Anda **WAJIB MEMBUKA & MEMBACA** dokumen pedoman terkait dari **Bagian C.3** SEBELUM menyusun rencana:
+- **Menyentuh penulisan/modifikasi kode logika?** $\rightarrow$ Wajib baca `../../global-guidelines/coding.md`.
+- **Menyentuh skema database, migrasi, atau query?** $\rightarrow$ Wajib baca `../../global-guidelines/database.md`.
+- **Menyentuh antarmuka pengguna (UI), aset, atau styling?** $\rightarrow$ Wajib baca `../../global-guidelines/ui-and-assets.md` dan `../../global-docs/design-system.md`.
+- **Menyentuh penulisan pengujian (test suite)?** $\rightarrow$ Wajib baca `../../global-guidelines/testing.md`.
+- **Menyentuh operasi file massal / skrip?** $\rightarrow$ Wajib baca `../../global-guidelines/safe-file-operations.md`.
+- **Menyentuh rilis/deployment?** $\rightarrow$ Wajib baca `../../global-guidelines/deployment.md` dan `../../global-guidelines/pipeline.md`.
 
-1. **JIKA DITEMUKAN (`.graphify` ada):** Anda **WAJIB** menggunakan fitur CLI `graphify` (contoh: `graphify query`) di dalam direktori *Path Codebase* tersebut untuk memahami alur kode, melacak relasi pemanggil (*callers*), menelusuri dependensi antarmodul, dan mengidentifikasi komponen terdampak alih-alih membaca puluhan file secara manual.
-2. **JIKA TIDAK DITEMUKAN (`.graphify` belum ada):** Anda **WAJIB** men-generate-nya terlebih dahulu! Masuk ke direktori *Path Codebase* (`cd`), pastikan `graphify --version` terpasang (instal via `npm install -g @sentropic/graphify` jika belum ada), dan jalankan perintah `graphify build` untuk membangun Knowledge Graph node ini. Setelah selesai di-generate, gunakan hasilnya untuk menavigasi kode.
-3. **Wajib Dipakai Selama Pengerjaan:** Gunakan hasil kueri Graphify ini sebagai landasan utama penyusunan *Implementation Plan* (E.5) dan saat memodifikasi kode (E.6) agar tidak memutus relasi antar-komponen yang terpetakan.
-4. **Larangan Mutlak di Repositori Orchestrator:** Direktori `.graphify`, generasi graf (`graphify build`), kueri, maupun pembaruan (`graphify update`) **HANYA** boleh berada dan dieksekusi di dalam *Path Codebase* proyek/node asli. Anda **DILARANG KERAS** mengeksekusi `graphify build`, `graphify init`, atau membuat folder `.graphify` di dalam repositori `ai-orchestrator-template/`.
-
-### E.3: Berhenti & Bertanya (Stop & Ask)
-Rujuk dan patuhi secara mutlak seluruh aturan di `../../global-guidelines/error-handling.md`, khususnya seksi **"Stop-and-Ask (Anti-Looping)"** dan **"Larangan Inisiatif Liar (No Wild Initiative)"**.
+### E.3: Pemetaan Relasi & Ketergantungan Kode (Graphify Navigation)
+Sebelum menyusun rencana perubahan kode, Anda **WAJIB** mengecek apakah terdapat direktori `.graphify` di dalam *Path Codebase* (direktori proyek asli) dari node ini:
+1. **JIKA DITEMUKAN (`.graphify` ada):** Anda **WAJIB** menggunakan fitur CLI `graphify` (contoh: `graphify query`) di dalam direktori *Path Codebase* tersebut untuk memetakan fungsi pemanggil (*callers*), dependensi antarmodul, dan komponen terdampak alih-alih membaca puluhan file secara manual.
+2. **JIKA TIDAK DITEMUKAN (`.graphify` belum ada):** Anda **WAJIB** men-generate-nya terlebih dahulu! Masuk ke direktori *Path Codebase* (`cd`), pastikan `graphify --version` terpasang (instal via `npm install -g @sentropic/graphify` jika belum ada), dan jalankan perintah `graphify build` untuk membangun Knowledge Graph node ini.
+3. **Larangan Mutlak di Repositori Orchestrator:** Direktori `.graphify`, pembuatan graf (`graphify build`), kueri, maupun pembaruan (`graphify update`) **HANYA** boleh berada dan dieksekusi di dalam *Path Codebase* proyek asli. DILARANG KERAS mengeksekusinya di dalam repositori `ai-orchestrator-template/`.
 
 ### E.4: Manajemen Tiket (Tergantung Mode)
-Rujuk dan patuhi secara mutlak seluruh aturan di `../../global-guidelines/version-control.md` seksi **"Ticket-Driven Development Workflow"** dan format boilerplate di `tickets/README.md`.
+Rujuk dan patuhi aturan di `../../global-guidelines/version-control.md` seksi **"Ticket-Driven Development Workflow"** dan format boilerplate di `tickets/README.md`.
 - Jika Anda berada di **MODE 1**, tiket dibuat di awal sebelum eksekusi berdasarkan `development-planning.md`.
 - Jika Anda berada di **MODE 2**, tiket dibuat di akhir eksekusi sebagai rekam jejak (*retrospective*).
 - Anda **WAJIB MUTLAK** menyalin utuh struktur `Boilerplate (Templat)` dari `tickets/README.md`. DILARANG mengarang format *markdown* sendiri.
 
-### E.5: Pembuatan Implementation Plan (Wajib)
-Anda **DIWAJIBKAN MUTLAK** untuk membuat rencana implementasi (*implementation plan*) yang detail mengenai apa yang akan dikerjakan, dan menunggu persetujuan pengguna sebelum mengeksekusi kode atau membuat perubahan file apa pun. Anda **WAJIB** memanfaatkan hasil `graphify query` (generate terlebih dahulu via `graphify build` jika belum ada sesuai SOP E.2) untuk memetakan file-file sasaran yang terdampak (*affected files*) dan ketergantungan antarkomponen di dalam rencana. *Implementation Plan* ini adalah file markdown sementara (misalnya `implementation_plan.md` di root workspace) yang **WAJIB ANDA HAPUS** dari disk setelah instruksi sesuai/selesai dilakukan atau sesi berakhir (sebagaimana kebiasaan pendekatan *review-driven* pada AI agent).
+### E.5: Pembuatan Implementation Plan & Konfirmasi Pengguna (Wajib)
+Anda **DIWAJIBKAN MUTLAK** untuk membuat rencana implementasi (*implementation plan*) yang detail mengenai apa yang akan dikerjakan, dan menunggu persetujuan pengguna sebelum mengeksekusi kode atau membuat perubahan file apa pun.
+- Satukan seluruh pemahaman dari konteks dasar (E.1), pedoman domain (E.2), dan hasil Graphify (E.3) ke dalam rencana.
+- Petakan file-file sasaran yang terdampak (*affected files*).
+- *Implementation Plan* ini adalah file markdown sementara (misalnya `implementation_plan.md` di root workspace) yang **WAJIB ANDA HAPUS** dari disk setelah instruksi selesai dilakukan atau sesi berakhir.
+- Patuhi aturan **"Stop-and-Ask"** dan **"Larangan Inisiatif Liar"** di `../../global-guidelines/error-handling.md` jika terdapat ambiguitas.
 
-### E.6: Pengerjaan & Pengujian Kode
-Selesaikan instruksi pengguna secara tuntas. Anda **WAJIB** memanfaatkan kueri CLI `graphify` jika membutuhkan navigasi atau penelusuran referensi kode saat pengerjaan. Setelah selesai, Anda **WAJIB LANGSUNG** melakukan *testing* sesuai standar di `../../global-guidelines/testing.md` untuk memastikan fungsionalitas berjalan normal.
+### E.6: Pengerjaan Kode Berbasis TDD & Pengujian (Test-Driven Development)
+Setelah rencana disetujui pengguna, Anda **DIWAJIBKAN MUTLAK** mengeksekusi instruksi menggunakan siklus **Test-Driven Development (TDD)** sesuai rincian di `../../global-guidelines/testing.md`:
+1. **Analisis Definition of Done (DoD):** Petakan kriteria sukses dari *Acceptance Criteria* tiket (di `tickets/TICKET-XX.md`) atau instruksi eksplisit developer.
+2. **Tahap RED (Tulis Unit Test Dahulu):** Buat atau perbarui berkas *unit test* sebelum menulis kode produksi. Jalankan tes untuk memvalidasi status gagal (Red).
+3. **Tahap GREEN (Tulis Kode Produksi):** Tulis atau modifikasi kode aplikasi dengan mematuhi `../../global-guidelines/coding.md` (Zero-Comment, Fail-Fast, No Magic Numbers, Language Preference) hingga tes berhasil (Green). Manfaatkan kueri CLI `graphify` untuk navigasi kode.
+4. **Tahap REFACTOR & FIX (Jalankan Test & Perbaiki):** Eksekusi *test suite*. Jika gagal, perbaiki kode produksi hingga seluruh tes lulus 100% dan memenuhi target coverage.
+5. **Tahap QUALITY CHECK (Jalankan Linter):** Eksekusi *linter* dan *type checker* proyek untuk memastikan tidak ada kesalahan format, peringatan, atau galat tipe.
+6. **Selesai:** Lanjutkan ke pemutakhiran dan penyelesaian tiket (E.7).
 
 ### E.7: Penyelesaian & Sinkronisasi Tiket
 Rujuk dan patuhi aturan pemutakhiran status tiket di `../../global-guidelines/version-control.md` seksi **"Ticket-Driven Development Workflow"** poin 3–5. Pastikan:

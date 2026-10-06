@@ -29,10 +29,129 @@ Sebelum Anda menyerahkan atau menampilkan blok kode apa pun kepada pengguna, And
 ## Penjelasan Skrip CLI
 1.  Jika Anda memberikan perintah terminal/CLI (seperti eksekusi skrip, instalasi dependensi, atau *build*), jelaskan secara ringkas fungsi dari setiap *flag* atau argumen yang digunakan di luar blok kode agar mudah dipahami.
 
-## Hindari Hardcoded Default Values (Khusus Konfigurasi Bisnis)
-1.  **DILARANG memberikan *default value* di dalam definisi inti:** Jangan pernah menetapkan nilai bawaan (*default value*) secara *hardcode* di dalam definisi parameter komponen, fungsi, atau kelas utama jika parameter tersebut bersifat **konfigurasi bisnis** (contoh: harga, parameter lingkungan, URL).
-2.  Segala bentuk *default value* bisnis harus diinjeksi atau diberikan secara eksplisit melalui argumen/parameter saat fungsi atau komponen tersebut dipanggil (diinisialisasi), untuk memaksimalkan penggunaan ulang (*reusability*) di skenario yang berbeda.
-3.  **Pengecualian Mutlak:** Aturan larangan di atas **TIDAK BERLAKU** untuk *default value* yang berakar dari **konvensi framework** atau kepraktisan UX (seperti properti `defaultProps` di React, argumen `limit=10` untuk paginasi, nilai opsional konfigurasi UI). Default jenis ini justru didorong pemakaiannya.
+## Standar Preferensi Bahasa (Language Preference)
+1. **Bahasa Inggris sebagai Standar Utama (English by Default):**
+   - Seluruh elemen kode sumber yang Anda hasilkan **WAJIB MENGGUNAKAN BAHASA INGGRIS SECARA DEFAULT**, termasuk:
+     - String antarmuka pengguna (*UI strings*, labels, placeholders, tooltips).
+     - Pesan galat dan eksepsi (*error & exception messages*).
+     - Log sistem (*logging / console output*).
+     - Respon API (*API response messages & error payloads*).
+     - Penamaan variabel, fungsi, modul, kelas, dan tipe.
+     - Komentar fungsional / *type annotations* / *docstrings* (pada kasus yang diizinkan compiler/linter).
+2. **Pengecualian & Kewajiban Pencatatan:**
+   - Jika pengguna secara eksplisit meminta bahasa lain (misalnya: *"Buat semua teks UI dan pesan error dalam bahasa Indonesia"*):
+     - Anda diperbolehkan menggunakan bahasa yang diminta tersebut.
+     - Anda **WAJIB SECARA MUTLAK MENCATATKAN PERMINTAAN EKSPLISIT INI KE DALAM FILE `nodes/[nama-node]/guidelines/project-context.md`** di bawah seksi *"Preferensi Bahasa"* agar konsistensi bahasa terjaga pada seluruh sesi pengembangan berikutnya.
+
+## Larangan Mutlak Fallback & Hardcoded Data (Fail-fast Policy)
+
+> 🔴 **KEBIJAKAN FAIL-FAST MUTLAK:**
+> AI Agent **DILARANG KERAS** membuat nilai fallback diam-diam (*silent fallback*), nilai default tiruan (*dummy defaults*), atau data tiruan (*mock data/arrays*) di dalam kode produksi hanya demi membuat aplikasi "terlihat tidak error" atau menjaga agar pengujian tetap hijau. Jika sebuah variabel lingkungan, konfigurasi bisnis, atau data dinamis (API, Database, Storage, Layanan Eksternal, SDK) tidak ditemukan atau kosong, sistem **WAJIB MELEMPAR RUNTIME ERROR EKSPLISIT (*FAIL-FAST*)**.
+
+### 1. Larangan Silent Fallback & Dummy Defaults
+1. **Dilarang Menggunakan Fallback Semu pada Environment Variables:**
+   - **TERLARANG:** `process.env.NEXT_PUBLIC_API_KEY || "your_api_key"`
+   - **TERLARANG:** `process.env.API_BASE_URL || "https://api.example.com"`
+   - **TERLARANG:** `const dbUrl = process.env.DATABASE_URL || "postgres://user:pass@localhost:5432/mydb"`
+   - **WAJIB (Fail-Fast):** Periksa keberadaan variabel lingkungan. Jika `undefined` atau kosong (`""`), lemparkan `Error` waktu proses (*runtime error*) secara eksplisit dengan pesan yang jelas dan informatif.
+2. **Dilarang Menyediakan Fallback Defensif pada Data Dinamis:**
+   - Dilarang memberikan array statis tiruan, entitas bisnis dummy (misal: daftar produk tiruan, user tiruan, transaksi dummy), atau data placeholder sebagai *fallback* ketika API, query database, atau koneksi layanan eksternal gagal atau belum terhubung.
+   - Kegagalan pengambilan data nyata harus ditangani melalui pola penanganan galat (*error handling pattern* / *error boundaries* / *try-catch* yang melempar error atau menampilkan UI status error yang jujur), BUKAN menyamarkannya dengan data palsu.
+
+### 2. Larangan Data Hardcoded / Mock di Kode Produksi
+1. Seluruh data operasional, daftar entitas bisnis, URL endpoint, konfigurasi jaringan, dan kunci integrasi wajib dibaca langsung dari sumber aslinya: *Environment Variables*, API backend/third-party, Database, atau Storage service.
+2. **DILARANG KERAS** membuat daftar konstanta array/objek statis di dalam file konfigurasi atau modul bisnis yang berpura-pura menjadi representasi data nyata.
+
+### 3. Syarat Pengecualian Mutlak (Explicit Request Only)
+Pembuatan data *hardcoded*, data tiruan (*mock data*), atau nilai bawaan buatan **HANYA DIPERBOLEHKAN JIKA DAN HANYA JIKA PENGGUNA MEMINTANYA SECARA EKSPLISIT MELALUI INSTRUKSI KATA-PER-KATA**, contohnya:
+- *"Buat data ini secara hardcoded untuk sementara"*
+- *"Gunakan mock data untuk prototipe layar ini"*
+- *"Sediakan fallback offline dummy untuk pengujian lokal tanpa internet"*
+
+**Tanpa adanya instruksi eksplisit seperti di atas, asumsi default Anda adalah: 100% DINAMIS, NYATA, DAN FAIL-FAST.**
+
+> **Pengecualian Konvensi Framework & UX (Non-Bisnis):**
+> Nilai default teknis murni yang berasal dari konvensi kerangka kerja atau kepraktisan UX tetap diizinkan, seperti:
+> - Paginasi default (contoh: `limit = 10` atau `page = 1`)
+> - Batas waktu jaringan default (contoh: `timeoutMs = 5000`)
+> - Nilai opsional konfigurasi UI (`variant = 'primary'`, `isOpen = false`)
+
+### 4. Larangan Kepatuhan Dangkal (Anti-Shallow Compliance / No Repackaging)
+1. **Dilarang Melakukan Kamuflase Kode:** Ketika pengguna menegur Anda karena keberadaan data *hardcoded* atau *fallback*, Anda **DILARANG KERAS** sekadar membungkus ulang (*repackaging*) atau memindahkan data statis tersebut ke bentuk sintaksis lain, seperti:
+   - Memindahkan array statis dari variabel konstanta ke dalam nilai kembalian (*return value*) sebuah fungsi helper (misal: `function getCuratedItems() { return [...] }` atau `function getProductList() { return [...] }`).
+   - Memindahkan data statis ke dalam objek *registry* atau file kamus lain.
+   - Mengubah nama variabel tanpa membuang substansi data palsunya.
+2. **Hilangkan Substansi Datanya:** Yang ditolak oleh pengguna adalah **keberadaan data statis itu sendiri**, bukan nama variabel atau bungkus kodenya. Hapus data statis tersebut secara tuntas dan ganti dengan pembacaan dinamis / validasi error!
+
+### 5. Pola Implementasi Wajib (Pola Error Handling & Helper Validasi)
+Gunakan pola helper validasi yang melempar galat secara tegas untuk memastikan seluruh konfigurasi wajib terdefinisi sebelum aplikasi mengeksekusi logika lanjutan:
+
+```typescript
+function getRequiredEnv(key: string): string {
+  const value = process.env[key];
+  if (!value || value.trim() === "") {
+    throw new Error(`[Configuration Error] Missing required environment variable: ${key}. Please check your .env file.`);
+  }
+  return value;
+}
+```
+
+## Larangan Magic Number & Standarisasi Konstanta (No Magic Number Policy)
+
+> 🚫 **ZERO MAGIC NUMBERS:**
+> AI Agent **DILARANG KERAS** menyisipkan angka mentah (*raw numeric literals*) atau string kode arbitrer langsung ke dalam blok logika bisnis, rumus kalkulasi, validasi kondisi, perulangan, atau penentu batas (*threshold*). Setiap nilai numerik yang memiliki arti fungsional atau bisnis **WAJIB DIABSTRAKSIKAN** menjadi konstanta bernama (*named constants*) atau tipe `Enum` di dalam berkas terpisah yang terdedikasi.
+
+### 1. Cakupan Larangan (Anti-Patterns)
+- **Status & Kode Arbitrer:**
+  - ❌ `if (user.role === 2)` $\rightarrow$ ✅ `if (user.role === UserRole.ADMIN)`
+  - ❌ `if (order.status === 4)` $\rightarrow$ ✅ `if (order.status === OrderStatus.COMPLETED)`
+- **Durasi & Waktu (Timeouts / Delays / Cache TTL):**
+  - ❌ `setTimeout(fetchData, 86400000)` $\rightarrow$ ✅ `setTimeout(fetchData, ONE_DAY_IN_MS)`
+  - ❌ `jwt.sign(payload, secret, { expiresIn: 3600 })` $\rightarrow$ ✅ `expiresIn: JWT_EXPIRATION_SECONDS`
+- **Ukuran Data & Batas Kapasitas (*File Size & Limits*):**
+  - ❌ `if (file.size > 10485760)` $\rightarrow$ ✅ `if (file.size > MAX_FILE_SIZE_BYTES)`
+- **Faktor Perhitungan & Rasio Bisnis:**
+  - ❌ `const tax = subtotal * 0.11` $\rightarrow$ ✅ `const tax = subtotal * VAT_RATE_PERCENTAGE`
+  - ❌ `const discount = total * 0.05` $\rightarrow$ ✅ `const discount = total * EARLY_BIRD_DISCOUNT_RATE`
+
+### 2. Standar Pengelolaan Berkas Konstanta (Best Practice Architecture)
+Konstanta tidak boleh berserakan di sembarang tempat atau disisipkan secara *ad-hoc* di dalam komponen/controller lokal jika bernilai reusable atau merepresentasikan aturan sistem. Pisahkan konstanta ke dalam modul/berkas terpusat:
+
+1. **Struktur Direktori Standar:**
+   - Tempatkan di direktori khusus seperti `constants/`, `config/`, atau `types/` (misal: `src/constants/limits.ts`, `src/constants/time.ts`, `src/config/pricing.ts`).
+2. **Konvensi Penamaan:**
+   - Gunakan format **`SCREAMING_SNAKE_CASE`** untuk konstanta tunggal (contoh: `MAX_RETRY_ATTEMPTS`, `DEFAULT_PAGE_SIZE`, `ONE_HOUR_IN_MS`).
+   - Gunakan objek `as const` bertingkat atau `Enum` untuk konstanta bertema (contoh: `const HTTP_STATUS = { OK: 200, NOT_FOUND: 404 } as const`).
+3. **Deskripsi Arti Angka:**
+   - Nama konstanta harus mendeskripsikan **maksud bisnis (*intent*) dan satuan ukurannya** (misal: `_MS`, `_SECONDS`, `_BYTES`, `_PERCENTAGE`, `_DAYS`).
+
+### 3. Pengecualian yang Diizinkan (Idiomatic Numbers)
+Angka-angka fundamental yang maknanya sudah sangat jelas secara sintaksis dan universal diizinkan tanpa konstanta terpisah:
+- Inisialisasi awal indeks array atau pencacah perulangan: `let i = 0` atau `array[0]`.
+- Penambahan/pengurangan inkremental dasar: `count += 1` atau `index - 1`.
+- Pengecekan paritas biner: `value % 2 === 0`.
+- Representasi nilai kosong/not-found standar bahasa: `indexOf(...) === -1`.
+
+### 4. Contoh Format Berkas Konstanta yang Dianjurkan
+
+```typescript
+export const TIME_CONSTANTS = {
+  ONE_SECOND_IN_MS: 1000,
+  ONE_MINUTE_IN_MS: 60 * 1000,
+  ONE_HOUR_IN_MS: 60 * 60 * 1000,
+  ONE_DAY_IN_MS: 24 * 60 * 60 * 1000,
+} as const;
+
+export const UPLOAD_LIMITS = {
+  MAX_FILE_SIZE_BYTES: 10 * 1024 * 1024,
+  MAX_ATTACHMENTS_COUNT: 5,
+} as const;
+
+export const PAGINATION = {
+  DEFAULT_PAGE_SIZE: 20,
+  MAX_PAGE_SIZE: 100,
+} as const;
+```
 
 ## Dilarang Mem-Bypass Arsitektur (No Hacks)
 1.  **DILARANG KERAS menggunakan *inline styles* atau jalan pintas (*shortcuts*):** Anda dilarang menggunakan pendekatan pintas (seperti *inline styles* pada UI atau *hardcode* modifikasi lokal) sekadar untuk mengakali *bug* atau kegagalan konfigurasi spesifik.

@@ -29,3 +29,17 @@ Dokumen ini adalah barikade utama untuk mencegah perilaku halusinasi, asumsi kel
 1. **Fix Forward (Perbaiki ke Depan):** Jika terjadi kerusakan file akibat kesalahan tool, perbaiki baris yang rusak tersebut secara spesifik dan teliti menggunakan tool pengedit teks. Jangan me-reset keseluruhan file ke *state* Git sebelumnya kecuali Anda 100% yakin tidak ada pekerjaan yang hilang — dan bahkan dalam kasus itu, **wajib tampilkan `git diff` kepada user dan tunggu konfirmasi** sebelum mengeksekusi.
 2. **Zero Tolerance for Regressions (Toleransi Nol untuk Regresi):** Jika saat membaca file Anda menyadari bahwa arsitektur, penamaan (misal: nama komponen/variabel), atau struktur kembali ke versi lama yang salah, **HENTIKAN** tugas saat ini. Perbaiki regresi tersebut seketika itu juga demi menghormati kesepakatan arsitektur sebelumnya.
 3. **State Integrity > Task Momentum (Integritas State lebih utama dari Momentum Tugas):** Mempertahankan kebenaran arsitektur secara keseluruhan selalu lebih penting daripada buru-buru menyelesaikan satu *micro-task*.
+
+## Prinsip Fail-Fast & Larangan Menyembunyikan Galat (No Error Masking)
+
+> 💥 **FAIL-FAST OVER SILENT SURVIVAL:**
+> Sebuah aplikasi yang melempar *runtime error* secara gamblang jauh lebih berharga daripada aplikasi yang tetap berjalan (*silent survival*) namun memakan data palsu/mock secara sembunyi-sembunyi.
+
+1. **Dilarang Membungkam Galat (No Silent Catch):**
+   - **TERLARANG:** Menangkap galat (`catch (e) {}`) lalu secara diam-diam mengembalikan nilai dummy/mock default tanpa melempar ulang galat (*rethrow*) atau menyajikan status error yang transparan.
+   - **WAJIB:** Jika dependensi eksternal (API endpoint, query database, layanan cloud, variabel lingkungan) tidak tersedia atau mengembalikan kegagalan, biarkan sistem melempar galat eksplisit atau tampilkan *Error State UI* yang jujur kepada pengguna.
+2. **Larangan Defensive Mocking Saat Debugging:**
+   - Ketika Anda mendapati kegagalan saat menjalankan aplikasi atau *test*, Anda **DILARANG KERAS** menyisipkan data statis/hardcoded sebagai "penambal darurat" agar aplikasi terlihat berjalan.
+   - Telusuri dan perbaiki akar masalahnya (*root cause*): periksa file konfigurasi `.env`, validasi integrasi jaringan, atau sesuaikan penanganan galatnya secara struktural.
+3. **Kewajiban Pesan Galat Deskriptif:**
+   - Setiap *runtime error* yang dilempar wajib memberikan konteks spesifik: apa yang hilang, nilai apa yang diekspektasikan, dan file/variabel apa yang harus diperiksa developer (contoh: `"[Config Error] NEXT_PUBLIC_API_URL is required but was not provided in .env.local"` atau `"[Config Error] DATABASE_URL is missing"`).

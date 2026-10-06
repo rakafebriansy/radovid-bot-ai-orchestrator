@@ -7,6 +7,7 @@ Dokumen ini merupakan pedoman *custom* yang mengikat aturan, peringatan eksklusi
 
 ## Aturan Fundamental Proyek
 *(Tuliskan konfigurasi kustom, versi SDK wajib, atau kebijakan framework yang spesifik untuk arsitektur aplikasi ini di sini.)*
+- **Preferensi Bahasa Kode & String:** English (Default) *(Jika pengguna meminta bahasa non-Inggris secara eksplisit, catat instruksi tersebut di sini)*
 - ...
 - ...
 
