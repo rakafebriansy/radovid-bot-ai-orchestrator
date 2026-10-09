@@ -23,6 +23,11 @@ Jika ekosistem ini terdiri dari berbagai *platform* atau aplikasi yang memiliki 
 ## Cara Melakukan Generate Design System
 Jelaskan "rasa" (*vibe*), tema, gaya visual (*modern*, minimalis, *playful*, dsb), serta preferensi estetika dari aplikasi Anda kepada AI Agent. Kemudian, mintalah AI Agent untuk mengajukan pertanyaan-pertanyaan spesifik terkait aset visual (seperti warna primer/sekunder, bentuk tombol, *dark/light mode*, tipografi) guna memperinci gambaran desain Anda. Berdasarkan interaksi tersebut, AI akan merumuskan dan menyusun pedoman komponen UI yang baku.
 
+### Prinsip Anti-AI-Slop dalam Perancangan Design System
+1. **Berakar pada Domain Produk (Product-Specific Intent):** Hindari estetika SaaS generik (mesh gradien ungu/biru, efek *glassmorphism* tebal, *glowing borders*, kartu berulang identik). Tentukan arah visual berbasis kebutuhan tugas pengguna nyata.
+2. **Hierarki Grayscale First:** Pastikan struktur dan keterbacaan komponen berfungsi sempurna dalam monokrom/hitam-putih sebelum menetapkan palet warna dan dekorasi.
+3. **Pencegahan Over-Decoration:** Komponen harus dirancang fungsional, memuat seluruh variasi status (*loading/empty/error*), memenuhi kontras WCAG AA, dan mematuhi seluruh hukum Anti-Slop di `global-guidelines/ui-and-assets.md`.
+
 > **Kewajiban Uji Validasi HTML:** Desain yang dirumuskan di dokumen ini **TIDAK BOLEH** langsung dikoding ke dalam *framework* asli (Flutter, Next.js, SwiftUI, dll.). AI Agent **WAJIB** membuat sketsa purwarupanya terlebih dahulu dalam format HTML sederhana di direktori `nodes/[nama-node]/prototypes/` dari proyek yang bersangkutan.
 ## [GANTI_DENGAN_NAMA_PROYEK]
 

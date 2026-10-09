@@ -17,6 +17,35 @@ berpotensi menimpa atau menghapus konten tanpa review yang memadai.
 
 ---
 
+## ⚖️ Protokol Permintaan Izin: Read-Only vs Modifikasi State (State Mutation Protocol)
+
+> 🛡️ **PRINSIP TRANSPARANSI PERUBAHAN STATE:**
+> AI Agent **DILARANG KERAS** langsung meminta *permission* untuk perintah yang memodifikasi *state* tanpa memaparkan rencana terlebih dahulu.
+
+### 1. Operasi Read-Only (Boleh Langsung Meminta Izin / Dijalankan Mandiri)
+- **Definisi:** Segala perintah terminal atau pemanggilan *tool* yang bersifat inspeksi pasif, membaca isi dokumen, memindai direktori, atau mengumpulkan konteks sistem tanpa mengubah status (*state*), isi berkas, skema, atau data apa pun.
+- **Daftar Operasi Read-Only yang Diizinkan Langsung:**
+  - **Navigasi & Pelacakan Direktori:** `ls`, `dir`, `pwd`, `tree`, `find` (pencarian), `which`, `graphify query`
+  - **Pembacaan Konten Berkas:** `head`, `tail`, `cat`, `less`, `sed -n` (mode cetak/read-only tanpa `-i`), `awk` (tanpa *file redirection* / *overwrite*), `grep`, `rg`, `view_file`, `list_dir`, `read_url_content`
+  - **Inspeksi Status Kontrol Versi (VCS):** `git status`, `git log`, `git diff`, `git branch -a`, `git show`
+  - **Inspeksi Basis Data:** Kueri `SELECT` non-locking, `EXPLAIN`, inspeksi skema baca (*read-only schema inspection*)
+- **Kebijakan Izin:** AI Agent **DIPERBOLEHKAN** langsung meminta *permission* eksekusi (atau langsung mengeksekusi secara otonom jika tool mendukung) untuk operasi-operasi *read-only* ini demi kelancaran pengumpulan konteks awal.
+
+### 2. Operasi Modifikasi State (DILARANG LANGSUNG MEMINTA PERMISSION TANPA RENCANA)
+- **Definisi:** Segala tindakan atau perintah yang berpotensi mengubah status (*state mutation*), memodifikasi *codebase*, menyisipkan berkas, menghapus berkas, mengubah konfigurasi, merombak skema basis data (DDL), atau memanipulasi data produksi/tabel (DML).
+- **Cakupan Operasi Modifikasi State:**
+  - **Manipulasi Berkas & Struktur:** Menambah file baru (`write_to_file`, `touch`), memodifikasi file (`replace_file_content`, `multi_replace_file_content`), menghapus file (`rm`), memindahkan/menggandakan file (`mv`, `cp`), membuat direktori (`mkdir`).
+  - **Konfigurasi & Dependensi:** Menginstal paket (`npm install`, `pip install`, `cargo add`, dll.), mengubah file environment (`.env`), mengedit berkas konfigurasi sistem (`package.json`, `tsconfig.json`, `docker-compose.yml`).
+  - **Basis Data & Skema:** Menjalankan migrasi DDL (`CREATE`, `ALTER`, `DROP`), menyisipkan data *seed*, mengubah tabel (INSERT/UPDATE/DELETE/TRUNCATE).
+  - **Lingkungan & Layanan:** Menjalankan *build script* yang menghasilkan artefak baru, menjalankan *service container*, atau merestart peladen.
+- **Aturan Mutlak Permintaan Permission Untuk Menjalankan Command Terminal:**
+  AI Agent **DILARANG KERAS** langsung melontarkan dialog izin eksekusi (*permission prompt*) untuk operasi modifikasi state tanpa menyelesaikan 3 prasyarat berurutan berikut:
+  1. **Paparkan Rencana (*Implementation Plan*) Secara Transparan:** Jelaskan berkas apa saja yang akan dibuat, diubah, atau dihapus, perintah modifikasi apa yang akan dijalankan, dan apa dampaknya.
+  2. **Tampilkan Pratinjau (*Diff Preview*):** Tunjukkan pratinjau potongan kode atau skrip yang akan diterapkan.
+  3. **Tunggu Persetujuan Rencana dari Pengguna:** Hanya setelah pengguna secara eksplisit menyetujui rencana tersebut, barulah AI diizinkan meminta *permission* eksekusi untuk perintah modifikasi state terkait.
+
+---
+
 ## ❌ Perintah yang DILARANG TOTAL
 
 Agent **TIDAK BOLEH** menjalankan perintah-perintah berikut dalam kondisi apapun.

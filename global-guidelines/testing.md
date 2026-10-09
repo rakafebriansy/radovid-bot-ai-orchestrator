@@ -111,6 +111,20 @@ Berikut adalah panduan perintah standar eksekusi pengujian beserta inspeksi *cov
 ### 10. Pembersihan Artefak Pengujian (Test Artifact Cleanup)
 Anda **WAJIB** selalu memastikan bahwa setiap file hasil *build* atau file ter-generate (*generated files*) lainnya yang berasal dari sisa hasil pengujian (*testing*) segera dihapus apabila ada. Jangan biarkan file sementara dari pengujian ini mengotori repositori.
 
-### 11. Pengujian Antarmuka Pengguna (Frontend View/Screen Testing)
-Saat Anda ditugaskan untuk melakukan pengujian (*testing*) pada komponen visual atau *frontend view/screen*, Anda **WAJIB** mengecek dan menerapkan metode *Heuristic Evaluation* dalam proses tersebut. Hal ini guna menjamin bahwa setiap layar antarmuka tidak hanya bebas dari *bug* teknis, tetapi juga teruji usabilitasnya.
-> **Enforcement (Kewajiban Bukti):** Hasil evaluasi heuristik ini **WAJIB** didokumentasikan ke dalam seksi *AI Execution Log* pada tiket terkait. Sebutkan secara eksplisit prinsip-prinsip Heuristik Nielsen mana saja yang telah dievaluasi dan temuan hasilnya (atau *"Passed"* jika lolos seluruhnya). AI tidak diperkenankan mengklaim telah menguji usabilitas tanpa bukti dokumentasi ini.
+### 11. Larangan Pengujian Semu (No Vanity Testing / Anti-Test Slop)
+> 🛡️ **PENGUJIAN SUBSTANSIAL, BUKAN ANGKA SEMU:**
+> AI Agent **DILARANG KERAS** memproduksi *test suite* yang dangkal (*test slop*) hanya demi mengejar target *coverage* 100% tanpa menguji integritas logika yang sebenarnya.
+- **Dilarang Asersi Kosong:** Dilarang menulis asersi yang pasti lolos atau tidak bermakna seperti `expect(true).toBe(true)`, `expect(result).toBeDefined()` tanpa memvalidasi isi objek, atau memanggil fungsi tanpa asersi nilai kembalian.
+- **Uji Perilaku Nyata & Kasus Ekstrem:** Setiap *test case* wajib menguji:
+  1. *State mutation* dan nilai kembalian (*return value*) aktual.
+  2. Kondisi batas ekstrem (*edge cases & boundary limits*).
+  3. Skenario kegagalan & penanganan galat (*error throwing*, *invalid payload*, *rejections*).
+- **Dilarang Menguji Boilerplate Sepele:** Jangan membuat lusinan *test* yang hanya menguji properti statis bawaan bahasa jika logika bisnis intinya tidak diuji secara mendalam.
+
+### 12. Pengujian Antarmuka Pengguna & Gerbang Uji Visual Anti-Slop (Frontend UI/Screen Testing)
+Saat Anda ditugaskan untuk melakukan pengujian (*testing*) pada komponen visual atau *frontend view/screen*:
+1. **Evaluasi Heuristik (Usabilitas):** Anda **WAJIB** mengecek dan menerapkan 10 prinsip *Heuristic Evaluation* Jakob Nielsen sesuai pedoman di `ui-and-assets.md`.
+2. **Tinjauan Visual Nyata (Rendered Output Inspection):** AI **DILARANG KERAS** menyatakan tugas UI selesai hanya karena *linter* atau *test* kompilasi lolos. Anda **WAJIB** memeriksa tampilan yang dirender secara visual (melalui sandbox prototipe atau pratinjau browser).
+3. **Anti-Slop Visual Checklist Gate:** Pastikan antarmuka telah lolos seluruh butir pemeriksaan di `ui-and-assets.md` (bebas dari estetika AI SaaS generik, bebas konten/metrik palsu, kontras teks WCAG AA terpenuhi, target sentuh minimal 24x24px / 44x44pt, serta kelengkapan status *loading/skeleton/empty/error*).
+
+> **Enforcement (Kewajiban Bukti):** Hasil evaluasi heuristik dan kepatuhan *Anti-Slop Checklist* ini **WAJIB** didokumentasikan ke dalam seksi *AI Execution Log* pada tiket terkait. Sebutkan secara eksplisit prinsip-prinsip Heuristik dan status uji Anti-Slop yang telah diverifikasi. AI tidak diperkenankan mengklaim telah menguji antarmuka tanpa bukti dokumentasi ini.

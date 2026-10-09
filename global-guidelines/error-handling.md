@@ -41,5 +41,20 @@ Dokumen ini adalah barikade utama untuk mencegah perilaku halusinasi, asumsi kel
 2. **Larangan Defensive Mocking Saat Debugging:**
    - Ketika Anda mendapati kegagalan saat menjalankan aplikasi atau *test*, Anda **DILARANG KERAS** menyisipkan data statis/hardcoded sebagai "penambal darurat" agar aplikasi terlihat berjalan.
    - Telusuri dan perbaiki akar masalahnya (*root cause*): periksa file konfigurasi `.env`, validasi integrasi jaringan, atau sesuaikan penanganan galatnya secara struktural.
-3. **Kewajiban Pesan Galat Deskriptif:**
+3. **Kewajiban Pesan Galat Deskriptif & Berorientasi Pemulihan:**
    - Setiap *runtime error* yang dilempar wajib memberikan konteks spesifik: apa yang hilang, nilai apa yang diekspektasikan, dan file/variabel apa yang harus diperiksa developer (contoh: `"[Config Error] NEXT_PUBLIC_API_URL is required but was not provided in .env.local"` atau `"[Config Error] DATABASE_URL is missing"`).
+   - Pesan galat yang ditampilkan pada antarmuka pengguna (UI) **WAJIB** berorientasi pada pemulihan (*actionable recovery*): jelaskan apa yang terjadi dan beri tahu tindakan perbaikan konkretnya (contoh: *"Nomor telepon belum lengkap. Masukkan 10–13 digit angka dan coba lagi"*, BUKAN hanya *"Input invalid"*).
+
+## Larangan Shotgun Debugging & Spekulasi Halusinatif (Anti-Slop Debugging)
+
+> 🛡️ **DEBUGGING DENGAN ANALISIS, BUKAN SPEKULASI MEMBABI BUTA:**
+> AI Agent dilarang melakukan aksi *shotgun debugging* (mengubah puluhan baris kode secara acak di banyak file dengan harapan "salah satunya berhasil").
+
+1. **Dilarang Mengarang API & Signature Pustaka (No Hallucinated APIs/Props):**
+   - AI **DILARANG KERAS** menebak atau mengarang nama *method*, *property*, atau *flag* dari pustaka pihak ketiga yang sebenarnya tidak didukung oleh versi pustaka yang terpasang di proyek.
+   - Periksa selalu deklarasi tipe (`.d.ts`), berkas `package.json`, atau dokumentasi resmi sebelum menggunakan fungsi baru.
+2. **Satu Hipotesis pada Satu Waktu:**
+   - Saat mendiagnosis galat, formulasikan 1 hipotesis terarah berdasarkan analisis *stack trace* dan log sistem. Terapkan perbaikan terfokus dan uji hasilnya secara terukur.
+3. **Dilarang Menumpuk Workaround Cacat:**
+   - Jika sebuah perbaikan tidak menyelesaikan akar masalah, jangan biarkan sisa kode eksperimen menumpuk di *codebase*. Bersihkan perubahan gagal tersebut sebelum mencoba pendekatan berikutnya.
+

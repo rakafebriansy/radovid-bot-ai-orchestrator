@@ -153,9 +153,63 @@ export const PAGINATION = {
 } as const;
 ```
 
+## Standar Rekayasa Kode Anti-AI-Slop (Anti-AI-Slop Code Quality)
+
+> 🛡️ **KODE DENGAN TUJUAN NYATA (PURPOSE-DRIVEN CODE):**
+> AI Agent dilarang menghasilkan kode yang bertele-tele, terlalu banyak lapisan pembungkus (*over-engineered*), menyembunyikan logika di balik abstraksi semu, atau menambal tata letak dengan angka ajaib (*magic numbers*). Kode yang baik adalah kode yang lugas, efisien, bermakna, dan mudah dipelihara.
+
+### 1. Larangan Abstraksi Semu & Over-Engineering (No Superficial Abstraction / YAGNI)
+- **Ekstraksi Komponen Hanya Berdasarkan Kebutuhan Nyata:** Komponen, modul, atau kelas baru hanya boleh dibuat jika memiliki:
+  1. Logika perilaku berulang (*reusable behavior*).
+  2. Struktur semantik yang jelas dan berulang.
+  3. Kontrak API atau batas *state* independen yang terisolasi.
+- **Dilarang Over-Abstracting Div Soup:** Jangan memecah setiap elemen `div` atau blok 3 baris kode menjadi berkas komponen mikro terpisah jika komponen tersebut hanya digunakan satu kali dan tidak memiliki logika mandiri.
+- **Terapkan Prinsip YAGNI (You Aren't Gonna Need It):** Jangan membangun arsitektur generik raksasa, *factory pattern* bertingkat, atau *design system* super-kompleks untuk prototipe fitur yang sederhana.
+
+### 2. Semantik Native & Platform-First (No Reinventing the Wheel)
+- **Utamakan Elemen Semantik Bawaan:** Selalu gunakan elemen native platform sebelum mencoba merekayasa ulang perilaku menggunakan elemen umum:
+  - Gunakan `<button>` untuk aksi pemicu, `<a href>` untuk navigasi rute, `<label>` untuk formulir, dan `<table>` untuk komparasi data dua dimensi.
+  - ❌ **TERLARANG:** Membuat `<div onClick={...}>` untuk tombol atau tautan navigasi tanpa penanganan keyboard (`Enter`/`Space`), *focus management*, dan *screen reader semantics*.
+- **Gunakan Kontrol Standar Platform:** Jangan membuat komponen kustom (*custom dropdown*, *custom scrollbar*, *custom modal*) yang rapuh jika kontrol bawaan platform atau pustaka komponen teruji sudah menyediakannya dengan aksesibilitas lengkap.
+
+### 3. Kualitas CSS & Layout Primitives (No Magic Number CSS Hacks)
+- **DILARANG Menggunakan Angka Ajaib untuk Patching Tata Letak:**
+  - ❌ **TERLARANG:** Menambal posisi elemen yang bergeser menggunakan koordinat absolut sembarangan, margin negatif acak, atau transformasi serampangan:
+    ```css
+    /* CONTOH TERLARANG */
+    position: absolute;
+    top: 13px;
+    left: 37px;
+    width: 417px;
+    transform: translateX(7px);
+    ```
+  - ✅ **WAJIB:** Perbaiki arsitektur model tata letak menggunakan *Layout Primitives* baku:
+    ```css
+    /* CONTOH BENAR */
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--space-4);
+    align-items: center;
+    ```
+- **Utamakan Intrinsic Sizing & Modern CSS:** Gunakan Flexbox, CSS Grid, *logical properties* (`margin-inline`, `padding-block`), unit fluida (`minmax()`, `clamp()`), serta *Container Queries* untuk komponen yang responsif terhadap kontainernya.
+
+### 4. Integritas State & Sinkronisasi URL (URL-Driven State)
+- **Navigasi & Filter Harus Bertahan di URL:**
+  - Parameter antarmuka yang seharusnya dapat dibagikan (*shareable*), disimpan dalam bookmark, atau bertahan saat halaman dimuat ulang (*refresh*) maupun saat navigasi tombol *Back/Forward* **WAJIB** disimpan ke dalam *URL Search Params / Query String*.
+  - Ini mencakup: kata kunci pencarian (*search query*), filter aktif, urutan pengurutan (*sorting*), nomor halaman paginasi, dan tab aktif utama.
+  - ❌ **TERLARANG:** Mengunci seluruh parameter filter penting hanya di dalam *ephemeral local state* (seperti `useState`) sehingga reset saat di-refresh dan tidak bisa dibagikan tautannya kepada pengguna lain.
+
+### 5. Integritas Logika Bisnis (Zero Business Logic Fabrication)
+- AI **DILARANG KERAS** mengarang sendiri aturan bisnis, batasan otorisasi, rumus kalkulasi keuangan, atau skema validasi yang bertentangan atau tidak tercantum di dalam `prd.md` dan `system-design.md`.
+- Setiap logika percabangan kritis harus didasarkan pada spesifikasi kebutuhan nyata, bukan karangan intuitif sepihak dari AI.
+
+---
+
 ## Dilarang Mem-Bypass Arsitektur (No Hacks)
 1.  **DILARANG KERAS menggunakan *inline styles* atau jalan pintas (*shortcuts*):** Anda dilarang menggunakan pendekatan pintas (seperti *inline styles* pada UI atau *hardcode* modifikasi lokal) sekadar untuk mengakali *bug* atau kegagalan konfigurasi spesifik.
 2.  **Perbaiki Akar Masalah (*Root Cause*):** Jika ada konfigurasi atau sistem penataan yang gagal teraplikasikan, Anda wajib menelusuri dan memperbaiki akar masalahnya hingga ke file pengaturan utama atau arsitektur dasarnya. Jangan gunakan *hack* lokal sebagai solusi.
+3.  **DILARANG Mengubah Skema/DDL Database Secara Langsung:** Dilarang melakukan eksekusi perintah DDL (`ALTER TABLE`, `CREATE TABLE`, `DROP COLUMN`, dll.) secara langsung pada *live database* sebagai jalan pintas. Seluruh perubahan struktur data wajib dikelola melalui berkas skrip migrasi terstruktur sesuai [database.md](./database.md).
+4.  **Kepatuhan Protokol Mutasi State:** Dilarang langsung meminta *permission* atau mengeksekusi aksi yang memodifikasi *state* (menambah/mengubah/menghapus berkas, mutasi konfigurasi, eksekusi DDL/DML massal) tanpa memaparkan rencana implementasi (*Implementation Plan*) dan mendapatkan persetujuan pengguna sesuai [safe-file-operations.md](./safe-file-operations.md).
 
 ## Visualisasi Dokumentasi Berbasis Teks (PlantUML)
 Sistem dokumentasi arsitektur di ekosistem ini **DILARANG KERAS** menggunakan lampiran gambar statis eksternal (`.png`, `.jpg`) untuk menggambarkan alur, struktur basis data, atau bagan interaksi.

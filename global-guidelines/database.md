@@ -118,3 +118,20 @@ Opsi ini mengonversi waktu saat ini dari zona waktu pengguna atau sistem ke zona
 3. **Pemberian Nilai Bawaan (Default Values):**
    * Jika menggunakan **Opsi 1 (Epoch Millis)**: Berikan nilai waktu milidetik melalui aplikasi atau fungsi basis data yang menghitung milidetik saat ini (misal: `(EXTRACT(EPOCH FROM NOW()) * 1000)::BIGINT`).
    * Jika menggunakan **Opsi 2 (Timestamp UTC)**: Gunakan fungsi bawaan UTC yang valid (misal: `CURRENT_TIMESTAMP AT TIME ZONE 'UTC'`, `NOW() AT TIME ZONE 'utc'`).
+
+---
+
+## Larangan Eksekusi DDL Langsung di Database (Migration-First Policy)
+
+> 🔴 **ZERO DIRECT DDL EXECUTION:**
+> AI Agent **DILARANG KERAS** mengeksekusi perintah Data Definition Language (DDL) seperti `CREATE TABLE`, `ALTER TABLE`, `DROP TABLE`, `TRUNCATE`, `RENAME COLUMN`, atau `ADD CONSTRAINT` secara langsung pada basis data aktif (*live/running database*) melalui terminal interaktif, skrip ad-hoc, atau kueri mentah mandiri.
+
+### 1. Wajib Melalui Berkas Migrasi Terstruktur (Migration-First Policy)
+1. **Version-Controlled Migrations:** Seluruh perubahan skema, struktur tabel, penambahan/penghapusan kolom, relasi *foreign key*, dan indeks **WAJIB** didefinisikan ke dalam berkas skrip migrasi resmi (*migration files*) yang tersimpan di dalam repositori kode (contoh: Prisma migrations, TypeORM/Knex migrations, Alembic, Flyway, Golang-migrate, atau file SQL migrasi berpenomoran urut di direktori proyek).
+2. **Keterlacakan & Reversibilitas:** Perubahan skema harus dapat di-review (*diff inspection*), memiliki prosedur *rollback* (*down migration*), dan dapat direproduksi secara deterministik di lingkungan CI/CD, staging, maupun produksi.
+3. **Dilarang Ad-hoc Console Mutations:** Mengubah tipe data, menambahkan kolom, atau mengubah tabel secara diam-diam melalui *database CLI/GUI tool* tanpa berkas migrasi adalah **PELANGGARAN FATAL**.
+
+### 2. Protokol Izin Mutasi Database (State Mutation Gate)
+- Eksekusi migrasi DDL, *seed*, dan manipulasi DML massal tergolong **Operasi Modifikasi State**.
+- AI **DILARANG LANGSUNG MEMINTA PERMISSION** untuk mengeksekusi perintah yang mengubah state database ini tanpa terlebih dahulu menyajikan rencana implementasi (*Implementation Plan*) / preview perubahan dan mendapatkan persetujuan rencana dari pengguna.
+- Kueri yang bersifat **Read-Only** (seperti `SELECT` non-locking, `EXPLAIN`, inspeksi skema baca) diperbolehkan langsung meminta permission/dieksekusi untuk pengumpulan konteks.

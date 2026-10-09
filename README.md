@@ -1,6 +1,6 @@
 # AI Orchestrator Template
 
-Selamat datang di ekosistem **AI Orchestrator**. Berbeda dengan sekadar *prompting* AI biasa untuk menulis kode, repositori ini adalah sebuah kerangka kerja (*framework*) rekayasa perangkat lunak yang dirancang agar AI Agent (seperti Cursor, GitHub Copilot Workspace, atau agen otonom lainnya) bekerja layaknya seorang *Software Engineer* terstruktur yang tidak mudah berhalusinasi, terhindar dari *looping error*, dan selalu merujuk pada dokumentasi mutlak (*Single Source of Truth*).
+Selamat datang di ekosistem **AI Orchestrator**. Berbeda dengan sekadar *prompting* AI biasa untuk menulis kode, repositori ini adalah sebuah kerangka kerja (*framework*) rekayasa perangkat lunak yang dirancang agar AI Agent (seperti Cursor, GitHub Copilot Workspace, atau agen otonom lainnya) bekerja layaknya seorang *Software Engineer* terstruktur yang tidak mudah berhalusinasi, terhindar dari *looping error*, bebas dari kode/desain sampah (*Anti-AI-Slop*), dan selalu merujuk pada dokumentasi mutlak (*Single Source of Truth*).
 
 ---
 
@@ -32,7 +32,7 @@ Berbekal informasi di atas, JANGAN MENULIS KODE APLIKASI SAMA SEKALI. Lakukan la
 1. Pahami struktur `ai-orchestrator-template` ini. Karena ini adalah lingkungan proyek tunggal, kita hanya akan menggunakan satu Node utama.
 2. Evaluasi & Wawancara Pengguna: Jika deskripsi yang saya berikan di atas masih terlalu dangkal atau belum cukup untuk mengisi Dokumen Mandatory secara detail dan maksimal, Anda WAJIB BERHENTI mengeksekusi langkah selanjutnya. (Catatan: Yang tergolong Dokumen Mandatory adalah: `prd.md`, `design-system.md`, `system-design.md`, dan `development-planning.md`). Ajukan daftar pertanyaan kritis kepada saya terkait visi, batasan teknis, target pengguna, dan spesifikasi fungsionalitas. Selain itu, SEBELUM Anda bertanya tentang Graphify, Anda WAJIB menanyakan: *"Mode Operasional mana yang ingin Anda gunakan secara default? (1) Mode 1: Autonomous Planning (digerakkan oleh roadmap), atau (2) Mode 2: Prompt-Driven (digerakkan instruksi mikro)"*. SETELAH ITU, tanyakan: *"Apakah Anda ingin menggunakan fitur CLI Graphify untuk pemetaan arsitektur otomatis? (Ya/Tidak)"*. SELANJUTNYA, tanyakan preferensi alat pengujian (*testing*) dan *linter* yang ingin digunakan sesuai teknologi proyek. JIKA proyek berupa *web* atau *mobile app*, tanyakan juga opsi fitur aksesibilitas (*accessibility*) apa saja yang ingin diimplementasikan (opsional). Ulangi proses tanya-jawab ini hingga Anda memiliki konteks yang solid.
 2.5. Pengecekan Environment (KONDISIONAL): JIKA pengguna menjawab YA untuk pemakaian Graphify pada tahap wawancara, eksekusi `graphify --version` di terminal. Jika gagal (not found), instal segera dengan `npm install -g @sentropic/graphify`. Jika pengguna menjawab TIDAK, lewati langkah ini sepenuhnya.
-3. Setelah informasi dirasa memadai, buatkan draf komprehensif untuk `global-docs/prd.md` dan `global-docs/design-system.md` berdasarkan spesifikasi proyek di atas.
+3. Setelah informasi dirasa memadai, buatkan draf komprehensif untuk `global-docs/prd.md` dan `global-docs/design-system.md` berdasarkan spesifikasi proyek di atas. Terapkan prinsip Anti-AI-Slop (desain berakar pada tugas nyata, bebas dari estetika klise AI generik).
 4. Buatkan GitHub Project di awal untuk repositori ini. Pastikan GitHub Project tersebut dibuat di bawah kepemilikan (*belongs to*) *User* dan ditautkan (disambungkan) ke repositori ini.
 5. Untuk inisialisasi Node proyek utama:
    a. Gandakan (copy) folder `nodes/_template/` menjadi `nodes/[nama-proyek]/`. Setelah itu, WAJIB tuliskan Mode Operasional pilihan pengguna (MODE 1 atau MODE 2) ke bagian paling atas file `nodes/[nama-proyek]/main.md` untuk menggantikan placeholder `[PILIH: MODE 1 / MODE 2]`.
@@ -77,7 +77,7 @@ Berbekal informasi di atas, JANGAN MENULIS KODE APLIKASI SAMA SEKALI. Lakukan la
 1. Pahami struktur `ai-orchestrator-template` yang berbasis nodes ini.
 2. Evaluasi & Wawancara Pengguna: Jika deskripsi yang saya berikan di atas masih terlalu dangkal atau belum cukup untuk mengisi Dokumen Mandatory secara detail dan maksimal, Anda WAJIB BERHENTI mengeksekusi langkah selanjutnya. (Catatan: Yang tergolong Dokumen Mandatory adalah: `prd.md`, `design-system.md`, `system-design.md`, dan `development-planning.md`). Ajukan daftar pertanyaan kritis kepada saya terkait visi, batasan teknis, target pengguna, dan spesifikasi fungsionalitas. Selain itu, SEBELUM Anda bertanya tentang Graphify, Anda WAJIB menanyakan: *"Mode Operasional mana yang ingin Anda gunakan secara default? (1) Mode 1: Autonomous Planning (digerakkan oleh roadmap), atau (2) Mode 2: Prompt-Driven (digerakkan instruksi mikro)"*. SETELAH ITU, tanyakan: *"Apakah Anda ingin menggunakan fitur CLI Graphify untuk pemetaan arsitektur otomatis? (Ya/Tidak)"*. SELANJUTNYA, tanyakan preferensi alat pengujian (*testing*) dan *linter* yang ingin digunakan untuk masing-masing Node. JIKA Node berupa *web* atau *mobile app*, tanyakan juga opsi fitur aksesibilitas (*accessibility*) apa saja yang ingin diimplementasikan (opsional). Ulangi proses tanya-jawab ini hingga Anda memiliki konteks yang solid.
 2.5. Pengecekan Environment (KONDISIONAL): JIKA pengguna menjawab YA untuk pemakaian Graphify pada tahap wawancara, eksekusi `graphify --version` di terminal. Jika gagal (not found), instal segera dengan `npm install -g @sentropic/graphify`. Jika pengguna menjawab TIDAK, lewati langkah ini sepenuhnya.
-3. Setelah informasi dirasa memadai, buatkan draf komprehensif untuk `global-docs/prd.md` dan `global-docs/design-system.md` berdasarkan spesifikasi lingkungan (Environment) di atas.
+3. Setelah informasi dirasa memadai, buatkan draf komprehensif untuk `global-docs/prd.md` dan `global-docs/design-system.md` berdasarkan spesifikasi lingkungan (Environment) di atas. Terapkan prinsip Anti-AI-Slop (desain berakar pada tugas nyata, bebas dari estetika klise AI generik).
 4. Buatkan GitHub Project di awal untuk repositori ini. Pastikan GitHub Project tersebut dibuat di bawah kepemilikan (*belongs to*) *User* dan ditautkan (disambungkan) ke repositori ini.
 5. Untuk SETIAP Node yang terdaftar di atas:
    a. Gandakan (copy) folder `nodes/_template/` menjadi `nodes/[nama-node]/`. Setelah itu, WAJIB tuliskan Mode Operasional pilihan pengguna (MODE 1 atau MODE 2) ke bagian paling atas file `nodes/[nama-node]/main.md` untuk menggantikan placeholder `[PILIH: MODE 1 / MODE 2]`.
@@ -136,7 +136,7 @@ Gunakan salah satu dari dua Execution Prompt di bawah ini sesuai dengan ruang li
 Gunakan prompt ini jika Anda hanya ingin fokus mengerjakan fitur di SATU proyek spesifik (misalnya hanya mengubah UI Frontend).
 
 ```text
-Kamu WAJIB membaca `nodes/[NAMA_NODE_ANDA]/main.md` sebagai Master Entrypoint. Patuhi seluruh pedoman arsitektur dan larangan mutlak yang tertulis di dalamnya.
+Kamu WAJIB membaca `nodes/[NAMA_NODE_ANDA]/main.md` sebagai Master Entrypoint. Patuhi seluruh pedoman arsitektur, larangan mutlak, serta standar Anti-AI-Slop yang tertulis di dalamnya.
 
 KEWAJIBAN PENGGUNAAN & GENERATE GRAPHIFY:
 Cek apakah terdapat direktori `.graphify` di dalam *Path Codebase* proyek ini:
@@ -146,7 +146,8 @@ Ingat: direktori `.graphify` HANYA boleh berada di dalam *Path Codebase* dan DIL
 
 SEBELUM menulis kode, evaluasi apakah tugas ini menuntut konteks atau domain fitur yang berbeda (contoh: fitur baru, *hotfix*, *testing*). Jika berbeda, WAJIB tanyakan kepada saya untuk membuat *branch* baru.
 
-Setelah kodemu berhasil dan tugas ini rampung, kamu WAJIB masuk ke *Path Codebase* (`cd`) dan eksekusi perintah `graphify update` untuk menyinkronkan konteks kode barumu. Saat meminta persetujuan commit Git, pesan commit WAJIB 100% bersih dari istilah orchestrator/tiket!
+Patuhi standar koding Anti-AI-Slop, TDD Workflow, dan Visual Review Checklist. Setelah kodemu berhasil dan tugas ini rampung, kamu WAJIB masuk ke *Path Codebase* (`cd`) dan eksekusi perintah `graphify update` untuk menyinkronkan konteks kode barumu. Saat meminta persetujuan commit Git, pesan commit WAJIB 100% bersih dari istilah orchestrator/tiket!
+
 
 Instruksi Tugas: [TULIS_INSTRUKSI_ATAU_ID_TIKET_DI_SINI]
 ```
