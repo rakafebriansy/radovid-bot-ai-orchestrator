@@ -1,36 +1,47 @@
-# Design System
+# Design System Guide & Specification Template
 
-## Apa itu Design System
-Design System adalah kumpulan terpusat yang berisi komponen visual, pedoman desain (seperti palet warna, tipografi, dan *spacing*), serta standar pola interaksi UI/UX yang dapat digunakan kembali (*reusable*). Dokumen ini bertujuan untuk memastikan konsistensi tampilan dan pengalaman pengguna di seluruh bagian aplikasi.
+> **[PRINSIP UTAMA]** Design System adalah acuan gaya visual (*styling ground truth*) untuk menjamin konsistensi antarmuka, aksesibilitas, dan identitas merek di seluruh aplikasi.
 
-Dalam pendekatan *Vibe Coding* yang dikerjakan oleh AI Agent, Design System berfungsi sebagai pedoman gaya (*styling ground truth*). Saat AI meng-*generate* antarmuka (UI) atau komponen baru, AI akan merujuk secara ketat pada aturan-aturan di dokumen ini. Hal ini memastikan bahwa kode UI yang dihasilkan (misalnya kode Flutter atau CSS) akan secara otomatis selaras dengan identitas visual, *branding*, dan tema aplikasi, sehingga terhindar dari ketidakkonsistenan desain.
+---
 
-Secara rinci, sebuah dokumen Design System wajib memuat komponen-komponen berikut:
-*   **Identitas Merek (*Brand Identity*):** Penjelasan mengenai filosofi desain, *vibe* atau nuansa aplikasi (contoh: *playful*, *minimalist*, korporat), serta *guideline* penggunaan aset merek.
-*   **Palet Warna (*Color Palette*):** Daftar lengkap warna yang akan diaplikasikan, mencakup peran *Primary*, *Secondary*, *Background*, *Surface*, *Error*, *Success*, dan *Warning*. Wajib menyertakan kode warnanya (*Hex/RGB*) serta adaptasi untuk *Dark Mode* dan *Light Mode*.
-*   **Tipografi (*Typography*):** Spesifikasi hierarki teks secara terstruktur, meliputi jenis huruf (*font family*), ukuran (*font sizes*), ketebalan (*font weights*), tingkat jarak huruf (*letter spacing*), dan tinggi baris (*line heights*) untuk elemen *Heading 1-6*, *Body*, *Subtitle*, *Caption*, dan teks pada tombol.
-*   **Sistem *Spacing*, Tata Letak, & Breakpoints (*Spacing & Layout System*):** Skala kelipatan angka standar untuk penentuan jarak *margin*, *padding*, sistem *grid*, penentuan titik batas responsif (*responsive breakpoints* untuk *mobile*, *tablet*, *desktop*), serta spesifikasi sudut elemen (*border radius*).
-*   **Aset & Ikonografi (*Iconography & Assets*):** Spesifikasi gaya visual ikon yang digunakan (seperti *outlined*, *filled*, atau *two-tone*), rasio ukuran standar ikon, dan acuan tata letak ilustrasi.
-*   **Komponen UI Utama (*UI Components Library*):** Rincian dan spesifikasi desain untuk setiap elemen *reusable* (seperti *buttons*, *text fields*, *dropdowns*, *cards*, *modals*, *bottom sheets*, dll.) beserta semua kemungkinan statusnya (*default*, *hover*, *pressed*, *disabled*, *focus*, *error*).
-*   **Animasi & Interaksi (*Micro-interactions/Animations*):** Standar perilaku gerakan antarmuka, mencakup durasi waktu (*duration*), kurva transisi (*easing curve*), dan *feedback* visual terhadap aksi dari pengguna.
-*   **Standar Aksesibilitas (a11y):** Persyaratan minimum aksesibilitas yang harus ditaati (seperti *color contrast ratio*, *focus states* yang jelas, dan ketersediaan label pembaca layar/*screen reader*).
+## 1. Arsitektur & Komponen Inti
 
-### Aturan Khusus Ekosistem Multi-Project (Multi-Node)
-Jika ekosistem ini terdiri dari berbagai *platform* atau aplikasi yang memiliki interaksi (*Multi-Node*), strukturkan Design System ini menjadi dua tingkatan:
-1. **Global Tokens:** Aturan fundamental (warna, tipografi utama, aset jenama/logo) yang wajib dipatuhi secara universal oleh seluruh *node* demi konsistensi *brand*.
-2. **Node-Specific Components:** Bagilah daftar komponen UI spesifik ke dalam sub-bab masing-masing *node* (misalnya: sub-bab "Komponen Web-Admin" terpisah dari sub-bab "Komponen Mobile-App") guna mencegah kontaminasi rancangan dan kerancuan (*ambiguity*) ketika AI melakukan koding antarmuka di node tertentu.
+### 1.1 Styling Ground Truth dalam AI Orchestration
+Rujukan mutlak AI Agent saat menghasilkan kode UI (Flutter, CSS, Tailwind, SwiftUI, Web) guna mencegah pergeseran gaya visual (*design drift*) dan estetika generik.
 
-## Cara Melakukan Generate Design System
-Jelaskan "rasa" (*vibe*), tema, gaya visual (*modern*, minimalis, *playful*, dsb), serta preferensi estetika dari aplikasi Anda kepada AI Agent. Kemudian, mintalah AI Agent untuk mengajukan pertanyaan-pertanyaan spesifik terkait aset visual (seperti warna primer/sekunder, bentuk tombol, *dark/light mode*, tipografi) guna memperinci gambaran desain Anda. Berdasarkan interaksi tersebut, AI akan merumuskan dan menyusun pedoman komponen UI yang baku.
+### 1.2 Delapan Komponen Spesifikasi Wajib
+1. **Identitas Merek (*Brand Identity*):** Filosofi desain, nuansa produk (*tone/vibe*), dan batasan aset merek.
+2. **Palet Warna (*Color Palette*):** Peran fungsional (Primary, Secondary, Background, Surface, Error, Success, Warning), format Hex/RGB/HSL, serta kontras Dark & Light Mode.
+3. **Tipografi (*Typography*):** Hierarki (H1-H6, Body, Subtitle, Caption, Button), font family, ukuran rem/pt, bobot, line-height, letter-spacing, dan `tabular-nums` untuk angka.
+4. **Sistem Spacing & Tata Letak:** Skala kelipatan 4px/8px, grid/flexbox, breakpoint responsif (mobile, tablet, desktop), dan konsistensi border radius.
+5. **Ikonografi & Aset:** Satu keluarga pustaka ikon (outlined/filled), skala dimensi standar, dan acuan ilustrasi.
+6. **Pustaka Komponen UI:** Spesifikasi komponen reusable beserta kelengkapan 11 status fungsional sesuai [ui-and-assets.md](../global-guidelines/ui-and-assets.md).
+7. **Animasi & Interaksi Mikro:** Durasi transisi, kurva easing, umpan balik visual, dan dukungan wajib `prefers-reduced-motion`.
+8. **Standar Aksesibilitas (a11y):** Kontras WCAG AA (>= 4.5:1 teks normal, >= 3:1 teks besar), target sentuh (>= 24x24px web / >= 44x44pt mobile), dan focus visible ring.
 
-### Prinsip Anti-AI-Slop dalam Perancangan Design System
-1. **Berakar pada Domain Produk (Product-Specific Intent):** Hindari estetika SaaS generik (mesh gradien ungu/biru, efek *glassmorphism* tebal, *glowing borders*, kartu berulang identik). Tentukan arah visual berbasis kebutuhan tugas pengguna nyata.
-2. **Hierarki Grayscale First:** Pastikan struktur dan keterbacaan komponen berfungsi sempurna dalam monokrom/hitam-putih sebelum menetapkan palet warna dan dekorasi.
-3. **Pencegahan Over-Decoration:** Komponen harus dirancang fungsional, memuat seluruh variasi status (*loading/empty/error*), memenuhi kontras WCAG AA, dan mematuhi seluruh hukum Anti-Slop di `global-guidelines/ui-and-assets.md`.
+### 1.3 Arsitektur Multi-Node
+- **Global Tokens:** Aturan universal (warna brand, tipografi utama, logo) yang mengikat seluruh node.
+- **Node-Specific Components:** Pemisahan spesifikasi per-node (misal: "Web-Admin" vs "Mobile-App") untuk mencegah kontaminasi rancangan antar-platform.
 
-> **Kewajiban Uji Validasi HTML:** Desain yang dirumuskan di dokumen ini **TIDAK BOLEH** langsung dikoding ke dalam *framework* asli (Flutter, Next.js, SwiftUI, dll.). AI Agent **WAJIB** membuat sketsa purwarupanya terlebih dahulu dalam format HTML sederhana di direktori `nodes/[nama-node]/prototypes/` dari proyek yang bersangkutan.
-## [GANTI_DENGAN_NAMA_PROYEK]
+---
 
-> ⚠️ AI Agent: Hapus placeholder judul di atas dan ganti dengan nama proyek atau ekosistem yang sebenarnya.
+## 2. Alur Perumusan & Validasi Prototipe
 
-*(Detail dari komponen, warna, tipografi, dan panduan Design System spesifik untuk aplikasi atau ekosistem ini akan ditambahkan di bawah batas ini)*
+### 2.1 Protokol Perumusan Design System
+1. **Definisi Niat:** Gali preferensi estetika, target audiens, dan batas fungsi produk nyata.
+2. **Pertanyaan Spesifik:** AI wajib mengonfirmasi palet warna, geometri sudut, mode gelap/terang, dan tipografi sebelum menyusun dokumen.
+3. **Doktrin Anti-Slop:** Berakar pada domain produk (hindari mesh ungu/biru, glassmorphism tebal, card soup), utamakan hierarki grayscale, dan hapus dekorasi non-fungsional.
+
+### 2.2 Validasi Prototipe Wajib (Pre-Coding Gate)
+1. **[TERLARANG]** Menulis kode antarmuka pada framework produksi (Flutter, Next.js, SwiftUI) sebelum validasi visual.
+2. **[WAJIB]** Rancang purwarupa interaktif (*Single-File HTML*) di `nodes/[nama-node]/prototypes/` sebelum koding produksi.
+
+---
+
+## 3. Spesifikasi Proyek: [GANTI_DENGAN_NAMA_PROYEK]
+
+> **Instruksi AI Agent:** Hapus placeholder ini dan cantumkan spesifikasi token desain, palet warna, tipografi, dan komponen proyek di bawah garis ini.
+
+---
+
+*(Detail token desain, palet warna, tipografi, dan panduan spesifik proyek dicatatkan di sini)*

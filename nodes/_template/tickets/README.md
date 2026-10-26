@@ -1,66 +1,92 @@
 # Local Tickets Directory (`tickets/`)
 
-Direktori ini berfungsi sebagai pusat komando atau sumber kebenaran (*source of truth*) lokal untuk manajemen tugas proyek Anda. File *markdown* di dalam folder ini nantinya dapat disinkronisasikan ke **GitHub Projects**, sehingga Anda bisa mengontrol arus tugas secara lincah melalui AI di ranah lokal (*offline first*), sekaligus menikmati visualisasi papan *Kanban* secara nyata di antarmuka GitHub.
-
-## Aturan Penamaan File Tiket
-Setiap file tiket baru yang dibuat di dalam direktori ini **WAJIB** dikonstruksikan menggunakan pedoman nama berikut:
-`TICKET-[NOMOR]-[JUDUL-SINGKAT-KEBAB-CASE].md`
-**Contoh Valid:** `TICKET-01-login-form.md`, `TICKET-02-api-integration.md`
-
-## Sumber Tiket (Backlog Source of Truth)
-Anda (AI Agent) **DILARANG KERAS** mengarang, mencetuskan, atau mendesain tiket tugas baru secara sembarangan di luar kendali pengguna. Setiap instruksi untuk mendesain file tiket baru di folder ini **WAJIB MUTLAK** diimpor wujudnya dari *backlog* yang telah disetujui sebelumnya di dalam peta jalan `docs/development-planning.md`.
-
-## Kebijakan Pemisahan Tiket UI Prototyping & Implementasi
-Apabila Anda diinstruksikan untuk membuat tiket yang berkaitan dengan *UI Slicing*, Anda **WAJIB** mengonfirmasi kepada pengguna apakah desain antarmukanya sudah tersedia atau perlu dirancang melalui prototipe HTML di direktori `prototypes/`. Jika pengguna memilih mekanisme *prototyping*, Anda **WAJIB MEMISAHKAN** antara tiket pembuatan prototipe desain dengan tiket implementasi kode ke dalam sistem utama. Jangan pernah menggabungkan kedua fase ini dalam satu tiket tugas.
-
-## Konsep "AI Execution Log & Output"
-Ini adalah fitur ruang kerja reflektif mandiri bagi AI di dalam setiap *file* tiket. Ketika AI Agent menerima tugas pengerjaan atas sebuah tiket, ia dilarang hanya berfokus mengubah baris kode program saja. AI Agent **wajib** kembali ke file tiket ini dan merangkum jejak kerjanya di seksi khusus tersebut.
-
-Pada bagian *AI Execution Log*, AI bertugas:
-1.  **Mencatat jejak modifikasi teknis:** File apa saja yang dibuat/dihapus/diubah.
-2.  **Menulis landasan keputusan desain:** Mengapa metode, variabel, atau kerangka kerja arsitektur A dipilih alih-alih B.
-3.  **Memetakan temuan tak terduga:** Mencatat peringatan atau potensi isu keamanan (*security flaw*) jika ditemukan.
-Dengan konsep log ini, tiket Anda tidak hanya mendokumentasikan apa yang *harus* dikerjakan, tetapi juga terekam jelas jejak tentang *bagaimana* itu dieksekusi. Layaknya riwayat komentar *developer* dalam tiket JIRA nyata.
+> **[PRINSIP UTAMA]** Pusat manajemen tugas lokal (*offline-first task management*) yang berfungsi sebagai sumber kebenaran pengerjaan tugas dan disinkronkan ke GitHub Projects.
 
 ---
 
-## Boilerplate (Templat) Pembuatan Tiket Baru
+## 1. Tata Kelola & Kebijakan Tiket
 
-Setiap AI Agent atau pengguna yang ingin membuat instruksi tiket baru **WAJIB MUTLAK** menyalin dan mematuhi struktur *markdown* di bawah ini.
-*(Catatan Khusus: Apabila jenis instruksinya adalah perbaikan kegagalan sistem, Anda **wajib menggunakan format templat yang lebih spesifik** yang berlokasi di `../../global-docs/templates/bug_report_template.md` ketimbang format standar fitur di bawah).*
+### 1.1 Konvensi Penamaan Berkas
+Setiap berkas tiket baru WAJIB mengikuti format:
+`TICKET-[NOMOR]-[JUDUL-SINGKAT-KEBAB-CASE].md`
+- **Contoh Valid:** `TICKET-01-login-form.md`, `TICKET-02-api-integration.md`
+
+### 1.2 Sumber Tiket (Backlog Ground Truth)
+1. **[TERLARANG]** Mengarang atau membuat tiket baru di luar kendali pengguna.
+2. **MODE 1:** Tiket wajib merujuk langsung pada backlog di `docs/development-planning.md`.
+3. **MODE 2:** Tiket dibuat secara retrospektif setelah menyelesaikan prompt developer.
+
+### 1.3 Kebijakan Pemisahan UI Prototyping & Implementasi
+1. Untuk tugas *UI Slicing*, konfirmasikan apakah desain sudah tersedia atau perlu dirancang via prototipe HTML di `prototypes/`.
+2. Jika menggunakan prototipe, tiket pembuatan prototipe WAJIB DIPISAHKAN dari tiket implementasi produksi ke dalam codebase.
+
+### 1.4 Protokol AI Execution Log & Output
+Pada setiap tiket, AI Agent WAJIB mencatat jejak kerja teknis pada seksi khusus di bagian bawah:
+1. Rangkuman modifikasi file dan landasan keputusan arsitektur.
+2. **Bukti Eksekusi (Evidence - O-03):** Potongan perintah dan output terminal aktual (pengujian lulus, metrik suite, pratinjau visual jika UI). Dilarang mengklaim PASS berdasarkan asumsi!
+3. **Verifikasi Delivery Gate:** Evaluasi kelulusan 4 Pilar (Higienitas Kode, Hard Gate, Must Probe Loop, dan Tata Kelola).
+4. **Daftar Belum Diuji (Untested List - O-16):** Deklarasi transparan skenario yang belum diuji beserta alasannya.
+
+---
+
+## 2. Format Baku Pembuatan Tiket (Boilerplate Template)
+
+Salin struktur Markdown berikut saat membuat tiket baru. *(Catatan: Untuk laporan bug, wajib gunakan `../../global-docs/templates/bug_report_template.md`).*
 
 ```markdown
 ---
 id: TICKET-[NOMOR]
 title: [Judul Singkat Tugas]
-status: Todo # Siklus Transisi Valid: Todo -> In Progress -> Done
+status: Todo # Siklus Valid: Todo -> In Progress -> Done
 priority: High # Siklus Valid: Low, Medium, High
 labels: [Frontend, Backend, Feature, Bug, dsb]
 ---
 
 # Deskripsi
-[Tuliskan latar belakang instruksi, masalah, atau fitur yang ingin dibangun secara mendetail. AI Agent akan menginterpretasikan dan mengeksekusi kemauan Anda berdasarkan teks di sini.]
+[Latar belakang instruksi, masalah teknis, atau fitur yang akan dibangun secara mendetail.]
 
 ## Acceptance Criteria (Kriteria Penerimaan)
-*Daftar spesifikasi mutlak (checklists) yang harus terpenuhi agar tiket ini sah dianggap berstatus selesai (Definition of Done).*
 - [ ] [Kriteria 1]
 - [ ] [Kriteria 2]
 - [ ] [Kriteria 3]
 
 ## Target Lingkup File (Affected Files)
-*Daftar path file yang diinstruksikan atau berpotensi diubah sebagai referensi utama eksekusi AI.*
 - `path/ke/file.ext`
 
 ---
 
 ## AI Execution Log & Output
-*⚠️ Peringatan untuk AI Agent: Bagian ini KHUSUS diisi oleh Anda SAAT dan SETELAH mengeksekusi tiket ini.*
+*Peringatan untuk AI Agent: Bagian ini WAJIB diisi SAAT dan SETELAH mengeksekusi tiket.*
 
 - **Langkah Teknis Tereksekusi:**
   1. ...
   2. ...
 - **Ringkasan File Terpengaruh:**
   - `path/ke/file/...`
-- **Catatan & Keputusan Arsitektural (Jika Ada):**
+- **Catatan & Keputusan Arsitektural:**
   - ...
+
+### Bukti Eksekusi & Pengujian (Evidence - O-03)
+- **Perintah Pengujian:** `npm run test` / `pytest` / dll.
+- **Output Terminal:**
+  ```text
+  [Salin ringkasan output tes terminal, misal: PASS path/to/test (X tests passed)]
+  ```
+
+### Verifikasi Delivery Gate (Wajib Sebelum Done)
+- **Pilar 1: Higienitas Kode & Data (CG-1 s/d CG-5):** PASS (Zero-comment, no fallback/mock, no magic numbers, no direct DDL, safe file ops)
+- **Pilar 2: Hard Gate Testing (HG-1 s/d HG-4):** PASS (Bukan DB prod, ada bukti konkret, tanpa pelonggaran tes, repositori bersih)
+- **Pilar 3: Must Probe Status (MP-1 s/d MP-7):**
+  - O-07 (Fail on Old Code): [PASS / N/A jika fitur baru] - Bukti: [pesan error tes di kode lama]
+  - O-08 (Edge Case Atlas): PASS (Sumbu: Who, How much, When, State, Input)
+  - O-09 (Damage Assessment): [PASS / Bersih / N/A] - Catatan: [kondisi data lama]
+  - O-10 (Full Suite Metrics): PASS - [misal: 100/100 passed, coverage 100%]
+  - O-11 (Real Thing Driven): PASS - [misal: diuji via CLI / browser]
+  - O-12 (Shipping Env Check): PASS
+  - Hunt Loop Final Round: PASS (0 temuan baru di putaran terakhir)
+- **Pilar 4: Tata Kelola & Sinkronisasi:**
+  - Graphify Update: PASS (dijalankan di codebase node asli)
+  - CHANGELOG.md: PASS (diperbarui di baris teratas)
+  - Commit Message Sanity: PASS (steril dari istilah orchestrator/tiket)
+  - O-16 Untested List: [Sebutkan hal yang belum sempat diuji beserta alasannya]
 ```

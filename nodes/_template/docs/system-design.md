@@ -1,30 +1,50 @@
-# System Design
+# System Design Guide & Architecture Template
 
-## Apa itu System Design
-System Design adalah dokumen teknis komprehensif yang menjelaskan arsitektur perangkat lunak, tumpukan teknologi (*tech stack*), pola desain (*design patterns*), struktur *database*, serta cara berbagai komponen sistem saling berintegrasi. Jika PRD berfokus pada "apa" yang akan dibangun untuk pengguna, System Design berfokus secara mendalam pada "bagaimana" sistem tersebut akan dibangun dari sisi rekayasa perangkat lunak (*software engineering*) agar efisien, aman, dan dapat diskalakan (*scalable*).
+> **[PRINSIP UTAMA]** System Design adalah cetak biru arsitektur teknis (*architectural blueprint*) yang menetapkan batasan rekayasa perangkat lunak, tumpukan teknologi, dan pola desain agar kode yang dihasilkan AI Agent konsisten, aman, dan dapat diskalakan.
 
-Dalam pendekatan *Vibe Coding*, System Design memegang peran krusial sebagai "cetak biru arsitektur" bagi AI Agent. Dokumen ini menjadi batasan teknis (*technical constraints*) agar AI tidak membuat keputusan struktural secara sembarangan saat menulis kode. Dengan adanya acuan ini, seluruh modul, komponen, dan fungsi yang di-*generate* oleh AI akan selalu mematuhi satu standar arsitektur yang sama (misalnya, *Clean Architecture*, *MVC*, atau *MVVM*), sehingga basis kode tetap rapi dan terstruktur.
+---
 
-Secara rinci, sebuah dokumen System Design wajib memuat komponen-komponen berikut:
-*   **Arsitektur Perangkat Lunak (*Software Architecture*):** Pola dasar yang akan diterapkan secara konsisten pada seluruh proyek (contoh: *Clean Architecture*, *Microservices*, *MVVM*).
-*   **Struktur Direktori (*Folder Structure*):** Pemetaan standar untuk pengorganisasian *folder* dan aturan penempatan jenis-jenis *file* (seperti *models, views, controllers, services*).
-*   **Tumpukan Teknologi (*Tech Stack* & Dependensi):** Bahasa pemrograman, *framework*, *library*, versi SDK, serta alat pendukung (*tools*) lain yang menjadi prasyarat proyek.
-*   **Logika & Alur Komponen (Flowchart):** Diagram alur kerja algoritma spesifik *node* ini. Anda **WAJIB MUTLAK** memvisualisasikan alur kerja komponen utamanya menggunakan PlantUML. Simpan file sebagai `docs/diagrams/flowchart.puml` secara eksplisit lalu tautkan ke sini. Jika *node* ini adalah aplikasi bertipe *Game Engine*, Anda **WAJIB** menggantinya dengan *Micro State Diagram* (seperti alur *Player State*) menggunakan PlantUML dan simpan di `docs/diagrams/state-diagram.puml`.
-*   **Skema Data (*Data Modeling*):** Rancangan dan representasi struktur data yang digunakan. Bagian ini wajib dirincikan ke dalam sub-komponen berikut:
-    *   **ERD (*Entity-Relationship Diagram*):** Jika aplikasi ini memuat penyimpanan basis data (*Backend/Fullstack*), Anda **WAJIB** membuat rancangan tabel, relasi, dan tipe data menggunakan PlantUML. Simpan file sebagai `docs/diagrams/erd.puml` secara eksplisit dan tautkan ke sini.
-    *   **Standar Datetime & Basis Data:** Saat mendefinisikan kolom tanggal/waktu pada skema basis data, Anda **WAJIB** memilih dan mendokumentasikan salah satu opsi baku (Opsi 1: Epoch Millis / `BIGINT` atau Opsi 2: Timestamp with Timezone UTC / `TIMESTAMPTZ`) secara konsisten dengan merujuk pada `../../global-guidelines/database.md`.
-    *   **Model:** (Jika aplikasi berupa *fullstack* atau *frontend*) mendefinisikan representasi struktur *object* atau entitas secara internal di dalam kode (*state*).
-    *   **DTO (*Data Transfer Object*):** (Jika aplikasi berbasis API) menjelaskan format struktur data (*payload*) yang dikirim atau diterima dalam proses komunikasi *client-server*.
-*   **Desain API (*API Contracts*):** Spesifikasi alur komunikasi antar layanan atau antara *client* dan *server*, mencakup spesifikasi *endpoint*, format *request/response payload*, metode autentikasi, serta wajib menyertakan **contoh konkret dari *Header*, *Request*, dan *Response***.
-*   **Arsitektur Penyebaran (Deployment Architecture):** Rincian mengenai infrastruktur *hosting*, skema penyebaran peladen (*server deployment*), penyedia awan (*cloud provider*), dan sistem *containerization* (seperti Docker) yang digunakan.
-*   **Integrasi Eksternal (*Third-Party Integrations*):** Daftar dan mekanisme integrasi sistem dengan penyedia layanan pihak ketiga (seperti *payment gateway*, analitik, penyimpanan cloud).
-*   **Konfigurasi Lingkungan (Environment Variables):** Daftar nama variabel lingkungan rahasia (.env) yang dibutuhkan oleh arsitektur ini beserta deskripsi utilitasnya.
-*   **Keamanan & Penanganan Eror (*Security & Error Handling*):** Protokol keamanan (*encryption*), pengelolaan autentikasi/otorisasi pengguna, serta standar untuk *error logging* dan validasi data.
+## 1. Arsitektur & Komponen Inti System Design
 
-## Cara Melakukan Generate System Design
-Pastikan dokumen PRD (`../../global-docs/prd.md`) sudah diselesaikan terlebih dahulu. Berikan draf PRD tersebut kepada AI Agent dan instruksikan untuk mengusulkan arsitektur sistem yang paling cocok. Mintalah AI Agent untuk mengajukan pertanyaan-pertanyaan spesifik terkait batasan infrastruktur, preferensi *tech stack*, target performa, skema keamanan, serta struktur data yang Anda inginkan. Berdasarkan diskusi tersebut, AI akan merumuskan dokumen teknis yang menjadi acuan penulisan kode selanjutnya.
+### 1.1 Peran System Design dalam AI Orchestration
+1. **Architectural Blueprint:** Menetapkan "bagaimana" sistem dibangun dari sisi rekayasa perangkat lunak (Clean Architecture, MVVM, MVC, Hexagonal, dll.).
+2. **Batasan Teknis:** Berfungsi sebagai *technical constraints* agar AI tidak membuat keputusan struktural sembarangan dan mencegah pergeseran kode (*code drift*).
 
-> **Kewajiban Referensi Desain:** Sebelum AI Agent mengeksekusi penyusunan antarmuka (UI) berdasarkan arsitektur ini, ia **WAJIB** merujuk pada pedoman visual global di `../../global-docs/design-system.md` agar implementasi logika sesuai dengan pedoman estetika ekosistem.
-## (_Judul Proyek_)
+### 1.2 Sepuluh Komponen Spesifikasi Wajib
+1. **Arsitektur Perangkat Lunak (*Software Architecture*):** Pola arsitektur dasar yang diterapkan secara konsisten pada seluruh proyek.
+2. **Struktur Direktori (*Directory Structure*):** Pemetaan folder standar dan aturan penempatan berkas (`models`, `views`, `controllers`, `services`, `repositories`).
+3. **Tumpukan Teknologi (*Tech Stack* & Dependensi):** Bahasa pemrograman, framework, pustaka, versi SDK, dan perkakas pendukung.
+4. **Logika & Alur Komponen (Flowchart PlantUML):**
+   - **Aplikasi Web / API / Mobile:** Wajib memvisualisasikan alur kerja algoritma komponen utama via PlantUML di `docs/diagrams/flowchart.puml` dan menautkannya ke dokumen.
+   - **Game Engine:** Wajib membuat *Micro State Diagram* (misal: *Player State*) PlantUML di `docs/diagrams/state-diagram.puml`.
+5. **Skema & Pemodelan Data (*Data Modeling*):**
+   - **ERD PlantUML:** Wajib membuat diagram relasi tabel/koleksi di `docs/diagrams/erd.puml` (khusus Backend/Fullstack).
+   - **Standar Datetime Basis Data:** Wajib memilih Opsi 1 (Epoch Millis / `BIGINT`) atau Opsi 2 (Timestamp UTC / `TIMESTAMPTZ`) secara konsisten merujuk [database.md](../../global-guidelines/database.md).
+   - **Model:** Representasi struktur entitas atau objek internal pada kode.
+   - **DTO (*Data Transfer Object*):** Format payload data komunikasi client-server.
+6. **Desain Kontrak API (*API Contracts*):** Spesifikasi endpoint, payload request/response, metode autentikasi, serta contoh konkret *Header*, *Request*, dan *Response*.
+7. **Arsitektur Deployment (*Hosting & Infrastructure*):** Infrastruktur hosting, skema peladen, penyedia cloud, dan kontainerisasi (Docker).
+8. **Integrasi Pihak Ketiga (*Third-Party Services*):** Layanan eksternal seperti payment gateway, analitik, dan penyimpanan cloud.
+9. **Konfigurasi Lingkungan (*Environment Variables*):** Daftar variabel `.env` privat beserta fungsi dan validasi fail-fast merujuk [security.md](../../global-guidelines/security.md) dan [coding.md](../../global-guidelines/coding.md).
+10. **Keamanan & Penanganan Galat (*Security & Error Handling*):** Protokol enkripsi, otentikasi/RBAC, error logging, dan validasi data.
 
-*(Rincian arsitektur, struktur folder, skema data, serta panduan System Design spesifik untuk aplikasi ini akan ditambahkan di bawah batas ini)*
+---
+
+## 2. Alur Perumusan & Validasi Desain
+
+### 2.1 Protokol Perumusan System Design
+1. Pastikan PRD (`../../global-docs/prd.md`) telah disahkan terlebih dahulu.
+2. AI Agent wajib mengajukan pertanyaan teknis terarah (batasan infrastruktur, preferensi stack, target performa, skema keamanan, struktur data) sebelum merumuskan arsitektur.
+
+### 2.2 Keterkaitan dengan Design System
+1. **[WAJIB]** Sebelum AI Agent mengeksekusi antarmuka visual (UI) pada node ini, AI wajib merujuk pedoman visual di `../../global-docs/design-system.md` agar implementasi selaras dengan estetika ekosistem.
+
+---
+
+## 3. Spesifikasi Arsitektur: [GANTI_DENGAN_NAMA_PROYEK]
+
+> **Instruksi AI Agent:** Hapus placeholder judul di atas dan ganti dengan nama proyek atau node aktual. Cantumkan rincian arsitektur teknis, struktur folder, skema data, dan kontrak API node ini di bawah garis pemisah.
+
+---
+
+*(Rincian arsitektur, struktur folder, skema data, serta panduan System Design spesifik untuk node ini dicatatkan di sini)*

@@ -1,18 +1,27 @@
-# Development Planning (Roadmap)
+# Development Planning & Ticket Backlog Guide
 
-## Apa itu Development Planning
-*Development Planning* adalah dokumen peta jalan (*roadmap*) strategis yang menjembatani dokumen makro (seperti PRD dan System Design) dengan tugas-tugas mikro (berupa Tiket). Dokumen ini berfungsi untuk memecah keseluruhan ruang lingkup proyek ke dalam beberapa fase pengerjaan (*Milestones*) yang dapat dikelola secara bertahap.
+> **[PRINSIP UTAMA]** Dokumen peta jalan strategis (*roadmap*) dan gudang antrean tiket (*ticket backlog*) yang menjembatani dokumen makro (PRD dan System Design) dengan tugas mikro (tiket eksekusi).
 
-Dalam pendekatan *Vibe Coding* dengan AI Agent, dokumen ini sangat krusial sebagai "Gudang Antrean Tiket" (*Ticket Backlog*). Daripada meminta pengguna membuat instruksi tiket secara manual satu per satu, AI Agent akan secara proaktif mendaftarkan seluruh kerangka tiket yang dibutuhkan di dalam dokumen ini. 
+---
 
-## Aturan Sinkronisasi Tiket
-1.  **Dilarang Mengarang Tiket (Khusus MODE 1):** Pada Mode 1, AI Agent **DILARANG KERAS** mengarang, mencetuskan, atau membuat file tiket baru di direktori `tickets/` jika tiket tersebut belum tercatat sebagai target *backlog* di dalam file `development-planning.md` ini. Namun pada **MODE 2**, aturan ini dibatalkan dan AI justru diwajibkan membuat tiket retrospektif setelah menyelesaikan setiap *prompt* dari *developer*.
-2.  **Transisi Status:** Jika sebuah tiket dari dokumen ini telah dipindahkan wujudnya menjadi file *markdown* di folder `tickets/`, AI wajib kembali ke dokumen ini dan menandai tiket tersebut sebagai `[CREATED]` atau mencoretnya.
-3.  **Kebijakan UI Slicing & Prototyping:** Khusus untuk tiket yang berkaitan dengan perancangan antarmuka (*UI Slicing*), AI Agent **WAJIB** menanyakan terlebih dahulu kepada pengguna apakah desainnya sudah ada atau perlu di-*generate* via HTML melalui direktori `prototypes/`. Apabila diputuskan menggunakan mekanisme prototipe, maka tiket untuk perancangan prototipe **WAJIB dipisahkan** dari tiket implementasi ke dalam *codebase* proyek.
+## 1. Aturan Sinkronisasi & Kebijakan Tiket
 
-## Struktur Rencana Pengembangan
+### 1.1 Kontrol Pembuatan Tiket Berdasarkan Mode
+1. **MODE 1 (Strict Backlog First):** AI Agent DILARANG KERAS membuat berkas tiket baru di `tickets/` jika tiket tersebut belum tercatat sebagai target backlog di dokumen ini.
+2. **MODE 2 (Retrospective per Prompt):** Aturan backlog dibatalkan; AI Agent diwajibkan membuat tiket retrospektif setelah menyelesaikan setiap prompt dari developer.
 
-Setiap fase wajib diuraikan dengan mencantumkan gol utama (*objective*) dan daftar antrean tiket yang akan dibuat ke depannya.
+### 1.2 Transisi Status Backlog
+1. **[WAJIB]** Saat tiket dari backlog ini dipindahkan wujudnya menjadi berkas markdown di `tickets/TICKET-XX.md`, ubah status tiket pada dokumen ini menjadi `[CREATED]` atau coret item tersebut.
+
+### 1.3 Kebijakan UI Slicing & Prototyping
+1. **Konfirmasi Desain:** Untuk tiket perancangan antarmuka (*UI Slicing*), AI Agent wajib menanyakan kepada pengguna apakah desain sudah tersedia atau perlu dirancang via HTML di `prototypes/`.
+2. **Pemisahan Tiket:** Jika menggunakan mekanisme prototipe, tiket perancangan prototipe WAJIB dibuat terpisah dari tiket implementasi produksi ke dalam codebase.
+
+---
+
+## 2. Struktur Rencana Pengembangan (Milestones)
+
+Setiap fase wajib diuraikan dengan mencantumkan tujuan utama (*objective*) dan daftar antrean tiket:
 
 ### Fase 1: [Nama Fase, misal: Inisialisasi & Autentikasi]
 - **Tujuan:** [Jelaskan target pencapaian di fase ini]
@@ -27,6 +36,10 @@ Setiap fase wajib diuraikan dengan mencantumkan gol utama (*objective*) dan daft
 
 ---
 
-## (_Judul Proyek_)
+## 3. Peta Jalan Proyek: [GANTI_DENGAN_NAMA_PROYEK]
 
-*(Peta jalan pengembangan dan rincian backlog tiket spesifik untuk proyek ini akan disusun oleh AI Agent di bawah batas ini)*
+> **Instruksi AI Agent:** Hapus placeholder judul di atas dan ganti dengan nama proyek atau node aktual. Susun peta jalan pengembangan dan rincian backlog tiket spesifik di bawah garis pemisah ini.
+
+---
+
+*(Peta jalan pengembangan dan rincian backlog tiket spesifik untuk proyek/node ini dicatatkan di sini)*

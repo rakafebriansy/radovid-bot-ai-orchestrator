@@ -1,83 +1,113 @@
 # CHANGELOG
 
-Changelog berfungsi sebagai catatan riwayat perubahan untuk proyek ini. Tujuan dari changelog ini adalah untuk melacak semua modifikasi, penambahan, dan perbaikan yang dilakukan secara terstruktur agar mudah dipahami oleh seluruh tim.
+> **[PRINSIP UTAMA]** Catatan riwayat pembaruan sistem (*Single Source of Truth*) untuk melacak seluruh modifikasi, penambahan fitur, dan perbaikan secara terstruktur.
 
-## Kategori Perubahan
+---
 
-Setiap entri log perubahan harus dikategorikan berdasarkan jenis file atau area yang diubah. Kategori-kategori tersebut terbagi menjadi:
+## 1. Aturan & Standar Pencatatan
 
-*   **Guideline: <judul>**: Perubahan atau penambahan pada dokumen panduan (guideline).
-*   **PRD**: Perubahan pada dokumen Product Requirements Document (PRD).
-*   **Design System**: Pembaruan atau modifikasi yang berkaitan dengan Design System.
-*   **System Design**: Perubahan pada arsitektur atau dokumen System Design.
-*   **Development Planning: <nomor>**: Pembaruan yang terkait dengan perencanaan pengembangan (Development Planning).
-*   **Ticket: <nomor>**: Perbaikan atau penambahan fitur yang merujuk pada tiket tertentu.
-*   **Prototype: <judul>**: Pembaruan atau pembuatan prototipe desain/aplikasi.
-*   **Implementation**: Implementasi coding pada folder yang dituju (harus menyertakan penjelasan detail mengenai apa saja yang diubah di dalam folder project).
+### 1.1 Kategori Perubahan
+Setiap entri wajib diklasifikasikan ke dalam salah satu kategori:
+- **`Guideline: <judul>`**: Modifikasi atau penambahan pada berkas pedoman (`guidelines/`).
+- **`PRD`**: Pembaruan dokumen Product Requirements Document.
+- **`Design System`**: Pembaruan spesifikasi desain visual dan token.
+- **`System Design`**: Pembaruan arsitektur sistem dan diagram teknis.
+- **`Development Planning: <nomor>`**: Pembaruan peta jalan atau antrean tiket.
+- **`Ticket: <nomor>`**: Pengerjaan fitur atau perbaikan berbasis tiket spesifik.
+- **`Prototype: <judul>`**: Pembuatan atau pembaruan purwarupa antarmuka HTML.
+- **`Implementation`**: Perubahan kode sumber aplikasi. Wajib menggunakan salah satu tag awalan:
+  - `[Added]`: Fitur, dokumen, atau konfigurasi baru.
+  - `[Changed]`: Penyesuaian fungsionalitas, logika, atau dokumen eksisting.
+  - `[Fixed]`: Perbaikan kelemahan, galat (*bug*), atau kesalahan sintaksis.
+  - `[Removed]`: Eliminasi fitur, kode, atau pedoman usang (*deprecated*).
 
-Khusus untuk kategori **Implementation**, penjelasan pada kolom "Perubahan" **wajib** mencantumkan salah satu tag status spesifik berikut di awal kalimatnya:
-*   `[Added]`: Penambahan fitur, dokumen, atau konfigurasi baru.
-*   `[Changed]`: Modifikasi atau penyesuaian pada fungsionalitas, logika, atau dokumen yang sudah ada.
-*   `[Fixed]`: Perbaikan atas suatu kelemahan, galat (*bug*), atau kesalahan *syntax*.
-*   `[Removed]`: Penghapusan fitur, pedoman, atau kode usang (*deprecated*).
+### 1.2 Ketentuan Urutan & Format Baku
+1. **Urutan Kronologis Terbalik (*Reverse-Chronological*):** Entri terbaru WAJIB diletakkan di baris **PALING ATAS** daftar log (tepat di bawah judul bagian log). DILARANG menambahkan entri di bagian terbawah dokumen.
+2. **Cakupan Universal:** Wajib mencatat SEMUA kategori perubahan, bukan hanya modifikasi kode (`Implementation`).
+3. **Template SSoT:** Wajib mematuhi format baku pada `../../global-docs/templates/changelog_entry_template.md`.
 
-## Format Changelog
+---
 
-Setiap penambahan log versi terbaru **WAJIB MUTLAK** diletakkan di baris **PALING ATAS** daftar, tepat di bawah judul "Log Perubahan" (urutan *descending* / *reverse-chronological*). AI **DILARANG KERAS** menambahkan log baru di baris terbawah. Anda **WAJIB** mencatat SEMUA kategori perubahan secara disiplin, bukan hanya modifikasi kode (`Implementation`).
+## 2. Log Perubahan: [GANTI_DENGAN_NAMA_PROYEK]
 
-> ⚠️ **Satu-satunya Format yang Sah (Single Source of Truth):**
-> AI Agent dilarang mengarang format changelog sendiri. Anda **WAJIB MUTLAK** menyalin dan mematuhi struktur baku yang terdapat pada berkas referensi berikut:
-> `../../global-docs/templates/changelog_entry_template.md`
+> **[PERINGATAN AI AGENT]** Tambahkan entri log baru tepat di bawah garis pemisah ini. Dilarang menambahkan log di baris paling bawah!
 
-## Log Perubahan (_Judul Proyek_)
+---
 
-*(⚠️ PERHATIAN AI AGENT: TAMBAHKAN ENTRI LOG BARU ANDA TEPAT DI BAWAH BARIS INI. JANGAN DI PALING BAWAH DOKUMEN!)*
+### [2026-10-26 21:35:00] - Refactor: Comprehensive Hierarchy Restructure & Token Optimization
+> **Trigger:** Prompt Driven | **Branch:** `main` | **Repo:** `ai-orchestrator-template`
+- **Konteks:** Restrukturisasi hierarki numerik terstandarisasi dan optimasi efisiensi token di seluruh berkas orchestrator.
+- **Perubahan:**
+  - `[Changed]` Restrukturisasi total 15 berkas pedoman global (`coding.md`, `ui-and-assets.md`, `testing.md`, `safe-file-operations.md`, `version-control.md`, `database.md`, `security.md`, `error-handling.md`, `pipeline.md`, `deployment.md`, `dependencies.md`, `localization.md`, `delivery-gate.md`, `edge-case-atlas.md`, `README.md`) ke format hierarki numerik bertingkat bebas emoji non-ASCII (0 non-ASCII).
+  - `[Changed]` Optimasi dokumen fondasi global (`prd.md`, `design-system.md`, `LEARN.md`, serta template di `global-docs/templates/`).
+  - `[Changed]` Restrukturisasi direktori `nodes/_template/` (`main.md`, `system-design.md`, `development-planning.md`, `tickets/README.md`, `prototypes/README.md`, `hunt/README.md`, `retrospectives/README.md`, `project-context.md`, `CHANGELOG.md`).
+  - `[Changed]` Merampingkan `README.md` root (-48% token) dengan memadatkan prompt 4 Fase tanpa kehilangan satu pun langkah instruksi.
+  - `[Added]` Menambahkan `.gitignore` untuk mengecualikan berkas referensi `clone/` dan metadata OS.
+- **Path File:** `README.md`, `.gitignore`, `global-guidelines/*`, `global-docs/*`, `nodes/_template/*`
+
+### [2026-10-26 14:22:00] - Guideline: Relentless Testing Integration (Hunt Loop, Delivery Gate, & Edge Case Atlas)
+> **Trigger:** Prompt Driven | **Branch:** `main` | **Repo:** `ai-orchestrator-template`
+- **Konteks:** Integrasi metodologi testing ketahanan lanjutan (Hunt Loop, Delivery Gate, dan Edge Case Atlas) ke dalam orchestrator.
+- **Perubahan:**
+  - `[Added]` Pedoman `delivery-gate.md` (4 Pilar: Higienitas Kode/Data, Hard Gate Testing, Must Probe Loop, Tata Kelola), `edge-case-atlas.md` (9 Sumbu Kasus Ekstrem), `global-docs/templates/hunt-findings.md`, dan direktori `nodes/_template/hunt/`.
+  - `[Changed]` Mengaugmentasi `global-guidelines/testing.md` dengan Hunt Loop 7 Langkah, Evidence Policy (O-03), pembuktian tes gagal di versi lama (O-07), Damage Assessment (O-09), dan Untested List (O-16).
+  - `[Changed]` Memperbarui SOP E.6, E.8, dan C.3 pada `nodes/_template/main.md`, memperkaya boilerplate AI Execution Log pada `nodes/_template/tickets/README.md`, menyempurnakan `bug_report_template.md`, dan menambahkan hook Hunt Loop pada prompt eksekusi Fase 3 di `README.md`.
+- **Path File:** `global-guidelines/delivery-gate.md`, `global-guidelines/edge-case-atlas.md`, `global-guidelines/testing.md`, `nodes/_template/main.md`, `nodes/_template/tickets/README.md`, `global-docs/templates/bug_report_template.md`, `global-docs/templates/hunt-findings.md`, `nodes/_template/hunt/README.md`, `README.md`, `nodes/_template/CHANGELOG.md`
 
 ### [2026-09-21 13:10:00] - Guideline: LEARN.md Strict Trigger & Project Commit Term Cleanliness
 > **Trigger:** Prompt Driven | **Branch:** `main` | **Repo:** `ai-orchestrator-template`
-- **Konteks:** "tambahkan rules baru untuk LEARN.md agar hanya diisi saat menggunakan template README.md, dan perbaiki kebocoran istilah orchestrator pada commit git milik node/project"
-- **Perubahan:** `[Changed]` Menetapkan kebijakan anti-agresivitas pada `global-docs/LEARN.md` di mana file hanya boleh diisi saat menggunakan template baku FASE 4 dari `README.md`, dan dilarang keras diisi pada instruksi biasa. `[Changed]` Menghapus kontradiksi kewajiban referensi tiket pada pesan commit di `global-guidelines/version-control.md`, memperbarui `global-docs/templates/commit_message_template.md` dengan contoh terpisah yang bersih untuk Project/Node vs Orchestrator, serta menegaskan larangan istilah orchestrator/tiket pada commit node di `nodes/_template/main.md` dan `README.md`.
+- **Konteks:** Penegakan aturan anti-agresivitas LEARN.md dan pembersihan kebocoran istilah orchestrator pada commit Git project/node.
+- **Perubahan:**
+  - `[Changed]` Menetapkan kebijakan anti-agresivitas pada `global-docs/LEARN.md` (hanya aktif via template FASE 4 README.md; dilarang keras pada instruksi biasa).
+  - `[Changed]` Memperbarui `global-guidelines/version-control.md` dan `global-docs/templates/commit_message_template.md` dengan aturan pemisahan steril pesan komit: Project/Node 100% bebas istilah orchestrator vs Orchestrator scope.
+  - `[Changed]` Menyelaraskan SOP `nodes/_template/main.md` dan `README.md`.
 - **Path File:** `global-docs/LEARN.md`, `global-guidelines/version-control.md`, `global-docs/templates/commit_message_template.md`, `nodes/_template/main.md`, `README.md`, `nodes/_template/CHANGELOG.md`
 
 ### [2026-09-16 21:22:00] - Guideline: Mandatory Graphify Utilization & Auto-Generation Standard
 > **Trigger:** Prompt Driven | **Branch:** `main` | **Repo:** `ai-orchestrator-template`
-- **Konteks:** "ubah kalimatnya, jika ada graphify ditemukan di directory node, harus pakai. jika tidak ditemukan, maka generate lah"
-- **Perubahan:** `[Changed]` Menetapkan kebijakan mutlak untuk Graphify: AI **WAJIB** memakai CLI `graphify query` untuk navigasi kode, pelacakan pemanggil/dependensi, dan penyusunan Implementation Plan jika direktori `.graphify` ditemukan di direktori project/node (*Path Codebase*). Jika direktori `.graphify` TIDAK ditemukan, AI **WAJIB** men-generate-nya terlebih dahulu dengan menjalankan `graphify build` di dalam *Path Codebase* node tersebut. `[Added]` Menegaskan aturan larangan mutlak pembatas direktori bahwa folder `.graphify`, pembuatan (`graphify build`), maupun pembaruan (`graphify update`) DILARANG KERAS dieksekusi di dalam repositori orchestrator.
+- **Konteks:** Standarisasi penggunaan CLI Graphify untuk navigasi kode dan auto-generation graf dependensi.
+- **Perubahan:**
+  - `[Changed]` Menetapkan kewajiban pemakaian CLI `graphify query` untuk navigasi kode, pelacakan pemanggil, dan Implementation Plan jika `.graphify` ditemukan di Path Codebase node.
+  - `[Changed]` Jika `.graphify` belum ada, AI wajib men-generate via `graphify build` di Path Codebase.
+  - `[Added]` Larangan mutlak mengeksekusi build/update graphify di dalam direktori orchestrator.
 - **Path File:** `global-guidelines/coding.md`, `README.md`, `nodes/_template/main.md`, `nodes/_template/CHANGELOG.md`
 
 ### [2026-09-07 17:47:00] - Guideline: Database & Datetime Storage Standard
 > **Trigger:** Prompt Driven | **Branch:** `main` | **Repo:** `ai-orchestrator-template`
-- **Konteks:** "tambahkan panduan di orchestrator, untuk menyimpan datetime di aplikasi database buatlah dua opsi, yakni menggunakan epoch time millis (konversi jam saat ini ke epoch time) dan menyimpan timestamp + timezone utc di database (konversi jam saat ini di timezone user ke utc, baru di insert)"
-- **Perubahan:** `[Added]` Menambahkan pedoman universal `database.md` yang menetapkan standar penyimpanan datetime di basis data dengan dua opsi baku (Opsi 1: Epoch Time Milliseconds / `BIGINT` dan Opsi 2: Timestamp with Timezone UTC / `TIMESTAMPTZ` / ISO-8601 UTC) beserta aturan konversi, tipe data, skenario penggunaan, dan matriks perbandingan. Memperbarui `global-guidelines/README.md`, `nodes/_template/main.md`, dan `nodes/_template/docs/system-design.md` dengan cross-reference ke pedoman baru tersebut.
+- **Konteks:** Penetapan dua opsi baku penyimpanan datetime pada database aplikasi.
+- **Perubahan:**
+  - `[Added]` Pedoman universal `database.md` (Opsi 1: Epoch Millis / `BIGINT` dan Opsi 2: Timestamp UTC / `TIMESTAMPTZ` / ISO-8601 UTC).
+  - `[Changed]` Memperbarui cross-reference pada `global-guidelines/README.md`, `nodes/_template/main.md`, dan `nodes/_template/docs/system-design.md`.
 - **Path File:** `global-guidelines/database.md`, `global-guidelines/README.md`, `nodes/_template/main.md`, `nodes/_template/docs/system-design.md`, `nodes/_template/CHANGELOG.md`
 
 ### [2026-09-02 08:14:00] - Guideline: Safe File Operations Policy
 > **Trigger:** Prompt Driven | **Branch:** `main` | **Repo:** `ai-orchestrator-template`
-- **Konteks:** "saya seringkali kehilangan kesempatan me-review ketika mengiyakan ai agent untuk menggunakan: 1. scripts (perubahan massal) dengan js, python, dll 2. sed -i ... 3. git checkout <file> 4. git restore <file> berikan batasan untuk penggunaan hal tersebut"
-- **Perubahan:** `[Added]` Menambahkan pedoman `safe-file-operations.md` yang melarang operasi file destruktif (mass change scripts, in-place edit seperti `sed -i`, `git checkout <file>`, `git restore <file>`, `git clean`, `git stash drop`, `write_to_file` overwrite) serta mewajibkan alternatif reversible. Memperbarui `version-control.md`, `error-handling.md`, dan `nodes/_template/main.md` dengan cross-reference ke pedoman baru tersebut.
+- **Konteks:** Pencegahan eksekusi perintah destruktif tanpa kesempatan review pengguna.
+- **Perubahan:**
+  - `[Added]` Pedoman `safe-file-operations.md` melarang script mutasi massal, edit in-place (`sed -i`), `git checkout <file>`, `git restore <file>`, `git clean`, `git stash drop`, dan `write_to_file` overwrite.
+  - `[Changed]` Menyelaraskan rujukan di `version-control.md`, `error-handling.md`, dan `nodes/_template/main.md`.
 - **Path File:** `global-guidelines/safe-file-operations.md`, `global-guidelines/error-handling.md`, `global-guidelines/version-control.md`, `nodes/_template/main.md`, `nodes/_template/CHANGELOG.md`
 
-### [2026-07-30 13:10] - Guideline: Comprehensive Audit Resolution
+### [2026-07-30 13:10:00] - Guideline: Comprehensive Audit Resolution
 > **Branch:** `main` | **Repo:** `ai-orchestrator-template`
-- **Instruksi User:** "periksalah seluruh ai-orchestrator-template untuk potensi halu atau inefisiensi oleh AI"
-- **Perubahan:** `[Fixed]` Menyelesaikan 16 temuan audit mencakup perbaikan halusinasi (H-01 s/d H-05), optimasi token (I-01 s/d I-05), penjernihan kontradiksi (A-01 s/d A-04), dan penutupan celah kepatuhan (C-01 s/d C-02, M-01 s/d M-03).
+- **Konteks:** Audit komprehensif eliminasi halusinasi dan inefisiensi orchestrator.
+- **Perubahan:** `[Fixed]` Menyelesaikan 16 temuan audit (halusinasi H-01 s/d H-05, inefisiensi token I-01 s/d I-05, kontradiksi A-01 s/d A-04, kepatuhan C-01 s/d C-02 & M-01 s/d M-03).
 - **Path File:** `global-docs/prd.md`, `global-docs/design-system.md`, `global-docs/templates/README.md`, `global-guidelines/coding.md`, `global-guidelines/testing.md`, `global-guidelines/ui-and-assets.md`, `global-guidelines/version-control.md`, `nodes/_template/CHANGELOG.md`, `nodes/_template/main.md`, `nodes/_template/retrospectives/README.md`, `nodes/_template/docs/diagrams/README.md`
 
-### [2026-07-20 18:48] - Enhancement: Node-Level Graphify Integration
+### [2026-07-20 18:48:00] - Enhancement: Node-Level Graphify Integration
 > **Branch:** `main` | **Repo:** `ai-orchestrator-template`
-- **Instruksi User:** "ubahlah pendekatan graphify, jangan dibuat di directory orchestrator melainkan dibuat di directory milik project/node... mintalah cek terlebih dahulu apakah ada graphify di dalam project/node... sebelum melakukan eksekusi/scanning manual"
-- **Perubahan:** Mengubah referensi `graphify build` dan `graphify update` pada root `README.md` dan `nodes/_template/main.md` agar menargetkan direktori spesifik *Path Codebase*. Menambahkan langkah wajib baru di SOP `main.md` (Poin E.2) untuk mengecek ketersediaan `.graphify` demi menghemat *token* sebelum pemindaian manual.
+- **Konteks:** Penataan lokasi direktori graf Graphify pada level codebase node.
+- **Perubahan:** Menyesuaikan referensi `graphify build` dan `update` agar menargetkan direktori Path Codebase lokal node; menambah langkah SOP pengecekan `.graphify` di `main.md`.
 - **Path File:** `README.md`, `nodes/_template/main.md`
 
-### [2026-07-19 22:43] - Guideline: Master Entrypoint & SOP
+### [2026-07-19 22:43:00] - Guideline: Master Entrypoint & SOP
 > **Branch:** `main` | **Repo:** `ai-orchestrator-template`
-- **Instruksi User:** "masukkan aturan ke `nodes/_template/main.md` dan refine lah main md buatlah lebih terstruktur, dan refine lagi terkait hierarki supaya tidak tumpang tindih. berlakukan aturan ke seluruh file di orchestrator template"
-- **Perubahan:** Restrukturisasi total `main.md` menjadi hierarki A-E yang lebih jelas, menambahkan Protokol Pemulihan Konteks (Bagian B), memindahkan aturan Git & Inisiatif Liar ke file pedoman global (`version-control.md` & `error-handling.md`), serta menambahkan keterangan SSoT pada `global-guidelines/README.md`.
+- **Konteks:** Restrukturisasi SOP Master Entrypoint template node.
+- **Perubahan:** Menata hierarki `main.md`, menambah Protokol Pemulihan Konteks, memindahkan aturan Git dan inisiatif liar ke `version-control.md` dan `error-handling.md`.
 - **Path File:** `nodes/_template/main.md`, `global-guidelines/error-handling.md`, `global-guidelines/version-control.md`, `global-guidelines/README.md`
 
-### [2026-07-02 16:58] - Guideline: Main SOP
+### [2026-07-02 16:58:00] - Guideline: Main SOP
 > **Branch:** `main` | **Repo:** `ai-orchestrator-template`
-- **Instruksi User:** "harus tetap auto commit dan setiap auto commit harus berdasarkan ticket, jika instruksi tak memiliki ticket maka harus dibuatkan ticket! tambahkan di @[nodes/_template/main.md]"
-- **Perubahan:** `[SUPERSEDED]` Menambahkan poin ke-7 pada SOP di `main.md` yang mewajibkan auto-commit berbasis tiket. *(Catatan: Aturan ini telah digugurkan. Berdasarkan revisi terbaru di `version-control.md`, AI dilarang keras melakukan auto-commit).*
+- **Konteks:** Inisiasi SOP pembuatan tiket awal.
+- **Perubahan:** `[SUPERSEDED]` SOP inisial penugasan tiket. *(Klausul auto-commit telah digugurkan mutlak oleh regulasi terbaru di `version-control.md`).*
 - **Path File:** `nodes/_template/main.md`
-

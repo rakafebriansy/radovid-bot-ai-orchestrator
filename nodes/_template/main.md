@@ -1,159 +1,142 @@
 # AI Orchestrator: Master Entrypoint
 
-> 🟢 **STATUS MODE SAAT INI:** [PILIH: MODE 1 / MODE 2]
+> **STATUS MODE SAAT INI:** [PILIH: MODE 1 / MODE 2]
+>
+> **[PERINGATAN MASTER]** Ini adalah dokumen pertama yang WAJIB dibaca setiap kali memulai sesi baru atau menerima *Execution Prompt*. Dilarang mengeksekusi instruksi koding sebelum memuat seluruh konteks dari dokumen-dokumen rujukan di bawah ini.
 
-> ⚠️ **PERHATIAN UNTUK AI AGENT:**
-> Ini adalah dokumen pertama yang WAJIB Anda baca setiap kali memulai sesi baru atau menerima *Execution Prompt*. Jangan mengeksekusi instruksi koding pengguna sebelum Anda memahami konteks dari dokumen-dokumen di bawah ini!
-
-Tugas Anda sebagai AI Agent bukanlah sekadar *"code generator"*, melainkan seorang Arsitek Perangkat Lunak. Untuk menjaga konsistensi proyek, Anda **WAJIB** membaca file-file fondasi berikut ke dalam konteks memori Anda.
-
----
-
-## BAGIAN A — BATASAN RUANG LINGKUP
-
-> 🛑 **ANTI-CROSS CONTAMINATION:**
-> Node ini terisolasi! Anda **DILARANG KERAS** memodifikasi file di luar direktori *node* ini (seperti mengedit node lain) atau mengubah file di dalam direktori `global-*` kecuali diinstruksikan secara eksplisit oleh *Execution Prompt Multi-Node*. Fokuslah hanya pada *path* lokal di dalam node ini.
+AI Agent bertindak sebagai Arsitek Perangkat Lunak. Untuk menjaga konsistensi ekosistem, Anda **WAJIB** membaca dokumen fondasi dan mematuhi seluruh batasan berikut ke dalam memori kerja.
 
 ---
 
-## BAGIAN B — PROTOKOL PEMULIHAN KONTEKS (CONTEXT RECOVERY)
+## 1. Batasan Ruang Lingkup & Isolasi Node
 
-> 🔄 **MEKANISME WAJIB BACA ULANG:**
-> Protokol ini adalah mekanisme keselamatan untuk mencegah degradasi kualitas akibat hilangnya konteks (*context loss*) di tengah percakapan panjang.
-
-**Anda WAJIB SECARA OTOMATIS menghentikan sementara eksekusi dan membaca ulang seluruh dokumen ini (`main.md`) beserta file-file referensi yang relevan di dalamnya** jika salah satu kondisi berikut terpenuhi:
-
-1. **Ditegur Pengguna:** Anda ditegur atau dikoreksi oleh pengguna karena melanggar aturan, pedoman, atau konvensi yang sudah ditetapkan di ekosistem ini (seperti melanggar `coding.md`, `design-system.md`, dll).
-2. **Kehilangan Arah:** Anda merasa kebingungan, tidak yakin dengan langkah selanjutnya, atau mulai mengulangi kesalahan yang sama di tengah pengerjaan.
-3. **Inkonsistensi Terdeteksi:** Anda menyadari bahwa output yang Anda hasilkan tidak konsisten dengan keputusan arsitektural atau gaya desain yang sudah ditetapkan sebelumnya di sesi yang sama.
-4. **Sesi Baru atau Konteks Terputus:** Anda memulai sesi percakapan baru, atau percakapan sebelumnya terputus karena batas token atau gangguan jaringan.
-
-**Prosedur Pemulihan:**
-1. Hentikan eksekusi kode yang sedang berjalan.
-2. Baca ulang `main.md` ini secara utuh.
-3. Baca ulang file-file yang relevan dengan tugas saat ini dari **Bagian C** di bawah (minimal: file fondasi yang bersangkutan dan pedoman mutlak terkait).
-4. Laporkan kepada pengguna bahwa Anda telah memulihkan konteks dan siap melanjutkan.
+> **[ATURAN ISOLASI NODE - ANTI-CROSS CONTAMINATION]**
+> Node ini terisolasi! AI Agent **DILARANG KERAS** memodifikasi berkas di luar direktori node ini (mengedit node lain) atau mengubah berkas di dalam direktori `global-*` kecuali diinstruksikan secara eksplisit oleh *Execution Prompt Multi-Node*. Pusatkan eksekusi hanya pada path lokal di dalam node ini.
 
 ---
 
-## BAGIAN C — DAFTAR BACAAN REFERENSI
+## 2. Protokol Pemulihan Konteks (Context Recovery)
 
-### C.1: Dokumen Fondasi (Wajib Dibaca Seluruhnya)
-File-file ini adalah nyawa dari ekosistem proyek ini. Anda harus memahaminya untuk mengetahui fitur global apa yang dibangun dan bagaimana antarmukanya dirancang.
+AI Agent **WAJIB MENGHENTIKAN SEMENTARA EKSEKUSI DAN MEMBACA ULANG** dokumen `main.md` ini beserta seluruh berkas referensi terkait apabila menemui salah satu dari 4 kondisi pemicu:
+1. **Ditegur Pengguna:** Dikoreksi karena melanggar aturan, pedoman, atau konvensi ekosistem (seperti `coding.md`, `design-system.md`, dll.).
+2. **Kehilangan Arah:** Mengalami kebingungan teknis, ragu menentukan langkah, atau mengulang galat yang sama.
+3. **Inkonsistensi Terdeteksi:** Menyadari bahwa keluaran kode tidak selaras dengan keputusan arsitektur atau gaya desain sesi aktif.
+4. **Sesi Baru / Konteks Terputus:** Memulai sesi baru, atau percakapan terputus akibat limit token maupun kendala koneksi.
+
+### Prosedur Pemulihan Bertahap:
+1. Hentikan eksekusi kode yang sedang berjalan seketika.
+2. Baca ulang `main.md` ini secara menyeluruh.
+3. Muat ulang berkas relevan dari Bagian 3 (minimal dokumen fondasi dan pedoman domain terkait).
+4. Laporkan pemulihan konteks kepada pengguna sebelum melanjutkan pengerjaan.
+
+---
+
+## 3. Matriks Bacaan Referensi & Pustaka Pedoman
+
+### 3.1 Dokumen Fondasi (Wajib Dipahami Utuh)
 1. `../../global-docs/prd.md` (Spesifikasi fitur dan alur pengguna global)
 2. `docs/system-design.md` (Arsitektur teknis spesifik node ini)
-3. `../../global-docs/design-system.md` (Aturan UI/UX, warna, tipografi global)
-4. `docs/development-planning.md` (Peta jalan spesifik node ini)
-5. `CHANGELOG.md` (Untuk mengetahui progres terakhir di node ini)
+3. `../../global-docs/design-system.md` (Standar UI/UX, warna, dan tipografi global)
+4. `docs/development-planning.md` (Peta jalan dan backlog tiket spesifik node ini)
+5. `CHANGELOG.md` (Riwayat progres pengerjaan terakhir di node ini)
 
-### C.2: Pedoman Mutlak (Wajib Dibaca Seluruhnya)
-Hukum besi operasional Anda. Pelanggaran terhadap pedoman ini akan merusak integritas sistem.
+### 3.2 Pedoman Mutlak Operasional (Wajib Kepatuhan Penuh)
 1. `../../global-guidelines/error-handling.md` (Aturan *Stop-and-Ask*, larangan inisiatif liar, batas percobaan, *Anti-Slop Debugging*)
-2. `../../global-guidelines/security.md` (Larangan *hardcode API keys*)
-3. `../../global-guidelines/safe-file-operations.md` (Larangan perintah destruktif & *Protokol Izin State Mutation vs Read-Only*)
-4. `../../global-guidelines/coding.md` (Standar Rekayasa Kode *Anti-AI-Slop*, Zero-Comment, Fail-Fast, No Magic Numbers)
-5. `guidelines/project-context.md` (Aturan khusus & hasil pemindaian sistem dari node ini)
+2. `../../global-guidelines/security.md` (Larangan *hardcode secrets*, fail-fast env, sanitasi input)
+3. `../../global-guidelines/safe-file-operations.md` (Larangan perintah destruktif & otorisasi mutasi state vs read-only)
+4. `../../global-guidelines/coding.md` (Standar rekayasa kode, Zero-Comment, Fail-Fast, No Magic Numbers)
+5. `guidelines/project-context.md` (Aturan khusus & hasil pemindaian sistem node ini)
 
-### C.3: Dokumen Kondisional (Baca Saat Dibutuhkan Saja)
-Jangan buang token Anda untuk membaca file ini jika instruksi pengguna tidak berkaitan dengannya.
-*   **Akan menulis atau memodifikasi source code (coding)?** Baca `../../global-guidelines/coding.md`.
-*   **Akan mengedit file secara massal, menjalankan script perubahan, atau menggunakan perintah Git yang memodifikasi file (termasuk `sed`, `git restore`, `git checkout <file>`)?** Baca `../../global-guidelines/safe-file-operations.md`. Pelanggaran terhadap pedoman ini menghilangkan kesempatan review pengguna secara permanen.
-*   **Akan melakukan aktivitas Git (commit, branch, push, pengelolaan tiket)?** Baca `../../global-guidelines/version-control.md`.
-*   **Akan mendeploy aplikasi, mengkonfigurasi CI/CD, atau melakukan rilis/version bump?** Baca `../../global-guidelines/deployment.md` dan `../../global-guidelines/pipeline.md`.
-*   **Akan menulis unit test?** Baca `../../global-guidelines/testing.md` (*No Vanity Testing* & *TDD Workflow*).
-*   **Akan membuat/mengelola dependensi?** Baca `../../global-guidelines/dependencies.md`.
-*   **Akan merancang skema basis data, migrasi, ERD, atau menyimpan data datetime/waktu?** Baca `../../global-guidelines/database.md` (*Larangan Direct DDL di Live DB* & *Datetime Storage Standard*).
-*   **Akan merancang UI, mengelola aset, melakukan slicing pada frontend, atau menambahkan bahasa?** Baca `../../global-guidelines/ui-and-assets.md` (*Standar Anti-AI-Slop UI/UX*, *Visual Review Checklist*) dan `../../global-guidelines/localization.md`.
-*   **Akan membuat sketsa prototipe tampilan baru?** Baca `prototypes/README.md`.
-*   **Akan mengambil, membaca, atau membuat tiket tugas?** Baca `tickets/README.md`.
-*   **Terjebak error yang sama berkali-kali?** Baca `retrospectives/RETROSPECTIVE.md` untuk melihat apakah AI sebelumnya pernah memecahkan masalah ini di node ini.
-*   **Ditugaskan membuat tiket Bug?** Baca `../../global-docs/templates/bug_report_template.md`.
-*   **Ditugaskan membuat deskripsi PR/Commit?** Baca `../../global-docs/templates/pull_request_template.md` & `../../global-docs/templates/commit_message_template.md`.
-*   **Ditugaskan menjawab pertanyaan pengguna seputar implementasi/arsitektur (Q&A)?** Baca dan patuhi protokol di `../../global-docs/LEARN.md` (HANYA diisi jika pengguna menggunakan format template resmi FASE 4 dari `README.md`; DILARANG KERAS mengisi file ini pada instruksi biasa, pertanyaan kasual, atau tugas koding!).
-*   **Pengerjaan & Navigasi Kode (Graphify):** Anda **WAJIB** menggunakan `graphify query` untuk navigasi arsitektur dan pelacakan fungsi/dependensi. Jika direktori `.graphify` belum ada di *Path Codebase*, Anda **WAJIB** men-generate-nya terlebih dahulu via `graphify build` di *Path Codebase*.
-
----
-
-## BAGIAN D — MODE OPERASIONAL
-
-Ekosistem ini beroperasi dalam salah satu dari dua mode. Anda **WAJIB** mengecek **STATUS MODE SAAT INI** di bagian paling atas dokumen ini sebelum bekerja.
-
-- **MODE 1 (Autonomous Planning):** Digerakkan oleh *roadmap*. Anda harus bertanya kepada developer apa yang harus dikerjakan secara garis besar -> Anda memperbarui `development-planning.md` dan mencetak tiket-tiket kosong yang belum dicentang -> Anda berhenti dan meminta koreksi developer -> Jika disetujui, Anda mengeksekusi semua tiket tersebut secara berurutan dan mencentangnya bila berhasil.
-- **MODE 2 (Prompt-Driven):** Digerakkan oleh instruksi per-langkah dari developer. Developer memberi *prompt* instruksi -> Anda mengeksekusi kode -> Setelah selesai, Anda secara otomatis dan retrospektif membuat tiket baru untuk instruksi tersebut dan langsung mencentangnya sendiri.
+### 3.3 Pedoman Kondisional Sesuai Domain Tugas
+- **Menulis/mengubah kode logika:** Wajib baca `../../global-guidelines/coding.md`.
+- **Modifikasi berkas massal, skrip bulk, atau Git per-file (`sed`, `git restore`, `git checkout <file>`):** Wajib baca `../../global-guidelines/safe-file-operations.md`.
+- **Aktivitas Git (commit, branch, push, PR):** Wajib baca `../../global-guidelines/version-control.md`.
+- **Deployment, konfigurasi CI/CD, rilis:** Wajib baca `../../global-guidelines/deployment.md` dan `../../global-guidelines/pipeline.md`.
+- **Penulisan pengujian (unit/integration test):** Wajib baca `../../global-guidelines/testing.md` (*TDD Workflow* & *No Vanity Testing*).
+- **Pengelolaan dependensi & lockfile:** Wajib baca `../../global-guidelines/dependencies.md`.
+- **Skema basis data, migrasi, ERD, datetime:** Wajib baca `../../global-guidelines/database.md`.
+- **Perancangan UI, slicing frontend, aset, i18n:** Wajib baca `../../global-guidelines/ui-and-assets.md` dan `../../global-guidelines/localization.md`.
+- **Pembuatan prototipe antarmuka baru:** Wajib baca `prototypes/README.md`.
+- **Pengambilan atau pembuatan tiket:** Wajib baca `tickets/README.md`.
+- **Terjebak galat berulang:** Wajib baca `retrospectives/RETROSPECTIVE.md`.
+- **Validasi serah terima tugas (Done):** Wajib verifikasi `../../global-guidelines/delivery-gate.md`.
+- **Eksplorasi kasus batas ekstrem (Hunt Loop):** Rujuk 9 sumbu di `../../global-guidelines/edge-case-atlas.md`.
+- **Audit QA / exploratory testing:** Dokumentasikan ke `hunt/` dengan format `../../global-docs/templates/hunt-findings.md`.
+- **Pembuatan tiket bug:** Gunakan format `../../global-docs/templates/bug_report_template.md`.
+- **Pengajuan PR & Pesan Komit:** Gunakan format `../../global-docs/templates/pull_request_template.md` & `../../global-docs/templates/commit_message_template.md`.
+- **Tanya-jawab implementasi/arsitektur (Q&A):** Rujuk `../../global-docs/LEARN.md` (HANYA diisi jika pemicu resmi FASE 4 README.md; dilarang keras saat tugas koding biasa).
+- **Navigasi & Analisis Dependensi Kode:** Wajib gunakan `graphify query` / `graphify build` di *Path Codebase*.
 
 ---
 
-## BAGIAN E — STANDARD OPERATING PROCEDURE (SOP) EKSEKUSI
+## 4. Klasifikasi Mode Operasional
 
-Anda **DIWAJIBKAN SECARA MUTLAK** untuk mematuhi alur kerja kronologis berikut (*Sequential Execution Gate*) tanpa terkecuali setiap kali menerima *Execution Prompt* atau penugasan:
+AI Agent WAJIB memeriksa **STATUS MODE SAAT INI** di awal dokumen sebelum bekerja:
+- **MODE 1 (Autonomous Planning):** Digerakkan roadmap. Tanyakan lingkup besar ke developer -> Perbarui `development-planning.md` -> Terbitkan tiket kosong -> Minta persetujuan developer -> Eksekusi berurutan dan centang bila selesai.
+- **MODE 2 (Prompt-Driven):** Digerakkan instruksi per langkah developer. Terima prompt -> Eksekusi kode -> Buat tiket baru secara retrospektif di akhir tugas dan centang sendiri.
 
-### E.1: Pemuatan Konteks Dasar (Context Ingestion — Wajib Awal)
-Sebelum memikirkan solusi atau membuat rencana, Anda **WAJIB MEMBUKA & MEMBACA** file-file berikut untuk memuat memori kerja:
-1. `CHANGELOG.md` (Untuk memahami riwayat dan konteks pekerjaan terakhir)
-2. `guidelines/project-context.md` (Untuk memahami arsitektur lokal, hasil pemindaian, dan aturan khusus node ini)
-3. `docs/system-design.md` (Untuk memahami struktur dan rancangan teknis node ini)
+---
 
-> 💡 **Kebijakan Perintah Read-Only:** Selama tahap pemuatan konteks dan investigasi, Anda **DIPERBOLEHKAN** langsung meminta permission atau menjalankan perintah yang bersifat *Read-Only* (seperti `ls`, `view_file`, `cat`, `head`, `tail`, `grep`, `git status`, `git log`, kueri `SELECT` non-locking) untuk mengumpulkan informasi secara cepat.
+## 5. Prosedur Operasi Standar (SOP Eksekusi Sekuensial)
 
-### E.2: Penentuan & Pembacaan Pedoman Domain (Domain Guidelines Ingestion — Wajib)
-Identifikasi cakupan dan domain dari instruksi tugas pengguna, lalu Anda **WAJIB MEMBUKA & MEMBACA** dokumen pedoman terkait dari **Bagian C.3** SEBELUM menyusun rencana:
-- **Menyentuh penulisan/modifikasi kode logika?** $\rightarrow$ Wajib baca `../../global-guidelines/coding.md`.
-- **Menyentuh skema database, migrasi, atau query?** $\rightarrow$ Wajib baca `../../global-guidelines/database.md`.
-- **Menyentuh antarmuka pengguna (UI), aset, atau styling?** $\rightarrow$ Wajib baca `../../global-guidelines/ui-and-assets.md` dan `../../global-docs/design-system.md`.
-- **Menyentuh penulisan pengujian (test suite)?** $\rightarrow$ Wajib baca `../../global-guidelines/testing.md`.
-- **Menyentuh operasi file massal / skrip?** $\rightarrow$ Wajib baca `../../global-guidelines/safe-file-operations.md`.
-- **Menyentuh rilis/deployment?** $\rightarrow$ Wajib baca `../../global-guidelines/deployment.md` dan `../../global-guidelines/pipeline.md`.
+AI Agent WAJIB mematuhi alur kronologis berikut tanpa terkecuali setiap kali menerima penugasan:
 
-### E.3: Pemetaan Relasi & Ketergantungan Kode (Graphify Navigation)
-Sebelum menyusun rencana perubahan kode, Anda **WAJIB** mengecek apakah terdapat direktori `.graphify` di dalam *Path Codebase* (direktori proyek asli) dari node ini:
-1. **JIKA DITEMUKAN (`.graphify` ada):** Anda **WAJIB** menggunakan fitur CLI `graphify` (contoh: `graphify query`) di dalam direktori *Path Codebase* tersebut untuk memetakan fungsi pemanggil (*callers*), dependensi antarmodul, dan komponen terdampak alih-alih membaca puluhan file secara manual.
-2. **JIKA TIDAK DITEMUKAN (`.graphify` belum ada):** Anda **WAJIB** men-generate-nya terlebih dahulu! Masuk ke direktori *Path Codebase* (`cd`), pastikan `graphify --version` terpasang (instal via `npm install -g @sentropic/graphify` jika belum ada), dan jalankan perintah `graphify build` untuk membangun Knowledge Graph node ini.
-3. **Larangan Mutlak di Repositori Orchestrator:** Direktori `.graphify`, pembuatan graf (`graphify build`), kueri, maupun pembaruan (`graphify update`) **HANYA** boleh berada dan dieksekusi di dalam *Path Codebase* proyek asli. DILARANG KERAS mengeksekusinya di dalam repositori `ai-orchestrator-template/`.
+### 5.1 Pemuatan Konteks Dasar (Context Ingestion Awal)
+1. **[WAJIB BACA]** Buka berkas: `CHANGELOG.md`, `guidelines/project-context.md`, dan `docs/system-design.md`.
+2. **Inspeksi Read-Only:** Diperbolehkan langsung mengeksekusi perintah pasif (`ls`, `view_file`, `cat`, `grep`, `git status`, `git log`, `SELECT` non-locking) untuk mempercepat pengumpulan konteks.
 
-### E.4: Manajemen Tiket (Tergantung Mode)
-Rujuk dan patuhi aturan di `../../global-guidelines/version-control.md` seksi **"Ticket-Driven Development Workflow"** dan format boilerplate di `tickets/README.md`.
-- Jika Anda berada di **MODE 1**, tiket dibuat di awal sebelum eksekusi berdasarkan `development-planning.md`.
-- Jika Anda berada di **MODE 2**, tiket dibuat di akhir eksekusi sebagai rekam jejak (*retrospective*).
-- Anda **WAJIB MUTLAK** menyalin utuh struktur `Boilerplate (Templat)` dari `tickets/README.md`. DILARANG mengarang format *markdown* sendiri.
+### 5.2 Penentuan & Pembacaan Pedoman Domain
+1. Identifikasi domain tugas dan wajib baca dokumen terkait dari Bagian 3.3 sebelum merumuskan rencana (coding, database, UI, testing, safe-file-operations, deployment).
 
-### E.5: Pembuatan Implementation Plan & Konfirmasi Pengguna (Wajib Sebelum Mutasi State)
-Anda **DIWAJIBKAN MUTLAK** untuk membuat rencana implementasi (*implementation plan*) yang detail mengenai apa yang akan dikerjakan, dan menunggu persetujuan pengguna sebelum mengeksekusi kode atau membuat perubahan file apa pun.
-- **🚫 Larangan Langsung Meminta Permission State-Mutating:** Sesuai `safe-file-operations.md`, AI **DILARANG KERAS** langsung meminta *permission* untuk tindakan yang memodifikasi *state* (menambah/mengedit/menghapus file, migrasi DDL, mutasi data DB, install dependensi, ubah `.env`) sebelum *Implementation Plan* dipaparkan dan disetujui pengguna!
-- Satukan seluruh pemahaman dari konteks dasar (E.1), pedoman domain (E.2), dan hasil Graphify (E.3) ke dalam rencana.
-- Petakan file-file sasaran yang terdampak (*affected files*).
-- **Audit Anti-AI-Slop Awal:** Jika tugas menyentuh UI/UX, rumuskan batasan *Design Intent* (target user, primary task, density, visual direction konkret, WCAG constraints) dan pastikan rencana bebas dari abstraksi semu, template generik, atau data tiruan.
-- *Implementation Plan* ini adalah file markdown sementara (misalnya `implementation_plan.md` di root workspace) yang **WAJIB ANDA HAPUS** dari disk setelah instruksi selesai dilakukan atau sesi berakhir.
-- Patuhi aturan **"Stop-and-Ask"** dan **"Larangan Inisiatif Liar"** di `../../global-guidelines/error-handling.md` jika terdapat ambiguitas.
+### 5.3 Pemetaan Relasi & Ketergantungan Kode (Graphify Navigation)
+1. Periksa direktori `.graphify` di *Path Codebase* proyek asli:
+   - **Jika ada:** Gunakan `graphify query` untuk memetakan fungsi pemanggil, komponen terdampak, dan dependensi.
+   - **Jika belum ada:** Masuk ke *Path Codebase*, pastikan instalasi CLI tersedia, dan jalankan `graphify build`.
+2. **[TERLARANG]** Menjalankan build, query, atau update graphify di dalam repositori orchestrator `ai-orchestrator-template/`.
 
-### E.6: Pengerjaan Kode Berbasis TDD & Standar Anti-Slop (Test-Driven Development)
-Setelah rencana disetujui pengguna, Anda **DIWAJIBKAN MUTLAK** mengeksekusi instruksi menggunakan siklus **Test-Driven Development (TDD)** sesuai rincian di `../../global-guidelines/testing.md`:
-1. **Analisis Definition of Done (DoD):** Petakan kriteria sukses dari *Acceptance Criteria* tiket (di `tickets/TICKET-XX.md`) atau instruksi eksplisit developer.
-2. **Tahap RED (Tulis Unit Test Dahulu):** Buat atau perbarui berkas *unit test* sebelum menulis kode produksi. Dilarang membuat tes semu (*No Vanity Testing*). Jalankan tes untuk memvalidasi status gagal (Red).
-3. **Tahap GREEN (Tulis Kode Produksi):** Tulis atau modifikasi kode aplikasi dengan mematuhi `../../global-guidelines/coding.md` (Standar Anti-Slop, Zero-Comment, Fail-Fast, No Magic Numbers, Semantic Native, Language Preference) hingga tes berhasil (Green). Manfaatkan kueri CLI `graphify` untuk navigasi kode.
-4. **Tahap REFACTOR & FIX (Jalankan Test & Perbaiki):** Eksekusi *test suite*. Jika gagal, perbaiki kode produksi hingga seluruh tes lulus 100% dan memenuhi target coverage.
-5. **Tahap QUALITY CHECK (Jalankan Linter):** Eksekusi *linter* dan *type checker* proyek untuk memastikan tidak ada kesalahan format, peringatan, atau galat tipe.
+### 5.4 Manajemen Tiket Sesuai Mode
+1. **MODE 1:** Buat tiket di awal sebelum eksekusi berbasis `development-planning.md`.
+2. **MODE 2:** Buat tiket di akhir eksekusi sebagai rekam jejak (*retrospective*).
+3. **[WAJIB]** Salin utuh struktur boilerplate dari `tickets/README.md`. Dilarang mengarang format sendiri.
 
-### E.7: Verifikasi Uji Visual & Gerbang Anti-AI-Slop (UI Visual Review Gate)
-Khusus untuk tugas yang memodifikasi antarmuka visual (Frontend / Mobile App):
-- Anda **WAJIB** meninjau hasil render nyata (bukan sekadar kompilasi kode).
-- Lakukan validasi silang terhadap **Anti-Slop Visual Checklist** di `../../global-guidelines/ui-and-assets.md` (bebas dari palet klise ungu/biru, tanpa kartu berlebihan, tanpa teks AI filler, tanpa metrik palsu, kelengkapan state loading/empty/error, kontras WCAG AA, target sentuh 24x24px / 44x44pt, reflow 320px).
-- Evaluasi **Gerbang Akhir Anti-Slop**: *"Jika saya menghapus 20% dekorasi, apakah produk menjadi lebih jelas?"* $\rightarrow$ Jika ya, pangkas dekorasinya sebelum lanjut!
+### 5.5 Rencana Implementasi & Otorisasi Pengguna (Pre-Mutation Gate)
+1. **[TERLARANG]** Meminta izin terminal untuk mutasi state (edit file, migrasi DDL, install paket, ubah `.env`) sebelum memaparkan rencana implementasi sesuai `safe-file-operations.md`.
+2. **Penyusunan Rencana:** Petakan berkas sasaran, satukan hasil Graphify, rumuskan batasan *Design Intent* jika menyentuh UI, dan mintalah persetujuan pengguna.
+3. **Pembersihan File Rencana:** File rencana sementara (misal `implementation_plan.md`) WAJIB dihapus setelah tugas selesai.
+4. Terapkan prinsip *Stop-and-Ask* pada `error-handling.md` jika menemui ambiguitas.
 
-### E.8: Penyelesaian & Sinkronisasi Tiket
-Rujuk dan patuhi aturan pemutakhiran status tiket di `../../global-guidelines/version-control.md` seksi **"Ticket-Driven Development Workflow"** poin 3–5. Pastikan:
-- Status tiket diubah menjadi `Done`.
-- Seluruh *checkbox* `[ ]` diubah menjadi `[x]` pada bagian `Acceptance Criteria`.
-- Seksi `AI Execution Log & Output` terisi lengkap (termasuk bukti Heuristic Evaluation & Anti-Slop Visual Review).
-- Tiket disinkronkan dengan GitHub Projects.
+### 5.6 Pengerjaan Kode Berbasis TDD & Standar Anti-Slop
+Eksekusi implementasi menggunakan siklus Test-Driven Development sesuai `testing.md`:
+1. **Analisis DoD:** Petakan kriteria sukses dari *Acceptance Criteria* tiket atau prompt eksplisit pengguna.
+2. **Tahap RED:** Buat/perbarui unit test sebelum kode produksi. Buktikan tes gagal di terminal. Khusus perbaikan bug, wajib membuktikan tes baru **GAGAL pada kode lama** (Disiplin O-07).
+3. **Tahap GREEN:** Tulis kode implementasi minimal sesuai standar `coding.md` hingga seluruh tes berstatus lulus.
+4. **Tahap REFACTOR & FIX:** Jalankan test suite, perbaiki regresi hingga 100% PASS dan memenuhi target coverage.
+5. **Tahap QUALITY CHECK:** Jalankan linter dan type checker; pastikan nol peringatan dan nol galat.
+6. **Tahap HUNT LOOP:** Eksekusi minimal 1 putaran Hunt Loop (minimal 10 kasus ekstrem berbasis `edge-case-atlas.md`, reproduksi, jadikan tes permanen, hingga nol temuan baru).
 
-### E.9: Pencatatan Changelog
-Rujuk dan patuhi secara mutlak seluruh aturan di `../../global-guidelines/version-control.md` seksi **"Wajib Mencatat Setiap Perubahan"**, **"Penambahan Secara Reverse-Chronological"**, dan **"Format Log Pembaruan di Respons"**. Ringkasan:
-- Catatan baru **WAJIB** disisipkan di baris **PALING ATAS** daftar (*descending*).
-- Anda **WAJIB** mencatat **SEMUA** jenis perubahan, **BUKAN HANYA** kode (`Implementation`).
-- Anda **WAJIB MUTLAK** menyalin dan mematuhi struktur baku dari referensi berikut untuk format log Anda: `../../global-docs/templates/changelog_entry_template.md`. Dilarang mengarang format sendiri!
+### 5.7 Verifikasi Uji Visual Antarmuka (UI Review Gate)
+Khusus tugas yang memodifikasi visual frontend atau mobile:
+1. Periksa tampilan render visual aktual (melalui prototipe atau browser preview).
+2. Validasi Anti-Slop Visual Checklist pada `ui-and-assets.md` (kontras WCAG AA, target sentuh 24x24px / 44x44pt, reflow 320px, kelengkapan status loading/empty/error).
+3. Evaluasi Gerbang Akhir: pangkas 20% dekorasi jika tidak menambah kejelasan fungsi.
 
-### E.10: Kebijakan Version Control (Git)
-Rujuk dan patuhi secara mutlak seluruh aturan di `../../global-guidelines/version-control.md` seksi **"Larangan Eksekusi Git Otonom"**, **"Kewajiban Commit"**, **"Prosedur Konfirmasi Pembuatan Branch"**, serta **"Aturan Penggunaan Istilah Orchestrator"** (Pesan *commit* di Project/Node **WAJIB 100% BERSIH** dari istilah orchestrator, tiket, PRD, atau guideline; referensi ID tiket HANYA dicatat di `CHANGELOG.md` dan file tiket lokal, bukan di pesan Git!).
+### 5.8 Verifikasi Delivery Gate & Penyelesaian Tiket
+Sebelum mengubah tiket menjadi `Done` atau menyerahkan pekerjaan:
+1. Verifikasi seluruh butir pemeriksaan pada [delivery-gate.md](../../global-guidelines/delivery-gate.md) (4 Pilar: Higienitas Kode, Hard Gate Testing, Must Probe Loop, dan Tata Kelola).
+2. Ubah status tiket menjadi `status: Done`.
+3. Tandai seluruh checklist `[x]` pada *Acceptance Criteria*.
+4. Isi seksi `AI Execution Log & Output` lengkap (ringkasan delivery gate, bukti eksekusi terminal, evaluasi UI, dan *Untested List*).
+5. Sinkronkan tiket dengan GitHub Projects.
 
-### E.11: Sinkronisasi Konteks (Graphify Update)
-Setelah tugas selesai dan di-commit, Anda **WAJIB** masuk ke dalam direktori *Path Codebase* (`cd`) dan menjalankan perintah `graphify update` di terminal untuk menyinkronkan Knowledge Graph dengan perubahan kode terbaru. DILARANG KERAS menjalankan `graphify update` di dalam repositori orchestrator.
+### 5.9 Pencatatan Riwayat Changelog
+1. Sisipkan catatan baru di baris **PALING ATAS** daftar (*descending*) pada `CHANGELOG.md` node terkait.
+2. Catat seluruh jenis perubahan (kode, pedoman, dokumentasi, tiket).
+3. Wajib menyalin struktur baku dari `../../global-docs/templates/changelog_entry_template.md`.
+
+### 5.10 Disiplin Kontrol Versi (Git)
+1. **[TERLARANG]** Melakukan auto-commit atau auto-push tanpa izin eksplisit pengguna.
+2. **Pesan Komit Bersih:** Pesan komit di direktori Project/Node WAJIB 100% BERSIH dari istilah orchestrator, tiket, PRD, atau guideline sesuai `version-control.md`.
+
+### 5.11 Sinkronisasi Konteks Akhir (Graphify Update)
+1. Setelah komit selesai, masuk ke *Path Codebase* (`cd`) dan jalankan `graphify update` untuk menyinkronkan Knowledge Graph dengan kode terbaru.
+2. **[TERLARANG]** Menjalankan `graphify update` di dalam repositori orchestrator.

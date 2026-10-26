@@ -1,27 +1,48 @@
-# Deployment & Release Standard (Universal)
+# Deployment & Release Standard
 
-Panduan ini mengatur standar perilisan dan *deployment* untuk seluruh spektrum jenis perangkat lunak. Selaku AI Agent, Anda wajib menyesuaikan daftar periksa (*checklist*) pengiriman (*delivery*) ini sesuai dengan platform target yang sedang dibangun.
+Pedoman ini mengatur standar perilisan dan deployment lintas platform guna menjamin keamanan kredensial, keandalan performa build, kepatuhan versioning, dan stabilitas layanan di lingkungan produksi.
 
-## 1. Persiapan Pra-Rilis (Pre-Deployment Checklist)
-Terlepas dari jenis aplikasinya (Web, Mobile, Game, atau API), fase ini wajib dilalui secara absolut:
-1.  **Environment Audit:** Verifikasi bahwa seluruh URL pengembangan (*localhost*, *staging API*) telah dipindahkan atau dikonfigurasi menunjuk ke URL *Production*.
-2.  **Kewajiban Uji Kelulusan (Testing Pass):** Anda (AI Agent) **DILARANG KERAS** mengeksekusi skrip *deployment* apabila *test suite* (kumpulan pengujian) aplikasi belum mencapai status hijau (*pass*). Wajib ikuti seluruh prasyarat yang tertera pada pedoman `testing.md` sebelum perilisan.
-3.  **Secret Management:** Pastikan tidak ada kredensial, *API key*, atau kata sandi yang ter-*hardcode*. Seluruhnya harus merujuk pada *Environment Variables* lingkungan produksi.
-4.  **Build Optimization:** Lakukan *build* dengan konfigurasi khusus rilis (*release/production flag*) untuk memastikan pengecilan ukuran (*minification*), *tree-shaking*, dan pembuangan *debug logs* berjalan aktif.
-5.  **Version Bump:** Pastikan nomor versi di *package manager* (seperti `package.json`, `pubspec.yaml`, `build.gradle`) telah ditingkatkan secara terstruktur sesuai format *Semantic Versioning* (SemVer).
+---
 
-## 2. Standar Spesifik Berdasarkan Platform Target
+## 1. Verifikasi Universal Pra-Rilis (Pre-Deployment Checklist)
 
-### A. Web Application & API Server (Backend)
-- **Containerization (Opsional namun Sangat Disarankan):** Bungkus aplikasi dalam *Docker container* untuk menjamin konsistensi di *environment* peladen (*server*). Pastikan konfigurasi `Dockerfile` menggunakan arsitektur *multi-stage build* untuk menekan ukuran (*size*) rilis final.
-- **Reverse Proxy & SSL:** Pastikan aplikasi berjalan di balik *reverse proxy* standar industri (seperti Nginx/Caddy) dengan penyandian SSL terkonfigurasi.
-- **Port Binding:** Pastikan aplikasi mengikat port yang disuplai oleh lingkungan peladen melalui variabel dinamis (misal: `process.env.PORT`), BUKAN port *hardcoded*.
+Terlepas dari jenis platform (Web, Mobile, Game, atau API), seluruh butir pemeriksaan berikut wajib dipenuhi sebelum proses perilisan:
 
-### B. Mobile Application (iOS & Android)
-- **Code Signing:** Pastikan *Keystore* (Android) dan *Provisioning Profile/Certificates* (iOS) yang divalidasi adalah sertifikat kelas distribusi (*Distribution Certificates*), bukan *Development*.
-- **Permission Sanitization:** Lakukan penyisiran ulang terhadap pengaturan *manifest* (seperti `AndroidManifest.xml` atau `Info.plist`). Hapus perizinan akses (*permissions*) yang diaktifkan hanya demi kepentingan *debugging*.
-- **App Bundling:** Hasilkan format distribusi termodern. Untuk platform Android, Anda wajib memprioritaskan format *Android App Bundle* (`.aab`) ketimbang `.apk` mentah.
+### 1.1 Gerbang Pengujian & Delivery Gate
+AI Agent DILARANG KERAS mengeksekusi skrip deployment jika pengujian belum mencapai status lulus (PASS):
+1. Seluruh test suite wajib berstatus 100% PASS dan mematuhi [testing.md](./testing.md).
+2. Wajib lolos seluruh evaluasi checklist pra-serah terima di [delivery-gate.md](./delivery-gate.md).
+3. Jika melibatkan perubahan skema database, migrasi DDL terstruktur wajib dieksekusi terlebih dahulu sesuai [database.md](./database.md).
 
-### C. Game Development
-- **Asset Stripping:** Pastikan mode pembangunan (*build mode*) terkonfigurasi untuk membuang aset-aset yang tidak direferensikan dalam siklus akhir layar permainan (*unused assets stripping*).
-- **Architecture Slicing:** Apabila mengeksekusi pembangunan kompilasi (*build compile*), konfigurasikan arsitektur sistem (contoh: ARM64) agar presisi dengan arsitektur OS perangkat target sasaran.
+### 1.2 Audit Konfigurasi & Kredensial (Environment & Secret Audit)
+1. **Peralihan URL:** Pastikan seluruh endpoint dan URL pengembangan (localhost, staging) telah dialihkan ke URL produksi.
+2. **Larangan Kredensial Hardcoded:** Kredensial, kunci API, token otentikasi, dan connection string wajib dibaca dari Environment Variables produksi sesuai [security.md](./security.md) dan [coding.md](./coding.md).
+
+### 1.3 Optimasi Build Produksi (Build Optimization)
+Build wajib dieksekusi dengan konfigurasi mode rilis (production/release flag):
+1. Aktifkan minifikasi kode (minification), tree-shaking, dan kompresi bundle.
+2. Hapus seluruh logging internal dan debug output yang tidak diperlukan pada rilis publik.
+
+### 1.4 Tata Kelola Versi (Semantic Versioning)
+Tingkatkan nomor versi aplikasi pada berkas manifes terkait (`package.json`, `pubspec.yaml`, `build.gradle`, `Cargo.toml`) secara disiplin mengikuti kaidah Semantic Versioning (SemVer):
+- `MAJOR`: Perubahan arsitektur dengan breaking changes.
+- `MINOR`: Penambahan fitur baru yang backward-compatible.
+- `PATCH`: Perbaikan bug backward-compatible.
+
+---
+
+## 2. Standar Deployment Spesifik Platform (Platform-Specific Standards)
+
+### 2.1 Aplikasi Web & API Server (Backend)
+1. **Containerization Multi-Stage:** Bungkus aplikasi ke dalam Docker container untuk konsistensi lingkungan. Konfigurasikan `Dockerfile` menggunakan *multi-stage build* untuk meminimalkan ukuran image rilis final.
+2. **Reverse Proxy & SSL:** Jalankan server aplikasi di balik reverse proxy standar industri (Nginx, Caddy) dengan enkripsi SSL/TLS aktif.
+3. **Dynamic Port Binding:** Wajib mengikat port jaringan yang dialokasikan oleh environment runtime peladen (misal: `process.env.PORT`), dilarang mengunci port secara statis/hardcoded.
+
+### 2.2 Aplikasi Mobile (iOS & Android)
+1. **Distribusi Sertifikat (Code Signing):** Pastikan penandatanganan aplikasi menggunakan sertifikat distribusi resmi (Distribution Keystore untuk Android, Distribution Provisioning Profile untuk iOS), bukan sertifikat development/debug.
+2. **Sanitasi Izin (Permission Sanitization):** Periksa kembali manifes perizinan (`AndroidManifest.xml`, `Info.plist`). Hapus seluruh izin akses sensitif yang hanya digunakan selama debugging lokal.
+3. **Format Distribusi Modern:** Pada platform Android, prioritaskan pembuatan paket distribusi berformat Android App Bundle (`.aab`) ketimbang `.apk` mentah untuk optimasi ukuran unduhan pengguna.
+
+### 2.3 Pengembangan Game (Game Development)
+1. **Pembersihan Aset (Asset Stripping):** Konfigurasikan build pipeline untuk membuang aset yang tidak direferensikan (unused asset stripping) pada scene rilis akhir.
+2. **Penyesuaian Arsitektur Target:** Sesuaikan arsitektur kompilasi biner (misal: ARM64, x86_64) secara presisi dengan spesifikasi sistem operasi perangkat target sasaran.

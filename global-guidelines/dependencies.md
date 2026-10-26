@@ -1,18 +1,34 @@
 # Dependency & Package Management Policy
 
-Dokumen ini mengatur cara pandang AI Agent saat berinteraksi dengan perpustakaan pihak ketiga (*third-party libraries/dependencies*) agar ukuran aplikasi tidak membengkak (*bloat*) tanpa arah jelas.
+Pedoman ini mengatur standar pengelolaan pustaka eksternal (third-party dependencies) guna mencegah pembengkakan ukuran aplikasi (bloat), kerentanan keamanan, konflik resolusi versi, dan rusaknya integritas riwayat dependensi.
 
-## 1. Larangan Penambahan Library Tanpa Eksekusi Validasi Justifikasi
-Anda **DILARANG** menginisialisasi proses instalasi atau menginjeksikan perpustakaan dependensi eksternal mana pun secara otonom tanpa justifikasi yang kokoh. 
-Apabila Anda merasa bahwa solusi dari sebuah fitur mensyaratkan instalasi paket baru (seperti instalasi melalui mekanisme *NPM*, *Composer*, *Pub*, *Pip*):
-- Anda **WAJIB** menyampaikan argumentasi mengapa penambahan paket ini jauh lebih menguntungkan ketimbang menulis algoritma mandiri (*native logic*).
-- Prioritaskan pemakaian paket utilitas standar yang telah menjadi konvensi global *(well-maintained & widely-used)* daripada memilih paket *niche* yang tidak dikenal.
-- Jika pengguna ragu, mintalah izin terlebih dahulu!
+---
 
-## 2. Integritas Lockfile
-Sistem pengelolaan versi absolut (*Lockfile*) dari setiap *package manager* (contoh: berkas hierarkis `package-lock.json`, `pubspec.lock`, `Gemfile.lock`, atau `yarn.lock`) adalah **dokumen yang pantang dirusak**.
-Anda (AI Agent) dilarang merekomendasikan pengguna atau mengambil kendali paksa untuk menghapus berkas-berkas pengunci ini sekadar sebagai jalan pintas darurat (*quick hack*) saat menghadapi konflik ketidakcocokan dependensi instalasi (*resolution conflict*). Perbaiki di akar berkas inisialisasi utamanya (contoh: `package.json`), bukan dengan melenyapkan sistem sejarah kunci *lockfile*-nya.
+## 1. Tata Kelola & Justifikasi Penambahan Dependensi (Dependency Governance)
 
-## 3. Kesesuaian Platform
-Sebelum menyertakan dan menginstal suatu paket antarmuka sistem:
-Anda wajib memverifikasi dukungan kompatibilitas silang (*cross-platform compatibility*) dari paket tersebut, serta menyesuaikannya secara spesifik dengan dokumen pedoman arsitektur lokal yang digariskan di dalam `nodes/[nama-node]/docs/system-design.md`. (Sebagai ilustrasi: Jangan memasang paket khusus utilitas DOM Web pada proyek sasaran berspesifikasi *Flutter Desktop/Mobile* murni tanpa kompatibilitas *Web*).
+### 1.1 Larangan Instalasi Otonom Tanpa Justifikasi
+AI Agent DILARANG menginstal paket eksternal baru (via npm, pnpm, yarn, pip, composer, pub, cargo, go get) secara mandiri tanpa justifikasi teknis yang jelas.
+
+### 1.2 Kriteria Evaluasi Pustaka
+Sebelum merekomendasikan paket baru, AI Agent wajib mengevaluasi 3 kriteria berikut:
+1. **Native vs External Logic:** Jelaskan pertimbangan mengapa paket pihak ketiga lebih menguntungkan dibanding menulis logika mandiri (native logic / YAGNI). Hindari memasang dependensi mikro untuk fungsi sepele.
+2. **Reputasi & Pemeliharaan:** Prioritaskan pustaka standar industri yang aktif dipelihara, teruji, dan memiliki rekam jejak keamanan baik dibanding paket niche yang tidak dikenal.
+3. **Kesesuaian Platform & Arsitektur:** Verifikasi kompatibilitas target platform sesuai spesifikasi di `nodes/[nama-node]/docs/system-design.md` (contoh: dilarang memasang pustaka manipulasi DOM Web pada lingkungan Flutter Mobile/Desktop murni).
+
+### 1.3 Protokol Izin Mutasi Dependensi (State Mutation Protocol)
+Instalasi paket eksternal tergolong **Operasi Modifikasi State**:
+- Sesuai [safe-file-operations.md](./safe-file-operations.md), AI Agent dilarang langsung meminta permission untuk perintah instalasi terminal sebelum mencantumkan nama paket, alasan, dan dampaknya di dalam Implementation Plan serta memperoleh persetujuan pengguna.
+
+---
+
+## 2. Integritas Lockfile & Resolusi Konflik (Lockfile Integrity)
+
+### 2.1 Larangan Menghapus Berkas Pengunci (Lockfile)
+Berkas pengunci versi absolut (`package-lock.json`, `yarn.lock`, `pnpm-lock.yaml`, `pubspec.lock`, `poetry.lock`, `Gemfile.lock`, `Cargo.lock`, `go.sum`) adalah dokumen integritas yang pantang dirusak.
+- Dilarang merekomendasikan atau menghapus lockfile sebagai jalan pintas saat menghadapi konflik dependensi atau kegagalan instalasi.
+
+### 2.2 Prosedur Resolusi Konflik yang Benar
+Jika terjadi konflik ketidakcocokan versi (peer dependency / resolution conflict):
+1. Telusuri akar masalah pada berkas manifes utama (`package.json`, `pubspec.yaml`, `pyproject.toml`, `Cargo.toml`).
+2. Selaraskan batasan versi (semver constraints) yang saling berbenturan secara eksplisit.
+3. Jalankan pembaruan terarah (misal: `npm update <package>` atau audit resolver) tanpa melenyapkan riwayat deterministik lockfile.

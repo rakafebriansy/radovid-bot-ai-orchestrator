@@ -1,27 +1,28 @@
-# Panduan Spesifik Proyek: [Nama Proyek]
+# Panduan Spesifik Node: [GANTI_DENGAN_NAMA_NODE]
 
-Dokumen ini merupakan pedoman *custom* yang mengikat aturan, peringatan eksklusif, dan penyesuaian khusus yang **hanya relevan** pada proyek ini. 
-
-> [!IMPORTANT]
-> **Tugas Administratif Anda:** File ini adalah pusat penyimpanan aturan khusus untuk node ini. AI Agent akan mencatat spesifikasi *tech stack*, batasan, dan hasil pindai (*codebase scan*) dari aplikasi node ini di bawah.
-
-## Aturan Fundamental Proyek
-*(Tuliskan konfigurasi kustom, versi SDK wajib, atau kebijakan framework yang spesifik untuk arsitektur aplikasi ini di sini.)*
-- **Preferensi Bahasa Kode & String:** English (Default) *(Jika pengguna meminta bahasa non-Inggris secara eksplisit, catat instruksi tersebut di sini)*
-- **Kepatuhan Anti-AI-Slop:** Wajib mematuhi standar Anti-AI-Slop global (`coding.md`, `ui-and-assets.md`, `testing.md`, `error-handling.md`).
-- ...
-- ...
+> **[PRINSIP UTAMA]** Pedoman eksklusif yang memuat aturan lokal, spesifikasi tumpukan teknologi, hasil pemindaian basis kode (*codebase scan*), dan konvensi arsitektur khusus node ini.
 
 ---
 
-## Aturan Khusus & Konvensi Proyek
-Seksi ini menampung seluruh konvensi teknis, pantangan, dan kebiasaan (*best practices*) spesifik yang wajib dipatuhi secara absolut untuk proyek ini. Aturan-aturan ini dibentuk dari dua jalur utama:
-1. **Kesepakatan Fondasi Awal:** Standar kustom yang diikrarkan di awal fase pengembangan (contoh: *"Komponen UI mutlak menggunakan sistem Atomic Design"*, *"State management harus BLoC"*).
-2. **Hasil Ekstraksi Retrospective:** Solusi-solusi paten yang dikonversi langsung dari pengalaman kegagalan AI di `retrospectives/RETROSPECTIVE.md`. Jika kesalahan berhasil diatasi, aturan mutlak pencegahannya diabadikan di sini.
+## 1. Parameter Fundamental Node
 
-*(AI Agent WAJIB menyisipkan aturan baru dengan format poin deklaratif teknis, BUKAN menggunakan format log riwayat)*
+*(Tuliskan konfigurasi kustom, versi SDK, atau kebijakan framework spesifik node ini)*
+- **Preferensi Bahasa Kode & String:** English (Default). Jika pengguna secara eksplisit meminta bahasa lain, catatkan penetapannya di sini sesuai `coding.md` dan `localization.md`.
+- **Kepatuhan Anti-Slop:** Wajib mematuhi standar Anti-AI-Slop universal (`coding.md`, `ui-and-assets.md`, `testing.md`, `error-handling.md`).
+- **Versi SDK & Dependensi Utama:** [Tentukan versi SDK, compiler, atau framework inti]
+- **Path Codebase:** [Path direktori lokal proyek aplikasi asli]
+
+---
+
+## 2. Konvensi Lokal & Aturan Khusus
+
+Seksi ini menampung seluruh konvensi teknis, pantangan, dan best practices lokal yang bersumber dari:
+1. **Kesepakatan Awal:** Standar kustom yang ditetapkan pada fase inisialisasi (contoh: *"Komponen UI wajib Atomic Design"*, *"State management wajib Zustand"*).
+2. **Hasil Ekstraksi Retrospektif:** Solusi permanen yang dikonversi langsung dari pemecahan masalah pada `retrospectives/RETROSPECTIVE.md`.
+
+*(AI Agent WAJIB menyisipkan aturan baru dalam format poin deklaratif teknis, BUKAN narasi riwayat)*
 
 1. **[Nama Aturan Kustom 1]**
-   - *Detail Instruksi:* [Jelaskan instruksi, arsitektur, atau pantangan secara tegas].
+   - *Instruksi:* [Jelaskan batasan atau konvensi arsitektur lokal secara tegas].
 2. **[Nama Aturan Kustom 2]**
-   - *Detail Instruksi:* [Jelaskan instruksi, arsitektur, atau pantangan secara tegas].
+   - *Instruksi:* [Jelaskan batasan atau konvensi arsitektur lokal secara tegas].

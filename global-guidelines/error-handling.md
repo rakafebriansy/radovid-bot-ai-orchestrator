@@ -1,60 +1,66 @@
 # Error Handling & Anti-Hallucination Policy
 
-Dokumen ini adalah barikade utama untuk mencegah perilaku halusinasi, asumsi keliru, atau percobaan *debugging* secara "membabi buta" oleh AI Agent.
+Pedoman ini mengatur protokol penanganan galat, pembatasan inisiatif AI Agent, dan disiplin debugging analitis guna mencegah halusinasi, perbaikan spekulatif, dan degradasi arsitektur.
 
-## Aturan "Stop-and-Ask" (Anti-Looping)
-1. **Batas Percobaan Maksimal (Max Retry Rule):** Apabila Anda mencoba memperbaiki sebuah kegagalan (contoh: *build error*, peringatan linting berulang, kegagalan *test case*) dan gagal menyelesaikannya dalam **2 kali iterasi penyelesaian**, Anda **DIWAJIBKAN MUTLAK** untuk berhenti meraba-raba (*blind guessing*).
-2. **Kewajiban Melapor:** Setelah menyentuh batas percobaan tersebut, Anda harus secara proaktif melaporkan kegagalan tersebut kepada pengguna. Paparkan *log error* terakhir secara utuh, sampaikan hipotesis mengapa hal ini sangat persisten, dan mintalah panduan lebih spesifik.
-3. **Kewajiban Pencatatan Retrospektif:** Selain melapor kepada pengguna, Anda **WAJIB** mencatatkan detail kegagalan persisten ini ke dalam log pembelajaran mandiri di `nodes/[nama-node]/retrospectives/RETROSPECTIVE.md` (mengikuti pedoman di folder tersebut). Ini untuk memastikan jejak masalah terekam spesifik untuk *node* ini.
+---
 
-## Larangan Inisiatif Liar (No Wild Initiative)
-1. **Dilarang Menebak Keputusan:** Anda **DILARANG KERAS** mengambil inisiatif liar, menebak-nebak, atau membuat keputusan arsitektural/fungsional di luar cakupan instruksi pengguna jika terdapat informasi yang kurang atau ambigu.
-2. **Wajib Bertanya:** Jika Anda kebingungan dalam mengambil keputusan, merasa kurang konteks, atau menghadapi titik percabangan (*branching point*) yang tidak diatur di dalam pedoman mana pun, Anda **WAJIB BERHENTI** dan bertanya kepada pengguna melalui *prompt*. Inisiatif yang salah dan merugikan sangat dikutuk!
+## 1. Protokol Eskalasi & Interaksi Pengguna (Stop-and-Ask Policy)
 
-## Larangan Mengasumsikan Keberhasilan
-1. **Wajib Memvalidasi Eksekusi:** Anda **DILARANG KERAS** melontarkan klaim "Kode sudah berhasil diperbaiki" atau "Seharusnya sudah berfungsi" secara teoretis tanpa eksekusi bukti konkret.
-2. Jika Anda memodifikasi kode fungsional, Anda harus menjalankan validasi di lapis bawah secara mandiri (misalnya dengan menjalankan terminal linting, mengeksekusi kompilasi lokal, atau menjalankan skrip *test case* yang relevan). Hanya ketika indikator terminal mencetak status bersih (*pass/success*), barulah Anda boleh mengonfirmasi ke pengguna.
+### 1.1 Batas Percobaan Maksimal (Max Retry Rule: 2 Iterasi)
+Jika perbaikan galat (build error, linter warning, kegagalan test suite) tidak terselesaikan dalam **2 kali iterasi perbaikan**, AI Agent **WAJIB BERHENTI**:
+1. Hentikan percobaan acak atau tebakan spekulatif.
+2. Laporkan kegagalan kepada pengguna secara transparan: sertakan log terminal aktual, analisis penyebab persisten, dan minta arahan spesifik.
+3. Catat detail kegagalan dan jalan buntu teknis tersebut ke dalam `nodes/[nama-node]/retrospectives/RETROSPECTIVE.md` agar terekam sebagai pembelajaran lokal node.
 
-## Verifikasi Eksistensi File (No Blind Imports)
-1. **Dilarang Menebak Path:** Sebelum Anda (AI Agent) merujuk (*import/require*), mengedit secara *inline*, atau membongkar struktur file apa pun yang belum pernah Anda sentuh di sesi ini, Anda **WAJIB** melakukan pengecekan awal.
-2. Gunakan perintah pemindaian terminal seperti `ls`, pemanggilan fungsi pelacakan direktori, atau penelusuran *grep* untuk memvalidasi bahwa lokasi direktori atau struktur berkas (*file/folder*) yang akan Anda kerjakan benar-benar eksis secara fisik di sistem.
+### 1.2 Larangan Inisiatif Liar (No Wild Initiative)
+1. **Dilarang Menebak Keputusan:** Dilarang mengambil keputusan arsitektural, fungsional, atau bisnis di luar cakupan instruksi pengguna saat menghadapi informasi ambigu atau kurang lengkap.
+2. **Kewajiban Bertanya (Stop-and-Ask):** Jika menghadapi titik percabangan logika yang tidak diatur dalam PRD atau pedoman, wajib berhenti dan meminta konfirmasi pengguna melalui prompt.
 
-## Codebase State Preservation & Architectural Integrity
+---
 
-### 🚫 Larangan Keras (Anti-Patterns)
-1. **Destructive File Operations:** JANGAN PERNAH menggunakan perintah atau tool yang menimpa/menghapus file tanpa review eksplisit dari user. Ini mencakup (namun tidak terbatas pada) `git checkout <file>`, `git restore <file>`, `git clean`, `sed -i`, dan `write_to_file` dengan `Overwrite: true` pada file yang sudah ada. Lihat **[safe-file-operations.md](./safe-file-operations.md)** untuk daftar lengkap larangan dan alternatif wajibnya — dokumen tersebut adalah **satu-satunya sumber kebenaran** untuk aturan ini dan berlaku **secara absolut**, bukan hanya saat tool failure.
-2. **Conscious Disregard (Pengabaian Sadar):** JANGAN PERNAH mengabaikan regresi atau inkonsistensi yang terlihat pada *codebase*. Pemikiran seperti "Ini tidak penting sekarang, kerjakan saja tugas utamanya dulu" adalah **PELANGGARAN FATAL**.
+## 2. Integritas State, Pembuktian & Validasi Kode (State Integrity & Evidence)
 
-### ✅ Tindakan yang Diwajibkan (Best Practices)
-1. **Fix Forward (Perbaiki ke Depan):** Jika terjadi kerusakan file akibat kesalahan tool, perbaiki baris yang rusak tersebut secara spesifik dan teliti menggunakan tool pengedit teks. Jangan me-reset keseluruhan file ke *state* Git sebelumnya kecuali Anda 100% yakin tidak ada pekerjaan yang hilang — dan bahkan dalam kasus itu, **wajib tampilkan `git diff` kepada user dan tunggu konfirmasi** sebelum mengeksekusi.
-2. **Zero Tolerance for Regressions (Toleransi Nol untuk Regresi):** Jika saat membaca file Anda menyadari bahwa arsitektur, penamaan (misal: nama komponen/variabel), atau struktur kembali ke versi lama yang salah, **HENTIKAN** tugas saat ini. Perbaiki regresi tersebut seketika itu juga demi menghormati kesepakatan arsitektur sebelumnya.
-3. **State Integrity > Task Momentum (Integritas State lebih utama dari Momentum Tugas):** Mempertahankan kebenaran arsitektur secara keseluruhan selalu lebih penting daripada buru-buru menyelesaikan satu *micro-task*.
+### 2.1 Pembuktian Eksekusi Konkret (No Assumed Success)
+1. **Dilarang Klaim Berdasarkan Asumsi:** Dilarang mengklaim "kode sudah diperbaiki" atau "seharusnya berfungsi" tanpa bukti eksekusi riil.
+2. **Verifikasi Bukti Terminal:** Setiap perubahan kode wajib divalidasi via perintah terminal (linting, kompilasi build, atau test suite). Konfirmasi keberhasilan ke pengguna hanya sah jika terminal mencetak status lulus (PASS/Success).
 
-## Prinsip Fail-Fast & Larangan Menyembunyikan Galat (No Error Masking)
+### 2.2 Verifikasi Eksistensi Berkas (No Blind Imports)
+1. **Dilarang Menebak Path:** Sebelum merujuk (import/require), memodifikasi, atau memindahkan berkas yang belum disentuh dalam sesi aktif, wajib memverifikasi keberadaannya secara fisik.
+2. Gunakan perintah pemindaian pasif (`ls`, `list_dir`, `grep`, `find`) untuk memastikan berkas dan folder target benar-benar eksis.
 
-> 💥 **FAIL-FAST OVER SILENT SURVIVAL:**
-> Sebuah aplikasi yang melempar *runtime error* secara gamblang jauh lebih berharga daripada aplikasi yang tetap berjalan (*silent survival*) namun memakan data palsu/mock secara sembunyi-sembunyi.
+### 2.3 Pelestarian State Arsitektur (State Preservation)
+1. **Kepatuhan Operasi Berkas:** Dilarang menggunakan perintah destruktif yang menghapus perubahan working tree (`git checkout <file>`, `git restore <file>`, `git clean`, `sed -i`, atau `write_to_file` dengan overwrite tanpa persetujuan). Seluruh aturan pada [safe-file-operations.md](./safe-file-operations.md) berlaku mutlak.
+2. **Perbaiki ke Depan (Fix Forward):** Jika terjadi kerusakan akibat kesalahan pengeditan, perbaiki baris spesifik tersebut secara cermat. Dilarang me-reset paksa keseluruhan berkas ke commit lama tanpa menampilkan `git diff` dan memperoleh persetujuan pengguna.
+3. **Toleransi Nol untuk Regresi:** Jika menemukan penamaan, struktur modul, atau arsitektur kembali ke versi lama yang salah, segera hentikan tugas dan perbaiki regresi tersebut seketika. Integritas state arsitektur selalu lebih utama daripada kecepatan menyelesaikan tugas (State Integrity > Task Momentum).
+
+---
+
+## 3. Disiplin Debugging & Penanganan Galat (Anti-Slop Debugging & Fail-Fast)
+
+### 3.1 Prinsip Fail-Fast & Larangan Menyembunyikan Galat (No Error Masking)
+
+> **FAIL-FAST OVER SILENT SURVIVAL:**
+> Aplikasi yang melempar runtime error secara gamblang jauh lebih berharga daripada aplikasi yang tetap berjalan secara semu namun menyerap data palsu atau rusak.
 
 1. **Dilarang Membungkam Galat (No Silent Catch):**
-   - **TERLARANG:** Menangkap galat (`catch (e) {}`) lalu secara diam-diam mengembalikan nilai dummy/mock default tanpa melempar ulang galat (*rethrow*) atau menyajikan status error yang transparan.
-   - **WAJIB:** Jika dependensi eksternal (API endpoint, query database, layanan cloud, variabel lingkungan) tidak tersedia atau mengembalikan kegagalan, biarkan sistem melempar galat eksplisit atau tampilkan *Error State UI* yang jujur kepada pengguna.
+   - [TERLARANG] Menangkap galat (`catch (e) {}`) lalu secara diam-diam mengembalikan nilai dummy/mock tanpa melempar ulang galat (rethrow) atau menyajikan status error transparan.
+   - [WAJIB] Jika dependensi eksternal (API, Database, Storage, SDK) gagal atau tidak tersedia, sistem wajib melempar runtime error eksplisit atau menampilkan Error State UI yang jujur kepada pengguna.
 2. **Larangan Defensive Mocking Saat Debugging:**
-   - Ketika Anda mendapati kegagalan saat menjalankan aplikasi atau *test*, Anda **DILARANG KERAS** menyisipkan data statis/hardcoded sebagai "penambal darurat" agar aplikasi terlihat berjalan.
-   - Telusuri dan perbaiki akar masalahnya (*root cause*): periksa file konfigurasi `.env`, validasi integrasi jaringan, atau sesuaikan penanganan galatnya secara struktural.
-3. **Kewajiban Pesan Galat Deskriptif & Berorientasi Pemulihan:**
-   - Setiap *runtime error* yang dilempar wajib memberikan konteks spesifik: apa yang hilang, nilai apa yang diekspektasikan, dan file/variabel apa yang harus diperiksa developer (contoh: `"[Config Error] NEXT_PUBLIC_API_URL is required but was not provided in .env.local"` atau `"[Config Error] DATABASE_URL is missing"`).
-   - Pesan galat yang ditampilkan pada antarmuka pengguna (UI) **WAJIB** berorientasi pada pemulihan (*actionable recovery*): jelaskan apa yang terjadi dan beri tahu tindakan perbaikan konkretnya (contoh: *"Nomor telepon belum lengkap. Masukkan 10–13 digit angka dan coba lagi"*, BUKAN hanya *"Input invalid"*).
+   - Dilarang menyisipkan data statis/hardcoded sebagai penambal darurat saat aplikasi atau test gagal. Telusuri dan selesaikan akar masalah pada berkas konfigurasi `.env`, koneksi jaringan, atau penanganan galat strukturalnya.
 
-## Larangan Shotgun Debugging & Spekulasi Halusinatif (Anti-Slop Debugging)
+### 3.2 Standar Pesan Galat Runtime & Antarmuka
+1. **Pesan Runtime Informatif:** Setiap galat yang dilempar wajib memberikan konteks spesifik: apa yang hilang, nilai apa yang diekspektasikan, dan berkas/variabel mana yang perlu diperiksa developer (contoh: `"[Config Error] NEXT_PUBLIC_API_URL is required but was not provided in .env.local"`).
+2. **Pesan UI Berorientasi Pemulihan (Actionable Recovery):** Pesan galat pada antarmuka pengguna wajib menjelaskan apa yang terjadi dan tindakan solusi konkretnya (contoh: *"Nomor telepon belum lengkap. Masukkan 10–13 digit angka dan coba lagi"*, BUKAN hanya *"Input invalid"*).
 
-> 🛡️ **DEBUGGING DENGAN ANALISIS, BUKAN SPEKULASI MEMBABI BUTA:**
-> AI Agent dilarang melakukan aksi *shotgun debugging* (mengubah puluhan baris kode secara acak di banyak file dengan harapan "salah satunya berhasil").
+### 3.3 Larangan Shotgun Debugging & Halusinasi API
 
-1. **Dilarang Mengarang API & Signature Pustaka (No Hallucinated APIs/Props):**
-   - AI **DILARANG KERAS** menebak atau mengarang nama *method*, *property*, atau *flag* dari pustaka pihak ketiga yang sebenarnya tidak didukung oleh versi pustaka yang terpasang di proyek.
-   - Periksa selalu deklarasi tipe (`.d.ts`), berkas `package.json`, atau dokumentasi resmi sebelum menggunakan fungsi baru.
+> **DEBUGGING DENGAN ANALISIS, BUKAN SPEKULASI:**
+> Dilarang melakukan shotgun debugging (mengubah puluhan baris kode secara acak di banyak file dengan harapan salah satunya berhasil).
+
+1. **Dilarang Mengarang Signature API (No Hallucinated APIs/Props):**
+   - Dilarang menebak nama method, property, atau prop dari pustaka pihak ketiga yang tidak didukung versi terpasang.
+   - Selalu periksa deklarasi tipe (`.d.ts`), `package.json`, atau dokumentasi resmi sebelum menggunakan fungsi baru.
 2. **Satu Hipotesis pada Satu Waktu:**
-   - Saat mendiagnosis galat, formulasikan 1 hipotesis terarah berdasarkan analisis *stack trace* dan log sistem. Terapkan perbaikan terfokus dan uji hasilnya secara terukur.
-3. **Dilarang Menumpuk Workaround Cacat:**
-   - Jika sebuah perbaikan tidak menyelesaikan akar masalah, jangan biarkan sisa kode eksperimen menumpuk di *codebase*. Bersihkan perubahan gagal tersebut sebelum mencoba pendekatan berikutnya.
-
+   - Formulasikan satu hipotesis terarah berdasarkan analisis stack trace dan log terminal. Terapkan perbaikan terfokus dan uji hasilnya secara terukur.
+3. **Pembersihan Workaround Gagal:**
+   - Jika suatu perbaikan eksperimen tidak menyelesaikan masalah, bersihkan sisa kode tersebut sebelum mencoba pendekatan berikutnya. Dilarang menumpuk workaround cacat di codebase.

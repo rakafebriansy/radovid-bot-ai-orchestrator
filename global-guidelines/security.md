@@ -1,18 +1,38 @@
 # Security & Environment Constraints
 
-Standar keamanan mutlak ini diperuntukkan guna mencegah kecerobohan kebocoran privasi (*credentials leakage*) atau penyalahgunaan penulisan kode oleh AI Agent.
+> **[PRINSIP UTAMA]** Standar keamanan mutlak untuk mencegah kebocoran kredensial, eksfiltrasi data, dan celah kerentanan dalam basis kode.
 
-## 1. Zero Hardcoded Secrets & No Dummy Fallbacks
-Anda **DILARANG SECARA MUTLAK** untuk:
-1. Menyisipkan kunci kriptografi, kredensial peladen (*server credentials*), sandi koneksi basis data (*database passwords*), token OAuth, atau *API Key* pihak ketiga (seperti OpenAI, Firebase, AWS, Stripe, Supabase, dll.) secara literal (sebagai teks tertanam) ke dalam struktur berkas kode sumber.
-2. Menyediakan string *fallback* semu/dummy pada pemanggilan kredensial (contoh TERLARANG: `process.env.API_KEY || "dummy_secret"` atau `process.env.SECRET_KEY ?? "my_secret"`).
+---
 
-Seluruh variabel rahasia dan konfigurasi lingkungan **WAJIB** dikelola melalui *Environment Variables* dan divalidasi dengan pola *Fail-Fast* (melempar *runtime error* jika kunci tidak terdefinisi). Rujuk detail implementasi pada [coding.md](./coding.md).
+## 1. Tata Kelola Rahasia Lingkungan (Secrets Governance)
 
-## 2. Kewajiban Pengabaian Git (Strict .gitignore)
-Sebelum sistem orkestrasi Anda menginjeksikan atau menginisialisasi skema pengumpulan kredensial *Environment Variables* lokal (seperti penciptaan file `.env`), tugas pertama dan paling esensial Anda adalah menjamin bahwa rute penamaan file kredensial tersebut telah tercatat teguh di dalam daftar hirarki eksklusi kontrol versi `.gitignore`. Tidak ada toleransi bagi kebocoran kunci rahasia (*secret leak*) menuju repositori Git.
+### 1.1 Larangan Hardcoded Secrets & Dummy Fallbacks
+1. **[TERLARANG]** Menyisipkan kunci kriptografi, kredensial peladen, sandi koneksi basis data, token OAuth, atau API Key pihak ketiga (seperti OpenAI, Firebase, AWS, Stripe, Supabase, dll.) secara literal ke dalam berkas kode sumber.
+2. **[TERLARANG]** Menyediakan string *fallback* semu atau dummy pada pembacaan kredensial lingkungan:
+   ```typescript
+   // [SALAH] Terlarang: Fallback dummy menutupi ketiadaan konfigurasi
+   const apiKey = process.env.API_KEY || "dummy_secret";
+   const secret = process.env.SECRET_KEY ?? "my_secret";
+   ```
+3. **[WAJIB]** Seluruh variabel rahasia dan konfigurasi lingkungan dikelola melalui *Environment Variables* dan divalidasi dengan pola *Fail-Fast* (melempar *runtime error* jika kunci tidak terdefinisi). Rujuk pola `getRequiredEnv()` pada [coding.md](./coding.md).
 
-## 3. Kewajiban Sanitasi Input Dasar (Input Validation)
-Saat membangun fitur antarmuka pemrograman terbuka (*public-facing API*) maupun interaksi *form inputs* dari sisi antarmuka klien pengguna:
-- AI **DILARANG** mempercayai struktur *payload* mentah dari sisi klien secara naif.
-- Anda wajib mensisipkan skema penyaringan (*sanitization*), filter regulasi regex, atau memanfaatkan perpustakaan *Data Validation Schema* baku untuk mencegat upaya penyusupan manipulatif seperti SQL Injection, manipulasi struktur NoSQL, hingga pancingan XSS (Cross-Site Scripting).
+### 1.2 Isolasi Berkas Kredensial (.gitignore First)
+1. **[WAJIB]** Sebelum membuat atau menginisialisasi berkas lingkungan lokal (`.env`, `.env.local`, `.env.*.local`), pastikan pola penamaan berkas tersebut telah tercatat dalam hirarki eksklusi `.gitignore`.
+2. **[TERLARANG]** Melakukan commit berkas kredensial atau rahasia ke kontrol versi Git. Nol toleransi terhadap kebocoran secret.
+
+### 1.3 Masking & Larangan Pencetakan Rahasia ke Log
+1. **[TERLARANG]** Mencetak nilai *environment variables* rahasia secara mentah ke log terminal atau log konsol runtime (`console.log(process.env)`, `print(os.environ)`). Rujuk [pipeline.md](./pipeline.md).
+2. **[WAJIB]** Gunakan masking parsial jika identitas kredensial perlu dicatat untuk audit trail (contoh: `sk-...xxxx`).
+
+---
+
+## 2. Validasi & Sanitasi Input (Input Hardening)
+
+### 2.1 Kebijakan Zero-Trust Payload
+1. **[ATURAN]** AI DILARANG mempercayai struktur payload mentah dari sisi klien secara naif, baik pada *public-facing API* maupun interaksi form input antarmuka pengguna.
+2. **[WAJIB]** Terapkan skema sanitasi data, filter regex ketat, atau pustaka validasi skema baku (seperti Zod, Yup, Joi, Pydantic) sebelum data diproses oleh logika bisnis.
+
+### 2.2 Mitigasi Vektor Kerentanan Baku
+1. **SQL Injection:** Wajib menggunakan *parameterized queries* atau ORM/query builder teruji. Dilarang konkatenasi string SQL mentah.
+2. **NoSQL Manipulation:** Sanitasi operator kueri dinamis sebelum dieksekusi oleh mesin basis data dokumen.
+3. **Cross-Site Scripting (XSS):** Lakukan sanitasi dan *escape* output data dinamis pengguna sebelum dirender pada antarmuka web; cegah injeksi HTML atau skrip tak terverifikasi.

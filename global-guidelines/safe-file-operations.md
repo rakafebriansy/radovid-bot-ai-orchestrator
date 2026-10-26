@@ -1,213 +1,118 @@
-# Safe File Operations — Prohibited Destructive Commands
+# Safe File Operations: Prohibited Destructive Commands
 
-> 🔴 **PELANGGARAN FATAL:** Mengeksekusi perintah-perintah yang dilarang di dokumen ini adalah
-> **PELANGGARAN FATAL** yang setara dengan menghapus pekerjaan pengguna secara sepihak. Agent yang
-> melanggar rule ini dianggap telah mengorbankan kepercayaan pengguna dan integritas proyek.
-
-## Tujuan
-
-Rule ini melindungi user dari kehilangan kesempatan me-review perubahan file sebelum diterapkan.
-Perintah-perintah di bawah bersifat **destruktif dan tidak reversible secara langsung**, sehingga
-berpotensi menimpa atau menghapus konten tanpa review yang memadai.
-
-> ⚠️ **Hubungan dengan `error-handling.md`:** Dokumen `error-handling.md` menyebut larangan
-> `git checkout <file>` dan `git restore <file>` dalam konteks *tool failure*. Dokumen ini
-> **memperluas dan menggantikan** cakupan tersebut — larangan berlaku **secara absolut**, bukan
-> hanya saat tool failure. Jika ada kontradiksi, **dokumen ini yang menang**.
+> **[FATAL]** Mengeksekusi perintah terlarang dalam dokumen ini menghapus kesempatan pengguna meninjau (review) kode dan setara dengan perusakan sepihak.
+> **[PRIORITAS REGULASI]** Dokumen ini memperluas dan menganulir klausul terkait pada [error-handling.md](./error-handling.md). Berlaku mutlak pada seluruh siklus eksekusi AI Agent. Jika terjadi kontradiksi aturan, dokumen ini adalah rujukan tertinggi.
 
 ---
 
-## ⚖️ Protokol Permintaan Izin: Read-Only vs Modifikasi State (State Mutation Protocol)
+## 1. Protokol Otorisasi Operasi: Read-Only vs Mutasi State
 
-> 🛡️ **PRINSIP TRANSPARANSI PERUBAHAN STATE:**
-> AI Agent **DILARANG KERAS** langsung meminta *permission* untuk perintah yang memodifikasi *state* tanpa memaparkan rencana terlebih dahulu.
+AI Agent DILARANG meminta izin terminal (permission prompt) untuk mutasi state sebelum memaparkan rencana implementasi secara transparan.
 
-### 1. Operasi Read-Only (Boleh Langsung Meminta Izin / Dijalankan Mandiri)
-- **Definisi:** Segala perintah terminal atau pemanggilan *tool* yang bersifat inspeksi pasif, membaca isi dokumen, memindai direktori, atau mengumpulkan konteks sistem tanpa mengubah status (*state*), isi berkas, skema, atau data apa pun.
-- **Daftar Operasi Read-Only yang Diizinkan Langsung:**
-  - **Navigasi & Pelacakan Direktori:** `ls`, `dir`, `pwd`, `tree`, `find` (pencarian), `which`, `graphify query`
-  - **Pembacaan Konten Berkas:** `head`, `tail`, `cat`, `less`, `sed -n` (mode cetak/read-only tanpa `-i`), `awk` (tanpa *file redirection* / *overwrite*), `grep`, `rg`, `view_file`, `list_dir`, `read_url_content`
-  - **Inspeksi Status Kontrol Versi (VCS):** `git status`, `git log`, `git diff`, `git branch -a`, `git show`
-  - **Inspeksi Basis Data:** Kueri `SELECT` non-locking, `EXPLAIN`, inspeksi skema baca (*read-only schema inspection*)
-- **Kebijakan Izin:** AI Agent **DIPERBOLEHKAN** langsung meminta *permission* eksekusi (atau langsung mengeksekusi secara otonom jika tool mendukung) untuk operasi-operasi *read-only* ini demi kelancaran pengumpulan konteks awal.
+### 1.1 Operasi Read-Only (Inspeksi Pasif)
+Operasi pembacaan dokumen, inspeksi direktori, atau penelusuran konteks tanpa mengubah berkas, skema, maupun data. AI Agent **DIPERBOLEHKAN** meminta izin atau mengeksekusi secara otonom untuk investigasi:
+- **Navigasi & Struktur Direktori:** `ls`, `dir`, `pwd`, `tree`, `find`, `which`, `graphify query`
+- **Pembacaan Berkas:** `head`, `tail`, `cat`, `less`, `sed -n` (tanpa `-i`), `awk` (tanpa redirect overwrite), `grep`, `rg`, `view_file`, `list_dir`, `read_url_content`
+- **Inspeksi Git:** `git status`, `git log`, `git diff`, `git branch -a`, `git show`
+- **Inspeksi Database:** Kueri `SELECT` non-locking, `EXPLAIN`, inspeksi skema baca
 
-### 2. Operasi Modifikasi State (DILARANG LANGSUNG MEMINTA PERMISSION TANPA RENCANA)
-- **Definisi:** Segala tindakan atau perintah yang berpotensi mengubah status (*state mutation*), memodifikasi *codebase*, menyisipkan berkas, menghapus berkas, mengubah konfigurasi, merombak skema basis data (DDL), atau memanipulasi data produksi/tabel (DML).
-- **Cakupan Operasi Modifikasi State:**
-  - **Manipulasi Berkas & Struktur:** Menambah file baru (`write_to_file`, `touch`), memodifikasi file (`replace_file_content`, `multi_replace_file_content`), menghapus file (`rm`), memindahkan/menggandakan file (`mv`, `cp`), membuat direktori (`mkdir`).
-  - **Konfigurasi & Dependensi:** Menginstal paket (`npm install`, `pip install`, `cargo add`, dll.), mengubah file environment (`.env`), mengedit berkas konfigurasi sistem (`package.json`, `tsconfig.json`, `docker-compose.yml`).
-  - **Basis Data & Skema:** Menjalankan migrasi DDL (`CREATE`, `ALTER`, `DROP`), menyisipkan data *seed*, mengubah tabel (INSERT/UPDATE/DELETE/TRUNCATE).
-  - **Lingkungan & Layanan:** Menjalankan *build script* yang menghasilkan artefak baru, menjalankan *service container*, atau merestart peladen.
-- **Aturan Mutlak Permintaan Permission Untuk Menjalankan Command Terminal:**
-  AI Agent **DILARANG KERAS** langsung melontarkan dialog izin eksekusi (*permission prompt*) untuk operasi modifikasi state tanpa menyelesaikan 3 prasyarat berurutan berikut:
-  1. **Paparkan Rencana (*Implementation Plan*) Secara Transparan:** Jelaskan berkas apa saja yang akan dibuat, diubah, atau dihapus, perintah modifikasi apa yang akan dijalankan, dan apa dampaknya.
-  2. **Tampilkan Pratinjau (*Diff Preview*):** Tunjukkan pratinjau potongan kode atau skrip yang akan diterapkan.
-  3. **Tunggu Persetujuan Rencana dari Pengguna:** Hanya setelah pengguna secara eksplisit menyetujui rencana tersebut, barulah AI diizinkan meminta *permission* eksekusi untuk perintah modifikasi state terkait.
+### 1.2 Operasi Mutasi State (State Mutation)
+Tindakan yang mengubah berkas, basis kode, konfigurasi, skema database (DDL), atau data:
+- **Manipulasi Berkas & Direktori:** Penambahan (`write_to_file`, `touch`), pengeditan (`replace_file_content`, `multi_replace_file_content`), penghapusan (`rm`), pemindahan/penyalinan (`mv`, `cp`), pembuatan direktori (`mkdir`).
+- **Konfigurasi & Dependensi:** Instalasi paket (`npm install`, `pip install`, `cargo add`), mutasi `.env`, modifikasi konfigurasi (`package.json`, `tsconfig.json`, `docker-compose.yml`).
+- **Basis Data & Skema:** Migrasi DDL (`CREATE`, `ALTER`, `DROP`), seeding data, mutasi DML massal (`INSERT`, `UPDATE`, `DELETE`, `TRUNCATE`).
+- **Layanan & Runtime:** Build script penghasil artefak, inisiasi service container, restart peladen.
+
+### 1.3 Prasyarat Otorisasi Sebelum Modifikasi (Tiga Tahap Mutlak)
+AI Agent DILARANG memunculkan dialog izin eksekusi terminal untuk mutasi state sebelum menuntaskan 3 tahap berurutan:
+1. **Paparkan Rencana (*Implementation Plan*):** Rincikan berkas yang dibuat/diubah/dihapus, perintah yang dijalankan, dan konsekuensi teknisnya.
+2. **Tampilkan Pratinjau (*Diff Preview*):** Tunjukkan cuplikan kode, diff terfokus, atau skrip yang akan diterapkan.
+3. **Tunggu Persetujuan Eksplisit:** Ajukan izin eksekusi terminal hanya setelah pengguna menyetujui rencana dan pratinjau.
 
 ---
 
-## ❌ Perintah yang DILARANG TOTAL
+## 2. Katalog Perintah Destruktif Terlarang Mutlak
 
-Agent **TIDAK BOLEH** menjalankan perintah-perintah berikut dalam kondisi apapun.
+AI Agent DILARANG mengeksekusi perintah berikut dalam kondisi apa pun tanpa konfirmasi tertulis eksplisit pengguna:
 
----
-
-### 1. Script Perubahan Massal (JavaScript, Python, Shell, dll.)
-
-Contoh yang dilarang:
-```
+### 2.1 Skrip Transformasi Massal (Bulk Mutation Scripts)
+Contoh terlarang:
+```bash
 node fix-all.js
 python migrate.py
 bash bulk-rename.sh
 ts-node transform.ts
 ```
+- **Rasional:** Mengubah banyak berkas sekaligus tanpa memberikan visibilitas diff per-berkas sebelum eksekusi.
+- **Alternatif Wajib:** Gunakan `replace_file_content` atau `multi_replace_file_content` per berkas secara granular. Jika modifikasi massal tidak terhindarkan, susun dokumen rencana implementasi berisi rincian diff tiap berkas dan tunggu persetujuan pengguna.
 
-**Alasan**: Script semacam ini memodifikasi banyak file sekaligus tanpa memberikan kesempatan
-user melihat perubahan per-file secara detail sebelum diterapkan.
-
-**Alternatif wajib**:
-- Gunakan tool `replace_file_content` atau `multi_replace_file_content` untuk setiap file secara eksplisit
-- Jika perubahan massal benar-benar diperlukan, buat terlebih dahulu `implementation_plan.md`
-  yang menjabarkan setiap file yang akan berubah beserta diff-nya, lalu **tunggu persetujuan
-  eksplisit user** sebelum mengeksekusi satu baris pun
-
----
-
-### 2. In-place File Edit (`sed -i`, `perl -i`, `awk` overwrite, `tee` destruktif)
-
-Contoh yang dilarang:
+### 2.2 Manipulasi Berkas In-Place (sed -i, perl -i, awk redirect, tee)
+Contoh terlarang:
 ```bash
 sed -i 's/foo/bar/g' file.ts          # sed in-place
 sed -i '' 's/old/new/' **/*.js        # sed in-place (macOS)
 perl -i -pe 's/foo/bar/g' file.ts     # perl in-place
-awk '{gsub(/foo/,"bar"); print}' f > f # overwrite via redirect ke file yang sama
+awk '{gsub(/foo/,"bar"); print}' f > f # overwrite via redirect ke berkas yang sama
 tee file.ts <<< "new content"         # overwrite via tee
 ```
+- **Rasional:** Memodifikasi berkas langsung di disk tanpa mekanisme diff preview kepada pengguna.
+- **Alternatif Wajib:** Gunakan `replace_file_content` atau `multi_replace_file_content`. Jalankan `sed` atau `perl` tanpa flag `-i` untuk inspeksi output ke stdout, lalu terapkan perubahan via tool pengedit berkas terisolasi.
 
-**Alasan**: Semua varian di atas memodifikasi file langsung di disk tanpa menampilkan preview
-perubahan kepada user terlebih dahulu.
-
-**Alternatif wajib**:
-- Gunakan tool `replace_file_content` atau `multi_replace_file_content` yang transparan dan
-  menampilkan diff sebelum diterapkan
-- Untuk preview: jalankan `sed 's/foo/bar/g' file.ts` (tanpa `-i`) atau `perl -pe '...' file.ts`
-  untuk melihat output, kemudian terapkan via file edit tool — **bukan** via flag in-place
-
----
-
-### 3. `git checkout <file>` (Membuang Perubahan Working Tree)
-
-Contoh yang dilarang:
+### 2.3 Pembatalan Modifikasi Git Tanpa Konfirmasi (git checkout & git restore per-file)
+Contoh terlarang:
 ```bash
 git checkout -- src/index.ts
 git checkout HEAD src/
 git checkout <branch> -- path/to/file
-```
-
-**Alasan**: Perintah ini **menghapus permanen** perubahan yang belum di-commit pada file yang
-ditarget tanpa konfirmasi user. Perhatikan: `git checkout <branch>` (berpindah branch tanpa
-path) **tidak termasuk** larangan ini — yang dilarang adalah varian yang menyertakan path/file.
-
-**Alternatif wajib**:
-- Tampilkan `git diff <file>` dan tunjukkan hasilnya kepada user
-- Jelaskan secara eksplisit konten apa yang akan hilang permanen
-- Gunakan `view_file` untuk menunjukkan isi file saat ini vs versi target
-- Tunggu konfirmasi eksplisit dari user sebelum melanjutkan
-
----
-
-### 4. `git restore <file>` (Membuang Perubahan Working Tree)
-
-Contoh yang dilarang:
-```bash
 git restore src/index.ts
 git restore --staged src/
 git restore --source=HEAD src/config.ts
 ```
+- **Rasional:** Menghapus permanen perubahan unstaged maupun staged pada berkas target tanpa persetujuan pengguna. *(Pengecualian: `git checkout <branch>` murni untuk navigasi antar-cabang diperbolehkan).*
+- **Alternatif Wajib:** Jalankan `git diff <file>` untuk meninjau perubahan, sampaikan bagian yang akan hilang, gunakan `view_file`, dan tunggu konfirmasi eksplisit pengguna sebelum membatalkan modifikasi.
 
-**Alasan**: Identik dengan `git checkout <file>` — perubahan yang belum di-commit akan hilang
-secara permanen dan tidak bisa di-undo.
-
-**Alternatif wajib**:
-- Jalankan `git diff <file>` terlebih dahulu dan tampilkan hasilnya kepada user
-- Jelaskan secara eksplisit konten apa yang akan hilang
-- Tunggu konfirmasi eksplisit dari user sebelum melanjutkan
-
----
-
-### 5. `git clean` (Menghapus File Untracked)
-
-Contoh yang dilarang:
+### 2.4 Pembersihan Berkas Untracked (git clean)
+Contoh terlarang:
 ```bash
 git clean -f
 git clean -fd
 git clean -fdx
 ```
+- **Rasional:** Menghapus permanen berkas untracked tanpa riwayat pemulihan Git.
+- **Alternatif Wajib:** Jalankan dry-run `git clean -n` terlebih dahulu untuk memaparkan daftar berkas yang akan terhapus, lalu minta persetujuan eksplisit pengguna.
 
-**Alasan**: Menghapus permanen file-file yang belum di-track Git (untracked files). File yang
-belum pernah di-`git add` tidak bisa dikembalikan — tidak ada di staging maupun history.
-
-**Alternatif wajib**:
-- Tampilkan `git clean -n` (dry run) kepada user terlebih dahulu untuk menunjukkan file apa yang
-  akan dihapus
-- Tunggu konfirmasi eksplisit dari user
-
----
-
-### 6. `git stash drop` / `git stash clear` (Menghapus Stash)
-
-Contoh yang dilarang:
+### 2.5 Penghapusan Git Stash (git stash drop & clear)
+Contoh terlarang:
 ```bash
 git stash drop
 git stash drop stash@{0}
 git stash clear
 ```
+- **Rasional:** Menghapus snapshot stash secara permanen tanpa opsi pemulihan.
+- **Alternatif Wajib:** Tampilkan konten stash dengan `git stash show -p stash@{N}`, paparkan detailnya, dan tunggu konfirmasi eksplisit sebelum eksekusi penghapusan.
 
-**Alasan**: Menghapus permanen perubahan yang tersimpan di stash. Setelah di-drop, stash tidak
-bisa dipulihkan.
-
-**Alternatif wajib**:
-- Tampilkan isi stash dengan `git stash show -p stash@{N}` terlebih dahulu
-- Tunjukkan hasilnya kepada user dan tunggu konfirmasi eksplisit sebelum menghapus
-
----
-
-### 7. `write_to_file` dengan `Overwrite: true` (Tool Native Agent)
-
-Contoh yang dilarang:
-```
+### 2.6 Penimpaan Berkas Total (write_to_file Overwrite: true)
+Contoh terlarang:
+```python
 write_to_file(path="src/config.ts", overwrite=True, content="...")
 ```
-
-**Alasan**: Tool ini menimpa **seluruh isi file** sekaligus — lebih destruktif dari `sed -i`
-karena menghapus konten yang tidak termasuk dalam perubahan yang dimaksud. Tidak ada diff yang
-ditampilkan sebelum eksekusi.
-
-**Alternatif wajib**:
-- Gunakan `replace_file_content` atau `multi_replace_file_content` untuk mengedit bagian
-  spesifik yang perlu diubah
-- Gunakan `write_to_file` dengan `Overwrite: true` **hanya** untuk file yang baru dibuat atau
-  file yang **seluruh isinya** memang ingin diganti secara sadar dan sudah disetujui user
-- Jika ragu, tampilkan diff rencana perubahan kepada user terlebih dahulu
+- **Rasional:** Menimpa seluruh isi berkas sekaligus tanpa visualisasi diff terfokus, berisiko menghapus kode penting di luar cakupan tugas.
+- **Alternatif Wajib:** Gunakan `replace_file_content` atau `multi_replace_file_content` untuk perubahan spesifik. Gunakan `write_to_file` dengan `Overwrite: true` HANYA untuk berkas baru atau jika penggantian total berkas telah disetujui dalam rencana implementasi.
 
 ---
 
-## ✅ Prinsip Umum: Utamakan Operasi Reversible
+## 3. Tata Kelola Reversibilitas & Resolusi Situasi Khusus
 
-Ketika ragu, selalu pilih pendekatan yang:
-1. **Show before apply** — tampilkan perubahan kepada user sebelum diterapkan
-2. **Reversible** — gunakan Git staging, branch baru, atau backup eksplisit agar bisa di-undo
-3. **Granular** — satu file pada satu waktu, bukan bulk sekaligus
-4. **Transparan** — user dapat melihat dengan jelas apa yang akan berubah
+### 3.1 Empat Pilar Tindakan Reversible
+1. **Show Before Apply:** Paparkan rencana atau diff kepada pengguna sebelum eksekusi mutasi.
+2. **Reversibility:** Utamakan operasi yang dapat di-rollback via Git staging, branch terisolasi, atau pencadangan eksplisit.
+3. **Granularitas:** Terapkan modifikasi satu berkas per langkah; hindari script transformasi massal tak terkendali.
+4. **Transparansi:** Berikan detail baris kode yang diubah beserta rasional dampaknya secara objektif.
 
----
-
-## Cara Menangani Edge Case
-
-Jika ada situasi di mana perintah-perintah di atas tampaknya merupakan satu-satunya solusi praktis:
-
-1. **Jangan jalankan perintahnya**
-2. Jelaskan kepada user mengapa Anda tidak bisa melanjutkan dengan cara yang ada
-3. Tampilkan dry run / preview output jika tersedia (misal: `git clean -n`, `sed` tanpa `-i`)
-4. Tawarkan alternatif reversible yang tersedia
-5. Tunggu instruksi eksplisit dari user sebelum mengambil tindakan apapun
+### 3.2 Protokol Resolusi Deadlock & Situasi Buntu
+Jika perintah destruktif tampaknya merupakan satu-satunya solusi teknis:
+1. **[TERLARANG]** Jangan eksekusi perintah destruktif secara sepihak.
+2. Jelaskan kendala teknis dan penyebab pendekatan standar tidak berfungsi.
+3. Jalankan dan paparkan hasil simulasi / dry-run (`git clean -n`, `git stash show -p`, `sed` tanpa `-i`, `git diff`).
+4. Ajukan opsi mitigasi yang aman dan dapat dipulihkan (*reversible*).
+5. Tunggu instruksi tertulis eksplisit dari pengguna sebelum mengeksekusi tindakan apa pun.
