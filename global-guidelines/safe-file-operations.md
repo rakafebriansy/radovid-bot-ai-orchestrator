@@ -47,7 +47,7 @@ bash bulk-rename.sh
 ts-node transform.ts
 ```
 - **Rasional:** Mengubah banyak berkas sekaligus tanpa memberikan visibilitas diff per-berkas sebelum eksekusi.
-- **Alternatif Wajib:** Gunakan `replace_file_content` atau `multi_replace_file_content` per berkas secara granular. Jika modifikasi massal tidak terhindarkan, susun dokumen rencana implementasi berisi rincian diff tiap berkas dan tunggu persetujuan pengguna.
+- **Alternatif Wajib:** Gunakan tool native editor berkas bawaan platform AI agent (contoh: `edit_file` pada Antigravity IDE, atau `replace_file_content` / `multi_replace_file_content` pada tool sejenis) per berkas secara granular. Jika modifikasi massal tidak terhindarkan, susun dokumen rencana implementasi berisi rincian diff tiap berkas dan tunggu persetujuan pengguna.
 
 ### 2.2 Manipulasi Berkas In-Place (sed -i, perl -i, awk redirect, tee)
 Contoh terlarang:
@@ -59,9 +59,35 @@ awk '{gsub(/foo/,"bar"); print}' f > f # overwrite via redirect ke berkas yang s
 tee file.ts <<< "new content"         # overwrite via tee
 ```
 - **Rasional:** Memodifikasi berkas langsung di disk tanpa mekanisme diff preview kepada pengguna.
-- **Alternatif Wajib:** Gunakan `replace_file_content` atau `multi_replace_file_content`. Jalankan `sed` atau `perl` tanpa flag `-i` untuk inspeksi output ke stdout, lalu terapkan perubahan via tool pengedit berkas terisolasi.
+- **Alternatif Wajib:** Gunakan tool native file editor platform AI (contoh: `edit_file` pada Antigravity IDE). Jalankan `sed` atau `perl` tanpa flag `-i` untuk inspeksi output ke stdout, lalu terapkan perubahan via tool pengedit berkas terisolasi.
 
-### 2.3 Pembatalan Modifikasi Git Tanpa Konfirmasi (git checkout & git restore per-file)
+### 2.3 Pembuatan & Penulisan Berkas via Terminal Stdin/Heredoc (cat << 'EOF', echo >, printf >)
+Contoh terlarang:
+```bash
+cat << 'EOF' > /Users/raka/Developer/repositories/projects/room-rental-management-system-dir/room_rental_management_system/test/scratch_measure_test.dart
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+...
+EOF
+cd /Users/raka/Developer/repositories/projects/room-rental-management-system-dir/room_rental_management_system && flutter test test/scratch_measure_test.dart
+rm /Users/raka/Developer/repositories/projects/room-rental-management-system-dir/room_rental_management_system/test/scratch_measure_test.dart
+```
+```bash
+echo "const secret = '123';" > src/config.ts
+cat << 'EOF' > scripts/temp_patch.py
+# python script
+EOF
+```
+- **Rasional:**
+  1. **Tidak Ter-record di Sistem Diff/Preview:** Penulisan atau penimpaan berkas melalui aliran input terminal (*heredoc/stdin redirection*) memotong (*bypass*) sistem diff dan file-tracking native platform IDE/AI (contoh: review preview pada Antigravity IDE, Cursor, atau VS Code). Aksi ini tidak menghasilkan penanda penambahan/penghapusan (baris hijau/merah) di editor, sehingga pengguna tidak dapat meninjau kode sebelum dieksekusi.
+  2. **Siluman & Menghilangkan Bukti (Covering Tracks):** Sering dipadukan dengan penghapusan sepihak via `rm` setelah tes dijalankan, melanggar prinsip transparansi audit dan menghilangkan rekaman historis apa yang sebenarnya diuji.
+  3. **Rentan Pelanggaran Absolute Path:** Pola heredoc terminal ini kerap memicu penggunaan path absolut (`/Users/...`, `/home/...`) yang melanggar *Relative Path Policy*.
+- **Alternatif Wajib:**
+  1. Pembuatan berkas baru atau berkas pengujian scratch WAJIB menggunakan tool native pembuatan berkas platform AI (contoh: `write_file` pada Antigravity IDE) pada direktori `sandbox/` atau `preview/` sesuai [testing.md](./testing.md).
+  2. Pengeditan dan penambahan kode pada berkas yang ada WAJIB menggunakan tool native file editor platform AI (contoh: `edit_file` pada Antigravity IDE) secara granular agar perubahan ter-record dan menghasilkan pratinjau diff (*inline review*) di editor.
+  3. Dilarang menghapus berkas eksperimen secara diam-diam via `rm`; minta konfirmasi pengguna atau daftarkan direktori sandbox ke `.gitignore`.
+
+### 2.4 Pembatalan Modifikasi Git Tanpa Konfirmasi (git checkout & git restore per-file)
 Contoh terlarang:
 ```bash
 git checkout -- src/index.ts
@@ -74,7 +100,7 @@ git restore --source=HEAD src/config.ts
 - **Rasional:** Menghapus permanen perubahan unstaged maupun staged pada berkas target tanpa persetujuan pengguna. *(Pengecualian: `git checkout <branch>` murni untuk navigasi antar-cabang diperbolehkan).*
 - **Alternatif Wajib:** Jalankan `git diff <file>` untuk meninjau perubahan, sampaikan bagian yang akan hilang, gunakan `view_file`, dan tunggu konfirmasi eksplisit pengguna sebelum membatalkan modifikasi.
 
-### 2.4 Pembersihan Berkas Untracked (git clean)
+### 2.5 Pembersihan Berkas Untracked (git clean)
 Contoh terlarang:
 ```bash
 git clean -f
@@ -84,7 +110,7 @@ git clean -fdx
 - **Rasional:** Menghapus permanen berkas untracked tanpa riwayat pemulihan Git.
 - **Alternatif Wajib:** Jalankan dry-run `git clean -n` terlebih dahulu untuk memaparkan daftar berkas yang akan terhapus, lalu minta persetujuan eksplisit pengguna.
 
-### 2.5 Penghapusan Git Stash (git stash drop & clear)
+### 2.6 Penghapusan Git Stash (git stash drop & clear)
 Contoh terlarang:
 ```bash
 git stash drop
@@ -94,13 +120,13 @@ git stash clear
 - **Rasional:** Menghapus snapshot stash secara permanen tanpa opsi pemulihan.
 - **Alternatif Wajib:** Tampilkan konten stash dengan `git stash show -p stash@{N}`, paparkan detailnya, dan tunggu konfirmasi eksplisit sebelum eksekusi penghapusan.
 
-### 2.6 Penimpaan Berkas Total (write_to_file Overwrite: true)
+### 2.7 Penimpaan Berkas Total (write_file Overwrite: true)
 Contoh terlarang:
 ```python
-write_to_file(path="src/config.ts", overwrite=True, content="...")
+write_file(path="src/config.ts", overwrite=True, content="...")
 ```
 - **Rasional:** Menimpa seluruh isi berkas sekaligus tanpa visualisasi diff terfokus, berisiko menghapus kode penting di luar cakupan tugas.
-- **Alternatif Wajib:** Gunakan `replace_file_content` atau `multi_replace_file_content` untuk perubahan spesifik. Gunakan `write_to_file` dengan `Overwrite: true` HANYA untuk berkas baru atau jika penggantian total berkas telah disetujui dalam rencana implementasi.
+- **Alternatif Wajib:** Gunakan tool native file editor (contoh: `edit_file` pada Antigravity IDE) untuk perubahan spesifik. Gunakan tool pembuatan berkas (contoh: `write_file`) dengan `Overwrite: true` HANYA untuk berkas baru atau jika penggantian total berkas telah disetujui dalam rencana implementasi.
 
 ---
 

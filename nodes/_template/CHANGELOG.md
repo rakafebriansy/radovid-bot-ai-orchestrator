@@ -34,6 +34,15 @@ Setiap entri wajib diklasifikasikan ke dalam salah satu kategori:
 
 ---
 
+### [2026-11-01 11:28:00] - Policy: Prohibition of Terminal Heredoc (CAT EOF) & Mutation Scripts
+> **Trigger:** Prompt Driven | **Branch:** `main` | **Repo:** `ai-orchestrator-template`
+- **Konteks:** Penegakan hukum besi pelarangan pembuatan/pengeditan berkas melalui terminal stdin/heredoc (`cat << 'EOF'`, `echo >`) dan skrip massal (Python/Node/Bash) guna menjamin seluruh perubahan ter-record di preview visual diff platform IDE (contoh: Antigravity IDE).
+- **Perubahan:**
+  - `[Added]` Menambahkan Subseksi 2.3 pada [global-guidelines/safe-file-operations.md](../../global-guidelines/safe-file-operations.md) berisi katalog larangan heredoc/stdin (`cat << 'EOF' > ...`), rasional teknis, contoh kode terlarang, dan kewajiban menggunakan tool native editor AI (contoh: `write_file` / `edit_file` pada Antigravity).
+  - `[Changed]` Memperbarui [global-guidelines/testing.md](../../global-guidelines/testing.md) Seksi 1.1 melarang pembuatan skrip uji siluman lewat heredoc lalu dihapus via `rm`.
+  - `[Changed]` Menambahkan butir larangan mutasi terminal pada SOP 5.4 di [nodes/_template/main.md](../main.md).
+- **Path File:** `global-guidelines/safe-file-operations.md`, `global-guidelines/testing.md`, `nodes/_template/main.md`, `nodes/_template/CHANGELOG.md`
+
 ### [2026-11-01 10:15:00] - Refactor: Complete Purge of Orchestrator Terms from Git Policy & Tandem Enforcement
 > **Trigger:** Prompt Driven | **Branch:** `main` | **Repo:** `ai-orchestrator-template`
 - **Konteks:** Menghapus sepenuhnya subseksi alur tiket & rencana dari pedoman kontrol versi Git (`version-control.md`) agar tidak menimbulkan kerancuan dengan aturan sterilitas Git message/PR, serta menuntaskan penyebutan berpasangan tandem di seluruh pedoman pendukung.

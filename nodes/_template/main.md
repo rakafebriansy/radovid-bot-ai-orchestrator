@@ -103,6 +103,7 @@ AI Agent WAJIB mematuhi alur kronologis berikut tanpa terkecuali setiap kali men
    - **MODE 2:** Paparkan rencana teknis sebelum mutasi state, eksekusi kode, lalu catat pasangan tiket & rencana secara retrospektif.
 3. **[TERLARANG] Mutasi State Tanpa Otorisasi Rencana:** Dilarang meminta izin terminal untuk mutasi state (edit file, migrasi DDL, install paket, ubah `.env`) sebelum memaparkan dokumen rencana teknis (`plans/PLAN-[EPOCH]`) dan pratinjau diff kepada pengguna (patuhi `safe-file-operations.md`).
 4. **Penyimpanan Permanen & Relative Path:** Berkas rencana disimpan permanen di `plans/` (bukan file sementara) dan ditautkan ke tiket pasangannya menggunakan relative path. Terapkan prinsip *Stop-and-Ask* pada `error-handling.md` jika menemui ambiguitas.
+5. **[TERLARANG] Mutasi Berkas via Terminal Stdin/Skrip:** Dilarang membuat atau memodifikasi berkas menggunakan terminal heredoc/stdin (`cat << 'EOF'`, `echo >`, dsb.) maupun skrip otomasi (Python/Node/Bash). Seluruh pembuatan berkas WAJIB menggunakan tool native pembuatan berkas (contoh: `write_file`) dan modifikasi kode WAJIB menggunakan tool native file editor platform AI (contoh: `edit_file` pada Antigravity IDE) secara granular agar perubahan terekam dan memunculkan diff preview di IDE (patuhi `safe-file-operations.md`).
 
 ### 5.5 Pengerjaan Kode Berbasis TDD & Standar Anti-Slop
 Eksekusi implementasi menggunakan siklus Test-Driven Development sesuai `testing.md`:

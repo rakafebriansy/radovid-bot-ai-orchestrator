@@ -10,6 +10,7 @@
 1. **[WAJIB]** Pisahkan skrip eksperimen atau pengujian coba-coba ke direktori terisolasi di tingkat akar proyek (contoh: `preview/` atau `sandbox/`).
 2. **[TERLARANG]** Mencampurkan kode simulasi atau berkas eksperimen ke dalam hierarki kode produksi (`src/`, `app/`, `lib/`).
 3. **[WAJIB]** Daftarkan direktori *sandbox* atau *preview* ke dalam `.gitignore`. Artefak uji eksperimental dilarang masuk ke riwayat commit Git maupun lingkungan rilis.
+4. **[TERLARANG] Skrip Uji Siluman via Terminal (`cat << 'EOF'`):** Dilarang keras membuat skrip pengujian atau berkas *scratch* menggunakan aliran terminal heredoc/stdin (`cat << 'EOF' > ...`) dan kemudian menghapusnya secara sepihak via `rm`. Seluruh pembuatan berkas pengujian *scratch* WAJIB menggunakan tool native pembuatan dan pengeditan berkas AI platform (contoh: `write_file` / `edit_file` pada Antigravity IDE) di dalam direktori `sandbox/` atau `preview/` agar perubahannya ter-record dan transparan di diff preview IDE (patuhi [safe-file-operations.md](./safe-file-operations.md)).
 
 ### 1.2 Pemeriksaan Pra-Penerbangan (Mandatory Pre-Flight Checks)
 Sebelum menyerahkan modul, menandai pasangan tiket dan rencana selesai (`Done` / `Completed`), atau mengajukan izin commit dan push:
