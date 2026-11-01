@@ -12,8 +12,8 @@ Setiap entri wajib diklasifikasikan ke dalam salah satu kategori:
 - **`PRD`**: Pembaruan dokumen Product Requirements Document.
 - **`Design System`**: Pembaruan spesifikasi desain visual dan token.
 - **`System Design`**: Pembaruan arsitektur sistem dan diagram teknis.
-- **`Development Planning: <nomor>`**: Pembaruan peta jalan atau antrean tiket.
-- **`Ticket: <nomor>`**: Pengerjaan fitur atau perbaikan berbasis tiket spesifik.
+- **`Development Planning: <nomor>`**: Pembaruan peta jalan atau antrean pasangan tiket & rencana implementasi.
+- **`Ticket & Plan: <epoch>`**: Pengerjaan fitur atau perbaikan berbasis pasangan tiket dan rencana implementasi spesifik.
 - **`Prototype: <judul>`**: Pembuatan atau pembaruan purwarupa antarmuka HTML.
 - **`Implementation`**: Perubahan kode sumber aplikasi. Wajib menggunakan salah satu tag awalan:
   - `[Added]`: Fitur, dokumen, atau konfigurasi baru.
@@ -33,6 +33,39 @@ Setiap entri wajib diklasifikasikan ke dalam salah satu kategori:
 > **[PERINGATAN AI AGENT]** Tambahkan entri log baru tepat di bawah garis pemisah ini. Dilarang menambahkan log di baris paling bawah!
 
 ---
+
+### [2026-11-01 10:15:00] - Refactor: Complete Purge of Orchestrator Terms from Git Policy & Tandem Enforcement
+> **Trigger:** Prompt Driven | **Branch:** `main` | **Repo:** `ai-orchestrator-template`
+- **Konteks:** Menghapus sepenuhnya subseksi alur tiket & rencana dari pedoman kontrol versi Git (`version-control.md`) agar tidak menimbulkan kerancuan dengan aturan sterilitas Git message/PR, serta menuntaskan penyebutan berpasangan tandem di seluruh pedoman pendukung.
+- **Perubahan:**
+  - `[Removed]` Mengeliminasi Subseksi 4.1 (*Siklus Pengerjaan Berbasis Tiket & Rencana*) dari [global-guidelines/version-control.md](../../global-guidelines/version-control.md), sehingga Seksi 4 murni menjadi Kebijakan Pengajuan Pull Request (PR Policy) tanpa ada kebocoran instruksi pencatatan ID internal.
+  - `[Changed]` Membersihkan penyebutan istilah 'tiket' pada klausul kontrol versi di [global-guidelines/version-control.md](../../global-guidelines/version-control.md) (aturan branch, granularitas komit, dan pencatatan changelog).
+  - `[Changed]` Menyelaraskan seluruh penyebutan tugas pada [global-guidelines/testing.md](../../global-guidelines/testing.md), [global-guidelines/delivery-gate.md](../../global-guidelines/delivery-gate.md), [global-guidelines/safe-file-operations.md](../../global-guidelines/safe-file-operations.md), dan [nodes/_template/main.md](../main.md) agar selalu menyebut pasangan tiket dan rencana secara beriringan (*tandem*).
+- **Path File:** `global-guidelines/version-control.md`, `global-guidelines/testing.md`, `global-guidelines/delivery-gate.md`, `global-guidelines/safe-file-operations.md`, `nodes/_template/main.md`, `nodes/_template/CHANGELOG.md`
+
+### [2026-11-01 10:05:00] - Refactor: Git Message Sterility & Inseparable Ticket-Plan Tandem Pairing
+> **Trigger:** Prompt Driven | **Branch:** `main` | **Repo:** `ai-orchestrator-template`
+- **Konteks:** Pembersihan mutlak pesan Git (Pull Request & Commit) dari istilah internal orchestrator dan penegakan prinsip penyebutan beriringan tanpa redundansi untuk Tiket & Rencana Implementasi (*Ticket & Plan*).
+- **Perubahan:**
+  - `[Changed]` Menulis ulang [global-docs/templates/pull_request_template.md](../../global-docs/templates/pull_request_template.md) menjadi template standar produksi yang 100% steril dari istilah internal orchestrator (`ticket`, `plan`, `prd`, `guideline`, dsb.).
+  - `[Changed]` Memperbarui [global-guidelines/version-control.md](../../global-guidelines/version-control.md) untuk menghapus instruksi pengaitan tiket internal pada deskripsi PR produksi serta menegaskan kebersihan riwayat Git.
+  - `[Changed]` Memastikan seluruh penyebutan tiket dan rencana implementasi (*Ticket & Plan*) berpasangan secara beriringan (*inseparable pair*) di `README.md`, `main.md`, `development-planning.md`, `tickets/README.md`, `plans/README.md`, `testing.md`, `delivery-gate.md`, dan `coding.md`.
+  - `[Changed]` Mengeliminasi pemanggilan redundan pada `nodes/_template/main.md` dengan menyatukan tata kelola tiket dan rencana ke dalam satu subseksi terpadu (SOP 5.4 Pre-Mutation Gate).
+- **Path File:** `global-docs/templates/pull_request_template.md`, `global-docs/templates/README.md`, `global-guidelines/version-control.md`, `global-guidelines/delivery-gate.md`, `global-guidelines/testing.md`, `global-guidelines/coding.md`, `nodes/_template/main.md`, `nodes/_template/docs/development-planning.md`, `nodes/_template/tickets/README.md`, `nodes/_template/plans/README.md`, `README.md`, `nodes/_template/CHANGELOG.md`
+
+### [2026-11-01 09:45:00] - Refactor: Dedicated Plans Directory, Epoch-Based Tickets, Relative Path Policy, & Skill Integrations
+> **Trigger:** Prompt Driven | **Branch:** `main` | **Repo:** `ai-orchestrator-template`
+- **Konteks:** Pemisahan direktori rencana teknis (`plans/`) dari tiket, konversi penamaan tiket berbasis Epoch timestamp, penegakan Relative Path Policy, serta integrasi keahlian frontend-design dan security-audit.
+- **Perubahan:**
+  - `[Added]` Membuat direktori `nodes/_template/plans/` dan panduan `plans/README.md` untuk menyimpan rencana implementasi teknis mendalam secara terpisah dari tiket tugas.
+  - `[Added]` Menambahkan template `global-docs/templates/plan_template.md` dan memperbarui `global-docs/templates/README.md`.
+  - `[Changed]` Mengonversi format penamaan tiket dari `TICKET-01-` menjadi `TICKET-[EPOCH_TIMESTAMP]-[judul].md` untuk mencegah tabrakan ID pada pengerjaan multi-agent, serta memperbarui seluruh berkas template dan pedoman terkait.
+  - `[Changed]` Memperketat batasan konten tiket di `tickets/README.md` agar tetap ringkas (User Stories dan Acceptance Criteria) dan menautkan rincian teknis ke berkas di `plans/`.
+  - `[Changed]` Menegakkan klausul wajib Relative Path (`Relative Path Policy`) pada `global-guidelines/coding.md`, `safe-file-operations.md`, `README.md`, `main.md`, dan seluruh template.
+  - `[Added]` Mengintegrasikan keahlian resmi Anthropic `skills/frontend-design/` ke dalam ekosistem dan menautkannya pada `ui-and-assets.md`, `design-system.md`, dan `main.md`.
+  - `[Added]` Mengintegrasikan paket keahlian Altamis Atmaja `skills/security-audit/` dan menautkannya pada `security.md` dan `main.md`.
+  - `[Added]` Menambahkan seksi apresiasi dan kredit di bagian bawah `README.md` untuk Anthropic `frontend-design`, Altamis Atmaja `security-audit-skill`, serta Altamis Atmaja `outofthebox`.
+- **Path File:** `README.md`, `nodes/_template/plans/*`, `nodes/_template/tickets/*`, `nodes/_template/main.md`, `global-guidelines/*`, `global-docs/*`, `skills/*`
 
 ### [2026-10-26 21:35:00] - Refactor: Comprehensive Hierarchy Restructure & Token Optimization
 > **Trigger:** Prompt Driven | **Branch:** `main` | **Repo:** `ai-orchestrator-template`

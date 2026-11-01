@@ -1,5 +1,6 @@
 ---
-id: TICKET-[NOMOR]
+id: TICKET-[EPOCH_TIMESTAMP]
+plan_id: PLAN-[EPOCH_TIMESTAMP]
 title: [BUG] [Judul Singkat]
 status: Todo
 priority: High # Siklus Valid: Low, Medium, High
@@ -9,8 +10,14 @@ labels: [Bug]
 
 # Laporan Bug
 
+> **Aturan Relative Path:** Seluruh referensi berkas di dalam tiket ini WAJIB menggunakan relative path dari posisi berkas tiket aktif.
+
 ## 1. Deskripsi Masalah
 [Penjelasan detail anomali atau kegagalan yang terjadi.]
+
+## Rencana Implementasi Teknis (Implementation Plan)
+- **Tautan Rencana Teknis:** [Lihat Dokumen Rencana](../plans/PLAN-[EPOCH_TIMESTAMP]-[judul-singkat].md)
+*(Gunakan folder `plans/` untuk rincian analisis akar masalah dan diff perbaikan; jaga tiket tetap berfokus pada AC dan DoD).*
 
 ## 2. Langkah Reproduksi (Steps to Reproduce)
 1. Buka halaman X / Panggil endpoint Y.

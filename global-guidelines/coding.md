@@ -46,6 +46,13 @@ Gunakan konfigurasi standar rekomendasi resmi (ESLint, Pylint, SwiftLint, Pretti
 ### 1.5 Penjelasan Skrip CLI
 Setiap perintah terminal/CLI (eksekusi skrip, dependensi, build) wajib disertai penjelasan ringkas fungsi flag dan argumen di luar blok kode.
 
+### 1.6 Kebijakan Referensi Path Wajib Relatif (Relative Path Policy)
+1. **[ATURAN MUTLAK]** Setiap kali merujuk, mencantumkan tautan, atau menyebutkan lokasi berkas di dalam dokumen apa pun (berkas Markdown, pedoman, PRD, tiket, dokumen rencana, diagram, changelog, dan catatan teknis), AI Agent **WAJIB** menggunakan **relative path** yang dihitung dari posisi berkas aktif saat ini.
+2. **[TERLARANG KERAS]** Menggunakan **absolute path** (seperti `/Users/...`, `/home/...`, atau `C:\...`).
+3. **Rasional Portabilitas:** Absolute path mengikat referensi ke satu mesin lokal tertentu, merusak keterbacaan pada mesin developer lain, menggagalkan lingkungan CI/CD, dan memicu disorientasi navigasi pada agen AI lain.
+   - `[SALAH]`: `Lihat spesifikasi pada /Users/developer/project/global-docs/prd.md`
+   - `[BENAR]`: `Lihat spesifikasi pada ../../global-docs/prd.md` (dari node) atau `../docs/system-design.md` (dari tiket)
+
 ---
 
 ## 2. Integritas Data & Logika Bisnis (Data Integrity & Fail-Fast Principles)
@@ -237,7 +244,8 @@ Tuliskan path berkas secara akurat di awal setiap blok instruksi kode:
             ├── prototypes/     <-- Area sketsa HTML statis sandbox UI
             ├── retrospectives/ <-- Pusat pembelajaran AI untuk kegagalan node ini
             ├── hunt/           <-- Log audit exploratory testing
-            └── tickets/        <-- Manajemen task/isu offline node ini
+            ├── plans/          <-- Dokumen rencana teknis terperinci (berpasangan dengan tickets/)
+            └── tickets/        <-- Manajemen tiket tugas (user stories & acceptance criteria)
 ```
 
 > **Catatan:** Struktur aplikasi asli di luar template ini tidak diatur ketat. Aturan mutlak hanyalah menegakkan **pemisahan fisik** antara source code aplikasi dengan direktori `ai-orchestrator-template/`.

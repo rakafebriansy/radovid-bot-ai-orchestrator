@@ -17,10 +17,10 @@
 # - chore: Perbaikan build process, dependencies, tooling
 # 
 # ATURAN ISTILAH ORCHESTRATOR:
-# Istilah-istilah orchestrator meliputi: ticket, TICKET-XX, prd, design system, guideline, node, retrospective, orchestrator, template, dll.
+# Istilah-istilah orchestrator meliputi: ticket, plan, TICKET-[EPOCH], PLAN-[EPOCH], prd, design system, guideline, node, retrospective, orchestrator, template, dll.
 #
 # 1. CONTOH UNTUK REPOSITORI PROJECT / NODE (WAJIB 100% BERSIH DARI ISTILAH ORCHESTRATOR):
-# DILARANG memuat kata 'orchestrator', 'ticket', 'TICKET-XX', 'Resolves TICKET-XX', 'prd', 'node', dll.
+# DILARANG memuat kata 'orchestrator', 'ticket', 'plan', 'TICKET-[EPOCH]', 'Resolves TICKET-[EPOCH]', 'prd', 'node', dll.
 #
 # feat(auth): add google oauth integration
 # 

@@ -1,0 +1,6 @@
+{
+  "files.autoSave": "off",
+  "diffEditor.experimental.useTrueInlineView": true,
+  "diffEditor.renderSideBySide": false,
+  "diffEditor.hideUnchangedRegions.enabled": false
+}

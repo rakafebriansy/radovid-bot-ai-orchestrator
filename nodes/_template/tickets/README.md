@@ -6,21 +6,29 @@
 
 ## 1. Tata Kelola & Kebijakan Tiket
 
-### 1.1 Konvensi Penamaan Berkas
-Setiap berkas tiket baru WAJIB mengikuti format:
-`TICKET-[NOMOR]-[JUDUL-SINGKAT-KEBAB-CASE].md`
-- **Contoh Valid:** `TICKET-01-login-form.md`, `TICKET-02-api-integration.md`
+### 1.1 Konvensi Penamaan Berkas & Pasangan Beriringan (Inseparable Pair)
+Setiap penugasan baru WAJIB memiliki pasangan berkas yang dibuat beriringan menggunakan timestamp UNIX epoch (dalam detik) dan judul deskriptif (*kebab-case*) yang sama:
+- **Berkas Tiket:** `TICKET-[EPOCH_TIMESTAMP]-[JUDUL-SINGKAT-KEBAB-CASE].md`
+- **Berkas Rencana Teknis:** `../plans/PLAN-[EPOCH_TIMESTAMP]-[JUDUL-SINGKAT-KEBAB-CASE].md`
+- **Contoh Valid:** `TICKET-1730421820-login-form.md` berpasangan dengan `PLAN-1730421820-login-form.md`.
+- **Rasional Anti-Collision:** Menggantikan urutan angka statis (`TICKET-01`) dengan timestamp UNIX Epoch untuk mencegah tabrakan ID antar-agen pada ekosistem multi-agent.
 
-### 1.2 Sumber Tiket (Backlog Ground Truth)
-1. **[TERLARANG]** Mengarang atau membuat tiket baru di luar kendali pengguna.
-2. **MODE 1:** Tiket wajib merujuk langsung pada backlog di `docs/development-planning.md`.
-3. **MODE 2:** Tiket dibuat secara retrospektif setelah menyelesaikan prompt developer.
+### 1.2 Format Tiket vs Rencana Implementasi
+**[PEMISAHAN FORMAT MUTLAK]**
+1. Berkas tiket **DILARANG** diisi dengan detail rencana teknis berbelit-belit, diff kode panjang, atau pseudocode.
+2. Format tiket diwajibkan **hanya berisi User Stories, Acceptance Criteria (DoD), daftar berkas terdampak, serta AI Execution Log pasca-eksekusi**.
+3. Seluruh rincian arsitektur teknis, pemetaan ketergantungan (Graphify), dan preview perubahan wajib ditulis pada berkas rencana pasangannya di `../plans/PLAN-[EPOCH]-[judul].md`.
 
-### 1.3 Kebijakan Pemisahan UI Prototyping & Implementasi
+### 1.3 Sumber Pasangan Tiket & Rencana (Backlog Ground Truth)
+1. **[TERLARANG]** Mengarang tugas baru di luar kendali pengguna.
+2. **MODE 1:** Pasangan tiket & rencana wajib merujuk langsung pada backlog di `docs/development-planning.md`.
+3. **MODE 2:** Pasangan tiket & rencana dibuat secara retrospektif setelah menyelesaikan prompt developer.
+
+### 1.4 Kebijakan Pemisahan UI Prototyping & Implementasi
 1. Untuk tugas *UI Slicing*, konfirmasikan apakah desain sudah tersedia atau perlu dirancang via prototipe HTML di `prototypes/`.
-2. Jika menggunakan prototipe, tiket pembuatan prototipe WAJIB DIPISAHKAN dari tiket implementasi produksi ke dalam codebase.
+2. Jika menggunakan prototipe, pasangan tiket & rencana perancangan prototipe WAJIB DIPISAHKAN dari pasangan tiket & rencana implementasi produksi ke dalam codebase.
 
-### 1.4 Protokol AI Execution Log & Output
+### 1.5 Protokol AI Execution Log & Output
 Pada setiap tiket, AI Agent WAJIB mencatat jejak kerja teknis pada seksi khusus di bagian bawah:
 1. Rangkuman modifikasi file dan landasan keputusan arsitektur.
 2. **Bukti Eksekusi (Evidence - O-03):** Potongan perintah dan output terminal aktual (pengujian lulus, metrik suite, pratinjau visual jika UI). Dilarang mengklaim PASS berdasarkan asumsi!
@@ -35,7 +43,8 @@ Salin struktur Markdown berikut saat membuat tiket baru. *(Catatan: Untuk lapora
 
 ```markdown
 ---
-id: TICKET-[NOMOR]
+id: TICKET-[EPOCH_TIMESTAMP]
+plan_id: PLAN-[EPOCH_TIMESTAMP]
 title: [Judul Singkat Tugas]
 status: Todo # Siklus Valid: Todo -> In Progress -> Done
 priority: High # Siklus Valid: Low, Medium, High
@@ -43,7 +52,15 @@ labels: [Frontend, Backend, Feature, Bug, dsb]
 ---
 
 # Deskripsi
-[Latar belakang instruksi, masalah teknis, atau fitur yang akan dibangun secara mendetail.]
+Sebagai [Peran Pengguna],
+Saya ingin [Kebutuhan Fitur / Aksi],
+Sehingga [Manfaat / Tujuan Bisnis].
+
+*(Penjelasan ringkas latar belakang masalah teknis atau konteks fungsional).*
+
+## Rencana Implementasi Teknis (Implementation Plan)
+- **Tautan Rencana Teknis:** [Lihat Dokumen Rencana](../plans/PLAN-[EPOCH_TIMESTAMP]-[judul-singkat].md)
+*(Rincian arsitektur, diff preview, dan langkah teknis mendalam berada di dokumen rencana di atas).*
 
 ## Acceptance Criteria (Kriteria Penerimaan)
 - [ ] [Kriteria 1]
@@ -87,6 +104,6 @@ labels: [Frontend, Backend, Feature, Bug, dsb]
 - **Pilar 4: Tata Kelola & Sinkronisasi:**
   - Graphify Update: PASS (dijalankan di codebase node asli)
   - CHANGELOG.md: PASS (diperbarui di baris teratas)
-  - Commit Message Sanity: PASS (steril dari istilah orchestrator/tiket)
+  - Commit Message Sanity: PASS (steril dari istilah orchestrator/tiket/rencana)
   - O-16 Untested List: [Sebutkan hal yang belum sempat diuji beserta alasannya]
 ```

@@ -12,7 +12,7 @@
 3. **[WAJIB]** Daftarkan direktori *sandbox* atau *preview* ke dalam `.gitignore`. Artefak uji eksperimental dilarang masuk ke riwayat commit Git maupun lingkungan rilis.
 
 ### 1.2 Pemeriksaan Pra-Penerbangan (Mandatory Pre-Flight Checks)
-Sebelum menyerahkan modul, menandai tiket selesai, atau melakukan commit dan push:
+Sebelum menyerahkan modul, menandai pasangan tiket dan rencana selesai (`Done` / `Completed`), atau mengajukan izin commit dan push:
 1. **[WAJIB]** Eksekusi kompilasi (*build checking*), *linter*, dan validasi tipe (*type checker*).
 2. **[WAJIB]** Verifikasi log terminal untuk memastikan nol galat kompilasi (*compile errors*), perselisihan tipe (*type mismatches*), impor hilang (*missing imports*), atau peringatan krusial runtime.
 3. **[ATURAN]** Dilarang berasumsi kode berfungsi tanpa eksekusi langsung. Pastikan aliran instruksi berjalan sesuai parameter dan spesifikasi logika.
@@ -32,7 +32,7 @@ AI Agent DILARANG menulis atau mengubah kode implementasi produksi sebelum menyi
 
 ### 2.1 Analisis Instruksi & Definition of Done (DoD)
 1. Identifikasi kriteria keberhasilan (*Acceptance Criteria* / *Definition of Done*) dari tugas yang diberikan.
-2. Pada tugas berbasis tiket, baca checklist pada seksi `Acceptance Criteria` di `tickets/TICKET-XX.md`. Pada instruksi langsung pengguna, petakan kriteria fungsionalitas secara eksplisit.
+2. Pada tugas berbasis tiket & rencana (*ticket & plan*), verifikasi checklist `Acceptance Criteria` pada berkas tiket (`tickets/TICKET-[EPOCH_TIMESTAMP]-[judul].md`) dan target lingkup perubahan pada berkas rencana implementasi (`plans/PLAN-[EPOCH_TIMESTAMP]-[judul].md`). Pada instruksi langsung pengguna, petakan kriteria fungsionalitas secara eksplisit.
 
 ### 2.2 Tahap RED: Tulis Tes Gagal Terlebih Dahulu
 1. Buat atau perbarui berkas unit test (`*.test.ts`, `test_*.py`, dll.) sebelum menyentuh kode produksi.
@@ -90,7 +90,7 @@ Saat arsitektur beralih dari fase mock menuju integrasi dinamis (API live, datab
 
 ### 3.6 Otomasi CI/CD & Headless Execution
 1. Seluruh pengujian wajib kompatibel untuk dijalankan secara senyap (*headless*) pada pipeline CI/CD.
-2. Dilarang menyerahkan tiket atau Pull Request jika test suite menghasilkan status gagal (*error/fail*).
+2. Dilarang menandai pasangan tiket dan rencana selesai (`Done` / `Completed`) atau mengajukan Pull Request jika test suite menghasilkan status gagal (*error/fail*).
 
 ### 3.7 Batas Percobaan & Prosedur Eskalasi
 Jika eksekusi tes mengalami kegagalan berulang hingga mencapai batas *Max Retry Rule* sesuai [error-handling.md](./error-handling.md):
@@ -99,7 +99,7 @@ Jika eksekusi tes mengalami kegagalan berulang hingga mencapai batas *Max Retry 
 
 ### 3.8 Standar Cakupan Kode 100% (100% Coverage Requirement)
 1. **[WAJIB]** Setiap penambahan atau modifikasi kode wajib memenuhi **100% test coverage** (*statements*, *branches*, *functions*, dan *lines*).
-2. **Pengecualian Mutlak:** Pengecualian hanya berlaku untuk berkas konfigurasi statis, titik masuk utama (*entry point* seperti `main()`), dan boilerplate yang secara arsitektural tidak logis diuji terisolasi. Seluruh pengecualian wajib dicatat alasannya pada *AI Execution Log* tiket.
+2. **Pengecualian Mutlak:** Pengecualian hanya berlaku untuk berkas konfigurasi statis, titik masuk utama (*entry point* seperti `main()`), dan boilerplate yang secara arsitektural tidak logis diuji terisolasi. Seluruh pengecualian wajib dicatat alasannya pada *AI Execution Log* tiket serta rencana implementasinya.
 
 ### 3.9 Perintah Eksekusi Pengujian Spesifik Bahasa
 Gunakan parameter evaluasi cakupan (*coverage*) berikut untuk memvalidasi ambang batas 100%:
@@ -127,7 +127,7 @@ Saat melakukan pengujian komponen visual atau layar antarmuka:
 1. **Evaluasi Heuristik:** Terapkan 10 prinsip *Heuristic Evaluation* Jakob Nielsen sesuai [ui-and-assets.md](./ui-and-assets.md).
 2. **Inspeksi Render Nyata:** Wajib memeriksa visual hasil render (melalui sandbox prototipe atau browser preview). Dilarang menganggap tugas UI selesai hanya karena lulus kompilasi/linter.
 3. **Gerbang Checklist Anti-Slop:** Verifikasi kepatuhan terhadap [ui-and-assets.md](./ui-and-assets.md) (bebas estetika generik, bebas konten palsu, kontras WCAG AA terpenuhi, target sentuh minimal 24x24px / 44x44pt, serta kelengkapan status *loading/skeleton/empty/error*).
-4. **Kewajiban Bukti:** Dokumentasikan prinsip heuristik dan status verifikasi visual ke dalam *AI Execution Log* tiket.
+4. **Kewajiban Bukti:** Dokumentasikan prinsip heuristik dan status verifikasi visual ke dalam *AI Execution Log* tiket serta rencana implementasinya.
 
 ---
 
@@ -159,8 +159,8 @@ AI Agent DILARANG menyatakan status lulus berdasarkan asumsi (*"seharusnya aman"
 Jika bug berkaitan dengan manipulasi state atau persistensi data:
 1. Analisis apakah anomali bug pada versi lama telah merusak atau membuat data eksisting menjadi tidak konsisten.
 2. Laporkan lokasi dan volume data terdampak.
-3. Jalankan skrip pembersihan/migrasi jika memiliki otorisasi, atau dokumentasikan secara rinci pada *AI Execution Log* tiket.
+3. Jalankan skrip pembersihan/migrasi jika memiliki otorisasi, atau dokumentasikan secara rinci pada *AI Execution Log* tiket serta rencana implementasinya.
 
 ### 4.5 Deklarasi Pengujian yang Belum Dilakukan (Untested List Declaration - O-16)
 1. **[WAJIB]** Deklarasikan secara eksplisit daftar fungsionalitas atau skenario yang **TIDAK DITEST** beserta alasan teknisnya (contoh: tidak tersedianya sandbox gateway pembayaran live, butuh perangkat keras fisik, atau keterbatasan hak akses).
-2. Cantumkan deklarasi ini pada seksi `AI Execution Log` tiket atau laporan audit QA.
+2. Cantumkan deklarasi ini pada seksi `AI Execution Log` tiket serta rencana teknis pasangannya, atau laporan audit QA.

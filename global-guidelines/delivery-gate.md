@@ -1,7 +1,7 @@
 # Delivery Gate: Gerbang Verifikasi Penyerahan Tugas
 
 > **HUKUM BESI PENYERAHAN TUGAS (HANDOVER DISCIPLINE):**
-> Dokumen ini adalah gerbang pemeriksaan wajib (mandatory exit gate) sebelum AI Agent mengubah status tiket tugas menjadi `Done`, menyatakan pekerjaan selesai, atau menyerahkan hasil kepada pengguna. 
+> Dokumen ini adalah gerbang pemeriksaan wajib (mandatory exit gate) sebelum AI Agent mengubah status pasangan tiket & rencana tugas menjadi `Done` / `Completed`, menyatakan pekerjaan selesai, atau menyerahkan hasil kepada pengguna. 
 >
 > **Jika ditemukan satu saja butir pemeriksaan yang gagal (FAIL), pekerjaan DILARANG diserahkan!** Perbaiki kegagalan tersebut, jalankan ulang pengujian, dan pastikan seluruh gerbang berstatus **PASS** dengan bukti nyata.
 
@@ -13,7 +13,7 @@ Delivery Gate berfungsi sebagai **pintu keluar tunggal (consolidated exit gate)*
 ---
 
 ## 2. Empat Pilar Gerbang Pemeriksaan (Delivery Gate Pillars)
-Setiap penyelesaian tiket atau instruksi implementasi wajib mengevaluasi 4 pilar berikut secara berurutan:
+Setiap penyelesaian pasangan tiket & rencana implementasi (*ticket & plan*) atau instruksi penugasan wajib mengevaluasi 4 pilar berikut secara berurutan:
 
 ### 2.1 Gerbang 1: Kepatuhan Standar Rekayasa Kode (Code & Data Hygiene)
 Seluruh pertanyaan pemeriksaan kode di bawah ini **WAJIB DIJAWAB "TIDAK"**:
@@ -71,14 +71,14 @@ Pemeriksaan integritas tata kelola kualitas dan sinkronisasi ekosistem orchestra
    Wajib mengeksekusi `graphify update` di dalam direktori codebase node asli setelah modifikasi kode selesai. DILARANG membuat atau memperbarui `.graphify` di dalam direktori `ai-orchestrator-template/`.
 6. **Pencatatan CHANGELOG:**  
    Seluruh pembaruan wajib dicatatkan di baris teratas `CHANGELOG.md` node terkait sesuai format templat resmi.
-7. **Kebersihan Pesan Git Commit:**  
-   Pesan commit wajib mematuhi konvensi Semantic Commit dan steril 100% dari istilah internal orchestrator (dilarang menyebutkan nama node, nomor tiket, atau prompt).
+7. **Kebersihan Pesan Git & PR:**  
+   Pesan commit dan deskripsi PR wajib mematuhi konvensi Semantic Commit dan steril 100% dari istilah internal orchestrator (dilarang menyebutkan nama node, nomor tiket, rencana teknis, atau prompt).
 
 ---
 
-## 3. Format Dokumentasi di Tiket (`AI Execution Log`)
+## 3. Format Dokumentasi AI Execution Log pada Pasangan Tiket & Rencana
 
-Sebelum mengubah status tiket menjadi `Done`, AI Agent **WAJIB MENYALIN & MENGISI** rekaman Delivery Gate berikut ke dalam seksi `AI Execution Log & Output` pada file tiket:
+Sebelum mengubah status tiket menjadi `Done` dan status rencana menjadi `Completed`, AI Agent **WAJIB MENYALIN & MENGISI** rekaman Delivery Gate berikut ke dalam seksi `AI Execution Log & Output` pada berkas tiket serta memverifikasi kelengkapan ringkasan perubahan pada berkas rencana pasangannya:
 
 ```markdown
 ### Delivery Gate Verification
@@ -95,6 +95,6 @@ Sebelum mengubah status tiket menjadi `Done`, AI Agent **WAJIB MENYALIN & MENGIS
 - **Orchestrator Sync & Quality Locks:**
   - Graphify Update: PASS (dijalankan di codebase node asli)
   - CHANGELOG.md: PASS (diperbarui di baris teratas)
-  - Commit Message Sanity: PASS (steril dari istilah orchestrator/tiket)
+  - Commit & PR Sanity: PASS (steril dari istilah orchestrator/tiket/rencana)
   - O-16 Untested List: [Sebutkan hal yang belum sempat diuji beserta alasannya]
 ```

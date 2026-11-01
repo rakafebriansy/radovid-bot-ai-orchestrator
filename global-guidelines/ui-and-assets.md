@@ -30,6 +30,9 @@ Saat mengonversi aset visual mentah (SVG mentah, templat HTML, XML layout) menja
 
 > **[PRINSIP ANTI-SLOP]** Dilarang mendesain UI agar sekadar terlihat mewah di tangkapan layar. Optimasi antarmuka agar membuat tugas pengguna jelas, cepat, dan mudah diselesaikan. Jika suatu elemen tidak memiliki fungsi nyata, hapus segera.
 
+### 2.0 Rujukan Utama Keahlian Frontend (Skill Rujukan)
+Dalam menyusun antarmuka visual baru, komponen web, atau mendesain ulang UI eksisting, AI Agent WAJIB memuat dan mematuhi panduan pada [frontend-design SKILL.md](../skills/frontend-design/SKILL.md). Bertindaklah sebagai *design lead* yang memberikan identitas visual unik (*distinctive point of view*), menolak estetika klise AI slop, merancang palet warna berkarakter (4–6 hex bernilai tegas), tipografi berpasangan jelas, dan ritme tata letak yang berakar pada konten nyata sebelum menulis kode.
+
 ### 2.1 Larangan Keras Estetika AI SaaS Generik
 AI Agent DILARANG KERAS menggunakan resep visual default berikut sebagai template otomatis:
 1. **[TERLARANG] Gradien Ungu/Biru Klise:** Latar belakang mesh gradien ungu/biru gelap generik tanpa dasar branding.

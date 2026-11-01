@@ -30,18 +30,11 @@ Rujukan mutlak AI Agent saat menghasilkan kode UI (Flutter, CSS, Tailwind, Swift
 ### 2.1 Protokol Perumusan Design System
 1. **Definisi Niat:** Gali preferensi estetika, target audiens, dan batas fungsi produk nyata.
 2. **Pertanyaan Spesifik:** AI wajib mengonfirmasi palet warna, geometri sudut, mode gelap/terang, dan tipografi sebelum menyusun dokumen.
-3. **Doktrin Anti-Slop:** Berakar pada domain produk (hindari mesh ungu/biru, glassmorphism tebal, card soup), utamakan hierarki grayscale, dan hapus dekorasi non-fungsional.
+3. **Doktrin Anti-Slop & Keahlian Frontend:** Wajib mengintegrasikan keahlian resmi [frontend-design SKILL.md](../skills/frontend-design/SKILL.md) dan [ui-and-assets.md](../global-guidelines/ui-and-assets.md). Berakar pada domain produk (hindari mesh ungu/biru, dark navy neon, glassmorphism tebal, card soup), tetapkan 4–6 nilai hex spesifik, tentukan pasangan tipografi kontras, dan hapus dekorasi non-fungsional.
+4. **Kebijakan Relative Path:** Seluruh tautan dokumen dan aset di dalam dokumen ini WAJIB menggunakan relative path. Dilarang menggunakan absolute path.
 
 ### 2.2 Validasi Prototipe Wajib (Pre-Coding Gate)
 1. **[TERLARANG]** Menulis kode antarmuka pada framework produksi (Flutter, Next.js, SwiftUI) sebelum validasi visual.
 2. **[WAJIB]** Rancang purwarupa interaktif (*Single-File HTML*) di `nodes/[nama-node]/prototypes/` sebelum koding produksi.
 
----
 
-## 3. Spesifikasi Proyek: [GANTI_DENGAN_NAMA_PROYEK]
-
-> **Instruksi AI Agent:** Hapus placeholder ini dan cantumkan spesifikasi token desain, palet warna, tipografi, dan komponen proyek di bawah garis ini.
-
----
-
-*(Detail token desain, palet warna, tipografi, dan panduan spesifik proyek dicatatkan di sini)*

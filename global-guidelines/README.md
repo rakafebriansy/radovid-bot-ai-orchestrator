@@ -15,6 +15,10 @@
 2. Berkas `main.md` di setiap node berfungsi sebagai **dispatcher (pengarah)** yang merujuk ke pedoman di direktori ini tanpa menduplikasi isinya.
 3. **[PRIORITAS REGULASI]** Jika terjadi perbedaan tafsir atau kontradiksi antara `main.md` dengan berkas di `global-guidelines/`, maka **berkas pedoman di direktori ini adalah rujukan yang menang**.
 
+### 1.3 Kebijakan Wajib Relative Path
+1. Seluruh rujukan, tautan, atau sitasi path berkas di dalam seluruh dokumen Markdown ekosistem WAJIB menggunakan **relative path** (contoh: `./coding.md`, `../global-docs/prd.md`).
+2. Penggunaan absolute path (`/Users/...`, `/home/...`) DILARANG KERAS karena merusak portabilitas lintas developer, sistem operasi, dan pipeline CI/CD.
+
 ---
 
 ## 2. Siklus Pembelajaran Berkelanjutan (The Retrospective Loop)

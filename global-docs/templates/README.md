@@ -8,9 +8,10 @@
 
 | Berkas Template | Fungsi & Cakupan Penggunaan |
 |---|---|
-| **[`pull_request_template.md`](./pull_request_template.md)** | Deskripsi PR standar dengan sintaks penutup tiket wajib (`Resolves TICKET-XX`). |
+| **[`pull_request_template.md`](./pull_request_template.md)** | Format deskripsi Pull Request standar produksi yang 100% bersih dari terminologi internal orchestrator. |
 | **[`commit_message_template.md`](./commit_message_template.md)** | Format Semantic Commit (`feat:`, `fix:`, dll.) dengan aturan pemisahan steril Project/Node vs Orchestrator. |
-| **[`bug_report_template.md`](./bug_report_template.md)** | Format tiket pelaporan bug dengan analisis akar masalah, pengujian regresi O-07, dan damage assessment O-09. |
+| **[`bug_report_template.md`](./bug_report_template.md)** | Format pasangan tiket dan rencana pelaporan bug (`TICKET-[EPOCH]` & `PLAN-[EPOCH]`) dengan analisis akar masalah, pengujian regresi O-07, dan damage assessment O-09. |
+| **[`plan_template.md`](./plan_template.md)** | Format rencana teknis terperinci (*Implementation Plan*) yang berpasangan dengan tiket tugas. |
 | **[`hunt-findings.md`](./hunt-findings.md)** | Format laporan sesi audit ketahanan sistem dan eksplorasi kasus ekstrem (Hunt Loop). |
 | **[`api_documentation_template.md`](./api_documentation_template.md)** | Spesifikasi endpoint API, skema request/response payload, dan contoh JSON. |
 | **[`routing_template.md`](./routing_template.md)** | Pemetaan rute halaman antarmuka web dan endpoint peladen. |

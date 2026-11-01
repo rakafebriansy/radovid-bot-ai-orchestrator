@@ -1,19 +1,24 @@
-# Deskripsi Perubahan
-*(Silakan jabarkan secara singkat modifikasi teknis atau fitur apa yang telah diselesaikan di PR ini berdasarkan instruksi tiket)*
+## Summary of Changes
+<!-- A concise summary of the code changes and the problem they solve. -->
 
----
+## Context & Motivation
+<!-- Why is this change necessary? If applicable, reference external issue e.g. Closes #123 -->
 
-## 🔗 Kaitan Tiket (Ticket Link)
-*(Wajib menyebutkan kata kunci pengait otomatis ke tiket GitHub/lokal demi mengaktifkan sinkronisasi auto-closing)*
-**Resolves [TICKET-ID]**
+## Type of Change
+- [ ] Bug fix (non-breaking change which fixes an issue)
+- [ ] New feature (non-breaking change which adds functionality)
+- [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
+- [ ] Refactor / Code hygiene / Performance improvement
+- [ ] Documentation update
 
----
+## Verification & Testing
+<!-- Describe how these changes were tested (unit tests, integration tests, manual testing). Include test output summary if helpful. -->
+- **Test Command:**
+- **Outcome:**
 
-## ✅ Checklist Kelayakan (Definition of Done)
-*(Harap pastikan semua poin di bawah ini dicentang `[x]` sebelum PR ini diajukan ke fase merge)*
-- [ ] Logika kode terbukti berfungsi normal dan telah tervalidasi selaras dengan semua syarat di bagian *Acceptance Criteria* tiket.
-- [ ] Tidak ada satupun teguran *linting* (Zero Linting Errors) atau peringatan *syntax* yang dibiarkan menyala.
-- [ ] Jika memuat pembaruan UI, bentuk antarmuka telah disesuaikan ketat dengan prototipe kanvas di `prototypes/`.
-- [ ] Bagian *AI Execution Log & Output* telah didokumentasikan sepenuhnya di bagian dasar file tiket lokal.
-- [ ] Rekam jejak pembaruan ini telah didaftarkan ke dalam file `CHANGELOG.md` menggunakan standar hierarki blok.
-- [ ] Aturan istilah "orchestrator" dipatuhi (Dilarang ada kata "orchestrator" untuk PR/Branch di Project/Node, Wajib ada kata "orchestrator" untuk PR/Branch di Orchestrator).
+## Pre-Merge Checklist
+- [ ] Code follows the established project conventions and style guidelines.
+- [ ] Unit and integration tests pass with 100% success rate.
+- [ ] Linter and type checker pass with zero errors and zero warnings.
+- [ ] No hardcoded secrets, sensitive credentials, or debug flags included.
+- [ ] Pull request description and commit history are completely clean of internal tooling terminology.

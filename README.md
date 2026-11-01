@@ -48,10 +48,10 @@ INSTRUKSI STARTUP (JANGAN TULIS KODE APLIKASI):
    c. Catat hasil pindai dan batasan lokal ke `nodes/[nama-proyek]/guidelines/project-context.md`.
    d. Susun `nodes/[nama-proyek]/docs/system-design.md`.
    e. Rancang diagram arsitektur PlantUML (ERD, Flowchart, State Diagram, User Journey) sebagai file terpisah `.puml` di `docs/diagrams/` atau `global-docs/diagrams/`, lalu tautkan ke dokumen terkait.
-   f. Susun `nodes/[nama-proyek]/docs/development-planning.md` berisi backlog tiket fase pertama.
+   f. Susun `nodes/[nama-proyek]/docs/development-planning.md` berisi backlog pasangan tiket & rencana implementasi fase pertama.
    g. Catat log inisialisasi perdana ke `nodes/[nama-proyek]/CHANGELOG.md` menggunakan format baku.
    h. Sinkronisasi Graf (Kondisional): Jika Graphify aktif, masuk ke Path Codebase (`cd`) dan jalankan `graphify build`. (DILARANG menjalankan `graphify build` di repositori orchestrator).
-Setelah selesai, berikan ringkasan struktur yang terbentuk dan tunggu persetujuan sebelum mulai eksekusi tiket!
+Setelah selesai, berikan ringkasan struktur yang terbentuk dan tunggu persetujuan sebelum mulai eksekusi pasangan tiket & rencana!
 ```
 
 #### Opsi B: Startup Prompt (Multi-Project Environment)
@@ -85,10 +85,10 @@ INSTRUKSI STARTUP (JANGAN TULIS KODE APLIKASI):
    c. Tulis hasil analisis ke `nodes/[nama-node]/guidelines/project-context.md`.
    d. Susun `nodes/[nama-node]/docs/system-design.md`.
    e. Rancang diagram PlantUML terpisah di `docs/diagrams/` spesifik milik node dan tautkan ke dokumen.
-   f. Susun `nodes/[nama-node]/docs/development-planning.md` untuk backlog tiket node.
+   f. Susun `nodes/[nama-node]/docs/development-planning.md` untuk backlog pasangan tiket & rencana node.
    g. Catat log inisialisasi ke `nodes/[nama-node]/CHANGELOG.md`.
    h. Sinkronisasi Graf (Kondisional): Jika Graphify aktif, jalankan `graphify build` di Path Codebase node terkait. (DILARANG di repositori orchestrator).
-Setelah seluruh node terkonfigurasi, berikan rangkuman arsitektur dan tunggu persetujuan sebelum eksekusi!
+Setelah seluruh node terkonfigurasi, berikan rangkuman arsitektur dan tunggu persetujuan sebelum eksekusi pasangan tiket & rencana!
 ```
 
 ---
@@ -118,10 +118,10 @@ INSTRUKSI PENAMBAHAN NODE (JANGAN TULIS KODE APLIKASI):
    c. Catat hasil analisis ke `nodes/[nama-node-baru]/guidelines/project-context.md`.
    d. Susun `nodes/[nama-node-baru]/docs/system-design.md`.
    e. Buat diagram PlantUML di `nodes/[nama-node-baru]/docs/diagrams/` dan tautkan ke dokumen.
-   f. Buat `nodes/[nama-node-baru]/docs/development-planning.md` untuk backlog tiket baru.
+   f. Buat `nodes/[nama-node-baru]/docs/development-planning.md` untuk backlog pasangan tiket & rencana baru.
    g. Catat log inisialisasi ke `nodes/[nama-node-baru]/CHANGELOG.md`.
    h. Sinkronisasi Graf: Jika Graphify aktif, jalankan `graphify build` di Path Codebase node baru. (DILARANG di direktori orchestrator).
-Berikan rangkuman arsitektur ekosistem terbaru dan tunggu konfirmasi sebelum melanjutkan!
+Berikan rangkuman arsitektur ekosistem terbaru dan tunggu konfirmasi sebelum melanjutkan eksekusi!
 ```
 
 ---
@@ -141,14 +141,15 @@ Cek direktori `.graphify` di Path Codebase proyek ini:
 
 DISIPLIN EKSEKUSI:
 1. Evaluasi kebutuhan branch baru jika konteks berbeda (fitur baru/hotfix) dan minta persetujuan pengguna.
-2. Susun Implementation Plan dan tunggu persetujuan sebelum mutasi state (patuhi `safe-file-operations.md`).
-3. Terapkan TDD Workflow (wajib buktikan tes baru gagal di versi lama sebelum fix jika perbaikan bug - Disiplin O-07).
-4. Jalankan minimal 1 putaran Hunt Loop (sebutkan >=10 kasus ekstrem berbasis `edge-case-atlas.md`, reproduksi, dan pastikan nol temuan di putaran akhir).
-5. Loloskan evaluasi Delivery Gate (`delivery-gate.md`) sebelum menandai tiket Done.
-6. Masuk ke Path Codebase (`cd`) dan jalankan `graphify update` setelah selesai.
-7. Pesan komit Git WAJIB 100% bersih dari istilah orchestrator atau ID tiket!
+2. Siapkan dan verifikasi pasangan tiket & rencana implementasi (`TICKET-[EPOCH_TIMESTAMP]` di `tickets/` dan `PLAN-[EPOCH_TIMESTAMP]` di `plans/`) serta tunggu persetujuan pengguna sebelum mutasi state.
+3. Seluruh referensi berkas di dalam tiket dan rencana implementasi WAJIB menggunakan relative path (DILARANG absolute path).
+4. Terapkan TDD Workflow (wajib buktikan tes baru gagal di versi lama sebelum fix jika perbaikan bug - Disiplin O-07).
+5. Jalankan minimal 1 putaran Hunt Loop (sebutkan >=10 kasus ekstrem berbasis `edge-case-atlas.md`, reproduksi, dan pastikan nol temuan di putaran akhir).
+6. Loloskan evaluasi Delivery Gate (`delivery-gate.md`) sebelum menandai tiket & rencana selesai (`Done` / `Completed`).
+7. Masuk ke Path Codebase (`cd`) dan jalankan `graphify update` setelah selesai.
+8. Pesan komit Git dan deskripsi PR WAJIB 100% bersih dari istilah orchestrator atau ID internal (tiket, rencana, dsb.)!
 
-Instruksi Tugas: [TULIS_INSTRUKSI_ATAU_ID_TIKET_DI_SINI]
+Instruksi Tugas: [TULIS_INSTRUKSI_ATAU_PASANGAN_TIKET_DAN_RENCANA_DI_SINI]
 ```
 
 #### Opsi B: Execution Prompt (Multi-Node / Lintas Proyek)
@@ -158,10 +159,11 @@ Periksa ketersediaan `.graphify` di Path Codebase masing-masing node terkait. Gu
 
 DISIPLIN INTEGRASI:
 1. Evaluasi branch baru dan minta konfirmasi persetujuan pengguna sebelum koding.
-2. Susun Implementation Plan lintas-node dan tunggu persetujuan sebelum mutasi state.
-3. Jalankan TDD Workflow, minimal 1 putaran Hunt Loop, dan evaluasi kelulusan Delivery Gate (`delivery-gate.md`) sebelum menyerahkan hasil.
-4. Jalankan `graphify update` di Path Codebase masing-masing node setelah selesai.
-5. Pesan komit Git WAJIB 100% bersih dari istilah orchestrator atau ID tiket!
+2. Susun pasangan tiket & rencana implementasi lintas-node (di tickets/ dan plans/ masing-masing node) dan tunggu persetujuan sebelum mutasi state.
+3. Seluruh referensi dokumen WAJIB menggunakan relative path (DILARANG absolute path).
+4. Jalankan TDD Workflow, minimal 1 putaran Hunt Loop, dan evaluasi kelulusan Delivery Gate (`delivery-gate.md`) sebelum menyerahkan hasil.
+5. Jalankan `graphify update` di Path Codebase masing-masing node setelah selesai.
+6. Pesan komit Git dan deskripsi PR WAJIB 100% bersih dari istilah orchestrator atau ID internal (tiket, rencana, dsb.)!
 
 Instruksi Tugas: [TULIS_INSTRUKSI_LINTAS_NODE_DI_SINI]
 ```
@@ -189,3 +191,11 @@ INSTRUKSI AI AGENT:
 5. Berikan jawaban komprehensif langsung pada chat sidebar.
 6. Simpan rekaman Q&A ini ke `global-docs/LEARN.md` sesuai format baku, tentukan Kategori Utama & Tags, serta perbarui Indeks Kategori di berkas tersebut.
 ```
+
+---
+
+## 3. Penghargaan & Kredit (Credits & Acknowledgments)
+
+- https://github.com/anthropics/skills/blob/main/skills/frontend-design/SKILL.md
+- https://github.com/altamisatmaja/security-audit-skill
+- https://github.com/altamisatmaja/outofthebox

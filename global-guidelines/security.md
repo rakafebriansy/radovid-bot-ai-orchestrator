@@ -36,3 +36,12 @@
 1. **SQL Injection:** Wajib menggunakan *parameterized queries* atau ORM/query builder teruji. Dilarang konkatenasi string SQL mentah.
 2. **NoSQL Manipulation:** Sanitasi operator kueri dinamis sebelum dieksekusi oleh mesin basis data dokumen.
 3. **Cross-Site Scripting (XSS):** Lakukan sanitasi dan *escape* output data dinamis pengguna sebelum dirender pada antarmuka web; cegah injeksi HTML atau skrip tak terverifikasi.
+
+---
+
+## 3. Protokol Audit Keamanan Terstruktur (Security Audit Skill)
+
+### 3.1 Integrasi Keahlian Audit Resmi
+1. **[SKILL RUJUKAN AUDIT]** Untuk penugasan evaluasi keamanan menyeluruh, tinjauan kerentanan (*vulnerability review*), penetrasi defensif (*pen-test*), atau pertanyaan keamanan arsitektur, AI Agent WAJIB memuat dan mematuhi [security-audit SKILL.md](../skills/security-audit/SKILL.md).
+2. **Kriteria Bukti Konkret:** Temuan kerentanan WAJIB melanggar batas kepercayaan (*trust boundary*) nyata dengan principal terdampak, sumber bukti (*source evidence*), dan langkah reproduksi lokal yang aman. Dilarang mengangkat asumsi tanpa dampak nyata menjadi temuan keamanan.
+3. **Katalog Kelas Serangan (Attack Classes):** Rujuk taksonomi serangan pada [skills/security-audit/ATTACK-CLASSES.md](../skills/security-audit/ATTACK-CLASSES.md) (Auth, Web Protocol, Client-Side, Cloud, RPC/Messaging, AI/LLM, Supply Chain) sebagai acuan verifikasi keamanan sistem.

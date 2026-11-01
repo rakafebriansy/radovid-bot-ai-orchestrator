@@ -25,9 +25,12 @@ Tindakan yang mengubah berkas, basis kode, konfigurasi, skema database (DDL), at
 
 ### 1.3 Prasyarat Otorisasi Sebelum Modifikasi (Tiga Tahap Mutlak)
 AI Agent DILARANG memunculkan dialog izin eksekusi terminal untuk mutasi state sebelum menuntaskan 3 tahap berurutan:
-1. **Paparkan Rencana (*Implementation Plan*):** Rincikan berkas yang dibuat/diubah/dihapus, perintah yang dijalankan, dan konsekuensi teknisnya.
+1. **Paparkan Rencana Teknis (*Implementation Plan*) Berpasangan dengan Tiket:** Rincikan berkas yang dibuat/diubah/dihapus, perintah yang dijalankan, dan konsekuensi teknisnya. Simpan draf rencana teknis secara terstruktur di `nodes/[nama-node]/plans/PLAN-[EPOCH_TIMESTAMP]-[judul].md` yang berpasangan dengan tiket tugas di `nodes/[nama-node]/tickets/TICKET-[EPOCH_TIMESTAMP]-[judul].md` (pisahkan detail teknis implementasi ke dalam rencana dan simpan *user stories* serta *acceptance criteria* di dalam tiket).
 2. **Tampilkan Pratinjau (*Diff Preview*):** Tunjukkan cuplikan kode, diff terfokus, atau skrip yang akan diterapkan.
 3. **Tunggu Persetujuan Eksplisit:** Ajukan izin eksekusi terminal hanya setelah pengguna menyetujui rencana dan pratinjau.
+
+### 1.4 Kebijakan Wajib Relative Path pada Dokumentasi
+Seluruh rujukan atau penyebutan path berkas di dalam pasangan tiket dan rencana implementasi serta seluruh dokumen teknis WAJIB menggunakan **relative path** yang dihitung dari posisi berkas dokumen aktif. Dilarang keras menggunakan absolute path (`/Users/...`, `/home/...`).
 
 ---
 
