@@ -1,0 +1,171 @@
+@startuml system-activity
+!theme plain
+skinparam backgroundColor #FAFAFA
+skinparam activityBorderColor #5B5EA6
+skinparam activityBackgroundColor #EEF0FB
+skinparam activityDiamondBackgroundColor #FFF3CD
+skinparam activityDiamondBorderColor #D4A017
+skinparam arrowColor #5B5EA6
+skinparam fontName "Helvetica"
+skinparam swimlaneBackgroundColor #F5F7FF
+skinparam swimlaneBorderColor #9999CC
+
+title Radovid Bot — System Activity Diagram (Component Interaction)
+
+|Discord Client|
+|Discord API (Gateway)|
+|Bot Handler (Delivery Layer)|
+|Use Case Layer|
+|Domain Logic|
+|Ollama Client|
+|SQLite Repository|
+
+== Discord Bot Command Flow ==
+
+|Discord Client|
+start
+:User inputs slash command\n(e.g. /radovid start word_chain easy);
+
+|Discord API (Gateway)|
+:Discord Gateway receives\nInteraction event;
+:Dispatches **InteractionCreate**\nevent to connected bot;
+
+|Bot Handler (Delivery Layer)|
+:DiscordGo receives event;
+:Route to correct handler\nbased on CommandName + Subcommand\n(e.g. radovid_start.go);
+:Parse and validate\ncommand options\n(game_type, difficulty, etc.);
+:Send **Deferred Interaction Response**\n(shows "Bot is thinking…");
+
+|Use Case Layer|
+:Invoke relevant Use Case\n(e.g. StartSessionUseCase);
+
+|Domain Logic|
+:Apply business rules:\n- Check channel availability\n- Create GameSession entity\n- Validate game type & difficulty;
+
+|SQLite Repository|
+:Read existing active sessions\nfor channel_id;
+
+|Use Case Layer|
+if (Active session exists?) then (yes)
+  |Bot Handler (Delivery Layer)|
+  :Edit deferred response:\nEphemeral error embed;
+  |Discord Client|
+  :User sees error message;
+  stop
+else (no)
+endif
+
+|SQLite Repository|
+:INSERT new game_session (status=PENDING);
+:INSERT session_participants (host);
+
+|Ollama Client|
+:POST /api/generate to Ollama\n(localhost:11434)\nwith game prompt template + context;\nnote right: Context timeout applied\n(OLLAMA_TIMEOUT_SECONDS)
+
+if (Ollama responds in time?) then (no)
+  |Bot Handler (Delivery Layer)|
+  :Edit deferred response:\nError embed "AI is busy, try again";
+  stop
+else (yes)
+endif
+
+|Ollama Client|
+:Stream and aggregate\ngenerated text response;
+
+|Use Case Layer|
+:Prepare session data + AI prompt\nfor Discord embed;
+
+|Bot Handler (Delivery Layer)|
+:Edit deferred response:\nGame session embed\n(game info + player prompt + join CTA);
+
+|Discord Client|
+:User sees game session embed\nin channel;
+
+== Round Processing (Game Loop) ==
+
+|Discord Client|
+:Players respond with\nfree-text messages in channel;
+
+|Bot Handler (Delivery Layer)|
+:DiscordGo receives MessageCreate event;
+:Filter messages by channel_id + session_id;
+
+|Use Case Layer|
+:Invoke GameMasterUseCase.ProcessRound();
+
+|Ollama Client|
+:POST to Ollama:\nPlayer responses + correction request;
+
+|SQLite Repository|
+:INSERT game_round record;\n:INSERT feedback_log entries;
+
+|Bot Handler (Delivery Layer)|
+:Post AI feedback embed to channel\n(corrections + hints);
+
+== Session Completion ==
+
+|Use Case Layer|
+:Calculate XP, update streak, check achievements;
+
+|SQLite Repository|
+:UPDATE user_progress;\n:INSERT achievements (if any);\n:UPDATE game_session (status=COMPLETED, ended_at);
+
+|Bot Handler (Delivery Layer)|
+:Post session summary embed\n(XP earned, level ups, achievements);
+
+|Discord Client|
+:Players see final results;
+
+== HTMX Admin Dashboard Flow ==
+
+|Discord Client|
+detach
+
+|Discord API (Gateway)|
+detach
+
+|Bot Handler (Delivery Layer)|
+detach
+
+|Use Case Layer|
+detach
+
+|Domain Logic|
+detach
+
+|Ollama Client|
+detach
+
+|SQLite Repository|
+
+' Swimlane reset for dashboard
+|#E8F8F5|Browser (Admin)|
+|#E8F8F5|HTTP Handler (Delivery Layer)|
+|SQLite Repository|
+
+|#E8F8F5|Browser (Admin)|
+:Admin navigates to\n/admin or /admin/sessions;
+:Sends HTTP GET request\nwith Basic Auth header;
+
+|#E8F8F5|HTTP Handler (Delivery Layer)|
+:Basic Auth middleware\nvalidates credentials;
+
+if (Auth valid?) then (no)
+  |#E8F8F5|Browser (Admin)|
+  :Browser shows 401 Unauthorized;
+  stop
+else (yes)
+endif
+
+|SQLite Repository|
+:Query sessions / users / stats\n(read-only SELECT);
+
+|#E8F8F5|HTTP Handler (Delivery Layer)|
+:Render HTML template\nwith data (Go text/template);
+:Return full page or HTMX partial\nbased on hx-request header;
+
+|#E8F8F5|Browser (Admin)|
+:HTMX swaps response\ninto the DOM (partial update)\nor renders full page;
+stop
+
+@enduml

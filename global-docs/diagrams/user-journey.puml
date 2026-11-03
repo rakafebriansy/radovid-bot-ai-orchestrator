@@ -1,0 +1,80 @@
+@startuml user-journey
+!theme plain
+skinparam backgroundColor #FAFAFA
+skinparam activityBorderColor #4A90D9
+skinparam activityBackgroundColor #E8F4FD
+skinparam activityDiamondBackgroundColor #FFF3CD
+skinparam activityDiamondBorderColor #F0AD4E
+skinparam arrowColor #4A90D9
+skinparam fontName "Helvetica"
+
+title Radovid Bot — User Journey: Start a Game Session
+
+start
+
+:User types **/radovid start [game_type] [difficulty]**\nin a Discord text channel;
+
+:Bot validates the command\n(guild_id, channel_id, parameters);
+
+if (Existing active session\nin this channel?) then (yes)
+  :Bot replies with an ephemeral error:\n"A session is already active here.\nUse /radovid join to participate.";
+  stop
+else (no)
+endif
+
+:Bot creates a new **GameSession** (status: **PENDING**)\nin SQLite;
+
+:Bot registers User as **host** in\n**session_participants**;
+
+:Bot posts a public embed in the channel:\n"🎮 **[Game Type]** session started!\n[Difficulty] | Waiting for Player 2…\n[Join button / /radovid join]";
+
+fork
+  :Player 2 clicks **Join button**\nor types **/radovid join**;
+  :Bot validates Player 2\n(not the same user, not already in session);
+  :Bot adds Player 2 to\n**session_participants**;
+fork again
+  :Timeout after 5 minutes\nif no Player 2 joins;
+  :Bot cancels session (status: **CANCELLED**)\nand notifies channel;
+  stop
+end fork
+
+:Bot updates session status to **ACTIVE**;
+
+:Bot sends prompt request to **Ollama (Gemma 3 4b)**\nwith game type + difficulty + initial context;
+
+:Ollama generates the **opening game scenario / prompt**;
+
+:Bot posts the prompt as a Discord embed\nin the channel;
+
+repeat
+
+  :Both players respond to the prompt\nin the channel (text messages);
+
+  :Bot collects responses and forwards to\n**Ollama** for feedback & next prompt generation;
+
+  :Ollama evaluates responses:\n- Grammar & vocabulary corrections\n- Feedback notes\n- Score / hints;
+
+  :Bot posts **AI feedback** for each player\n(corrections highlighted, hints provided);
+
+  :Bot increments **round_number**\nand records **game_rounds** in SQLite;
+
+  :Bot posts the **next round prompt**\nfrom Ollama;
+
+repeat while (Session continues?\n(no /radovid end command)) is (yes)
+->no: User types **/radovid end**\nor max rounds reached;
+
+:Bot sets session status to **COMPLETED**\nand records **ended_at** in SQLite;
+
+:Bot calculates **XP earned** per player\nbased on rounds, accuracy, participation;
+
+:Bot updates **user_progress** table:\n- total_xp += earned_xp\n- current_level (recalculated)\n- streak_days (if played today)\n- last_activity_at = now;
+
+:Bot checks for new **Achievements**\n(e.g., first game, streak milestones);\n→ Inserts into **achievements** table if earned;
+
+:Bot saves **feedback_logs** for the session\n(original texts, corrections, notes);
+
+:Bot posts the **Session Summary embed**:\n🏆 Session Complete!\n• Player 1: [XP] XP earned — Level [N]\n• Player 2: [XP] XP earned — Level [N]\n• Rounds played: [N]\n• Achievements unlocked: [list];
+
+stop
+
+@enduml

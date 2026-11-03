@@ -1,0 +1,123 @@
+@startuml flowchart
+!theme plain
+skinparam backgroundColor #FAFAFA
+skinparam activityBorderColor #27AE60
+skinparam activityBackgroundColor #EAFAF1
+skinparam activityDiamondBackgroundColor #FEF9E7
+skinparam activityDiamondBorderColor #F39C12
+skinparam arrowColor #27AE60
+skinparam fontName "Helvetica"
+
+title Radovid Bot — Game Session Command Processing Flowchart\n(/radovid start)
+
+start
+
+:Receive Discord Interaction Event\nCommandName: "radovid"\nSubcommand: "start";
+
+:Parse options:\n- game_type (required)\n- difficulty (optional, default: "medium");
+
+if (game_type is valid?) then (no)
+  :Reply ephemeral:\n"❌ Invalid game type.\nUse /radovid help for available games.";
+  stop
+else (yes)
+endif
+
+:Validate channel context\n(guild_id, channel_id from interaction);
+
+if (guild_id or channel_id missing?) then (yes)
+  :Reply ephemeral:\n"❌ This command can only be used in a server channel.";
+  stop
+else (no)
+endif
+
+:Query SQLite:\nSELECT * FROM game_sessions\nWHERE channel_id = ? AND status IN ('pending', 'active');
+
+if (Active session exists in channel?) then (yes)
+  :Reply ephemeral:\n"⚠️ A game session is already active in this channel.\nUse **/radovid join** to participate or **/radovid end** to cancel it.";
+  stop
+else (no)
+endif
+
+:Send deferred interaction response\n("🤔 Setting up your game...");
+
+:Create GameSession entity\n- id: UUID\n- game_type, difficulty\n- status: PENDING\n- channel_id, guild_id\n- created_at: epoch ms now;
+
+:INSERT game_session into SQLite;
+
+:INSERT session_participants:\n- session_id, user_id (host), role: "host"\n- joined_at: epoch ms now;
+
+:Build Ollama prompt:\n"Generate an opening scenario for a [game_type]\ngame at [difficulty] difficulty level.\nRespond in English. Keep it concise and engaging.";
+
+:POST to Ollama API\n(localhost:11434/api/generate)\nwith context timeout (OLLAMA_TIMEOUT_SECONDS);
+
+if (Ollama responds within timeout?) then (no)
+  :UPDATE game_session status = CANCELLED;
+  :Edit deferred response:\n"⚠️ AI is currently busy.\nPlease try again in a moment.";
+  stop
+else (yes)
+endif
+
+:Aggregate streamed response\ninto full prompt text;
+
+:Build Discord embed:\n────────────────────\n🎮 **[GAME TYPE]** Session\n────────────────────\nDifficulty: [Difficulty]\nHost: @[username]\nStatus: Waiting for Player 2…\n\n📋 **Scenario:**\n[AI-generated prompt]\n\n➡️ Type **/radovid join** to join this session!;
+
+:Edit deferred interaction response\nwith the game embed (public);
+
+:Start background goroutine:\nWait for Player 2 join event\nor 5-minute timeout;
+
+fork
+  :Wait for /radovid join command\nfrom a different user in same channel;
+
+  :Validate Player 2:\n- Not the same user as host\n- Not already in an active session;
+
+  :INSERT session_participants:\n- role: "player", joined_at: epoch ms now;
+
+  :UPDATE game_session status = ACTIVE;
+
+  :Post public message:\n"✅ @Player2 joined! Game starting now…";
+
+  :Begin **Game Loop**\n(see state-diagram.puml for states);
+
+fork again
+  :5-minute timeout expires\nwith no Player 2;
+
+  :UPDATE game_session status = CANCELLED\n(ended_at = epoch ms now);
+
+  :Post public message:\n"⏰ Session timed out — no one joined.\nUse **/radovid start** to create a new session.";
+  stop
+end fork
+
+== Game Loop ==
+
+repeat
+
+  :Ollama generates next round prompt;
+  :Bot posts prompt embed to channel;
+
+  :Collect responses from both players\n(MessageCreate events filtered by channel);
+
+  :POST responses to Ollama\nfor feedback + correction;
+
+  :INSERT game_round into SQLite;
+  :INSERT feedback_logs for each player;
+
+  :Post AI feedback embed;
+
+  :Increment round_number;
+
+repeat while (/radovid end received\nor max rounds reached?) is (no)
+->yes;
+
+:UPDATE game_session:\n- status = COMPLETED\n- ended_at = epoch ms now;
+
+:Calculate and award XP\nto each participant;
+
+:UPDATE user_progress for each player;
+
+:Check and INSERT achievements;
+
+:Post Session Summary embed;
+
+stop
+
+@enduml

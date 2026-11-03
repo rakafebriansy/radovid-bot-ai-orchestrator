@@ -1,0 +1,102 @@
+@startuml state-diagram
+!theme plain
+skinparam backgroundColor #FAFAFA
+skinparam StateBorderColor #8E44AD
+skinparam StateBackgroundColor #F5EEF8
+skinparam ArrowColor #8E44AD
+skinparam fontName "Helvetica"
+skinparam StateAttributeFontSize 11
+
+title Radovid Bot — Game Session State Diagram
+
+[*] --> IDLE : Bot starts / no session in channel
+
+state IDLE {
+  IDLE : No active game session\nin the channel.
+  IDLE : Waiting for /radovid start.
+}
+
+state PENDING {
+  PENDING : Session created by host.
+  PENDING : Waiting for Player 2\nto join (max 5 min).
+}
+
+state ACTIVE {
+  ACTIVE : Both players joined.
+  ACTIVE : Game loop running.
+  ACTIVE : Rounds in progress.
+  ACTIVE : AI Game Master generating\nprompts & feedback.
+}
+
+state COMPLETED {
+  COMPLETED : All rounds finished\nor /radovid end issued.
+  COMPLETED : XP awarded, progress saved.
+  COMPLETED : Summary displayed.
+}
+
+state CANCELLED {
+  CANCELLED : Session was aborted.
+  CANCELLED : No XP awarded.
+}
+
+state PAUSED {
+  PAUSED : [Future Feature]\nGame temporarily paused.
+  PAUSED : Both players must\nresume with /radovid resume.
+}
+
+' Primary transitions
+IDLE --> PENDING : /radovid start [game_type]\n(host creates session)
+
+PENDING --> ACTIVE : Player 2 joins\nvia /radovid join
+
+PENDING --> CANCELLED : 5-minute timeout\n(no Player 2)
+
+PENDING --> CANCELLED : Host issues\n/radovid end
+
+ACTIVE --> COMPLETED : /radovid end issued\n(by host or admin)\nor max rounds reached
+
+ACTIVE --> CANCELLED : Unexpected error\nor bot restart\nduring session
+
+COMPLETED --> IDLE : Channel ready\nfor new session
+
+CANCELLED --> IDLE : Channel ready\nfor new session
+
+' Future / optional transitions
+ACTIVE --> PAUSED : /radovid pause\n[future feature]
+
+PAUSED --> ACTIVE : /radovid resume\n[future feature]
+
+PAUSED --> CANCELLED : 30-min pause timeout\n[future feature]
+
+' Notes
+note right of PENDING
+  During PENDING state:
+  • Bot shows join embed in channel
+  • Timer runs for 5 minutes
+  • Ollama pre-generates opening prompt
+  • Only one PENDING session per channel
+end note
+
+note right of ACTIVE
+  During ACTIVE state:
+  • game_session.status = 'active'
+  • game_rounds inserted per round
+  • feedback_logs saved per response
+  • Both players must be in same channel
+end note
+
+note right of COMPLETED
+  On COMPLETED:
+  • game_session.ended_at = epoch ms
+  • user_progress updated (XP, level, streak)
+  • achievements checked & awarded
+  • feedback_logs finalized
+end note
+
+note bottom of PAUSED
+  PAUSED is a planned future state.
+  Not implemented in MVP.
+  SQLite status value reserved: 'paused'
+end note
+
+@enduml

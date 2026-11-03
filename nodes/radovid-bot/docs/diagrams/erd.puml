@@ -1,0 +1,103 @@
+@startuml erd
+!theme plain
+skinparam backgroundColor #FAFAFA
+skinparam EntityBackgroundColor #EAF4FB
+skinparam EntityBorderColor #2980B9
+skinparam ArrowColor #2980B9
+skinparam fontName "Helvetica"
+
+title Radovid Bot — Entity Relationship Diagram (SQLite)
+
+entity "users" as users {
+  * id : TEXT <<PK>> <<UUID>>
+  --
+  * discord_id : TEXT <<UNIQUE>>
+  * username : TEXT
+  * created_at : BIGINT <<epoch ms>>
+  * updated_at : BIGINT <<epoch ms>>
+}
+
+entity "game_sessions" as sessions {
+  * id : TEXT <<PK>> <<UUID>>
+  --
+  * game_type : TEXT
+  * status : TEXT
+    <<pending|active|completed|cancelled>>
+  * channel_id : TEXT
+  * guild_id : TEXT
+  * created_at : BIGINT <<epoch ms>>
+    ended_at : BIGINT <<epoch ms, nullable>>
+}
+
+entity "session_participants" as participants {
+  * session_id : TEXT <<PK, FK>>
+  * user_id : TEXT <<PK, FK>>
+  --
+  * role : TEXT <<player|host>>
+  * joined_at : BIGINT <<epoch ms>>
+}
+
+entity "game_rounds" as rounds {
+  * id : TEXT <<PK>> <<UUID>>
+  --
+  * session_id : TEXT <<FK>>
+  * round_number : INT
+  * prompt : TEXT
+  * started_at : BIGINT <<epoch ms>>
+    ended_at : BIGINT <<epoch ms, nullable>>
+}
+
+entity "user_progress" as progress {
+  * user_id : TEXT <<PK, FK>>
+  --
+  * total_xp : INT
+  * current_level : INT
+  * streak_days : INT
+    last_activity_at : BIGINT <<epoch ms, nullable>>
+  * updated_at : BIGINT <<epoch ms>>
+}
+
+entity "achievements" as achievements {
+  * id : TEXT <<PK>> <<UUID>>
+  --
+  * user_id : TEXT <<FK>>
+  * achievement_type : TEXT
+  * earned_at : BIGINT <<epoch ms>>
+}
+
+entity "daily_diaries" as diaries {
+  * id : TEXT <<PK>> <<UUID>>
+  --
+  * user_id : TEXT <<FK>>
+  * content : TEXT
+    ai_feedback : TEXT <<nullable>>
+  * created_at : BIGINT <<epoch ms>>
+}
+
+entity "feedback_logs" as feedbacks {
+  * id : TEXT <<PK>> <<UUID>>
+  --
+    session_id : TEXT <<FK, nullable>>
+  * user_id : TEXT <<FK>>
+  * original_text : TEXT
+    corrected_text : TEXT <<nullable>>
+    notes : TEXT <<nullable>>
+  * created_at : BIGINT <<epoch ms>>
+}
+
+' Relationships
+users ||--o{ participants : "participates in"
+sessions ||--o{ participants : "has"
+
+sessions ||--o{ rounds : "contains"
+
+users ||--|| progress : "has one"
+
+users ||--o{ achievements : "earns"
+
+users ||--o{ diaries : "writes"
+
+users ||--o{ feedbacks : "receives"
+sessions ||--o{ feedbacks : "generates"
+
+@enduml
