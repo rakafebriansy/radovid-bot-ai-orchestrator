@@ -36,11 +36,11 @@ Fase 4: Gamification       ← Fase 3: Speaking & Writing
 
 | # | Judul | Epoch Timestamp | Status | Pasangan |
 |---|-------|-----------------|--------|---------|
-| 1.1 | Setup Go Project Structure | `1762174595` | `[ ] Pending` | `TICKET-1762174595` / `PLAN-1762174595` |
-| 1.2 | Discord Bot Connection & Command Framework | `1762174655` | `[ ] Pending` | `TICKET-1762174655` / `PLAN-1762174655` |
-| 1.3 | SQLite Database Initialization & Migration System | `1762174715` | `[ ] Pending` | `TICKET-1762174715` / `PLAN-1762174715` |
-| 1.4 | Environment Configuration with Fail-Fast Validation | `1762174775` | `[ ] Pending` | `TICKET-1762174775` / `PLAN-1762174775` |
-| 1.5 | Basic `/radovid help` dan `/radovid start` Command Skeleton | `1762174835` | `[ ] Pending` | `TICKET-1762174835` / `PLAN-1762174835` |
+| 1.1 | Setup Go Project Structure | `1762174595` | `[COMPLETED]` | `TICKET-1762174595` / `PLAN-1762174595` |
+| 1.2 | Discord Bot Connection & Command Framework | `1762174655` | `[COMPLETED]` | `TICKET-1762174655` / `PLAN-1762174655` |
+| 1.3 | SQLite Database Initialization & Migration System | `1762174715` | `[COMPLETED]` | `TICKET-1762174715` / `PLAN-1762174715` |
+| 1.4 | Environment Configuration with Fail-Fast Validation | `1762174775` | `[COMPLETED]` | `TICKET-1762174775` / `PLAN-1762174775` |
+| 1.5 | Basic `/radovid help` dan `/radovid start` Command Skeleton | `1762174835` | `[COMPLETED]` | `TICKET-1762174835` / `PLAN-1762174835` |
 
 ### Detail Item Fase 1
 
@@ -122,13 +122,13 @@ Fase 4: Gamification       ← Fase 3: Speaking & Writing
 
 | # | Judul | Epoch Timestamp | Status | Pasangan |
 |---|-------|-----------------|--------|---------|
-| 2.1 | Ollama HTTP Client Wrapper | `1762261000` | `[ ] Pending` | `TICKET-1762261000` / `PLAN-1762261000` |
-| 2.2 | Game Session State Machine | `1762261060` | `[ ] Pending` | `TICKET-1762261060` / `PLAN-1762261060` |
-| 2.3 | AI Game Master Prompt System | `1762261120` | `[ ] Pending` | `TICKET-1762261120` / `PLAN-1762261120` |
-| 2.4 | Game 1: Would You Rather? | `1762261180` | `[ ] Pending` | `TICKET-1762261180` / `PLAN-1762261180` |
-| 2.5 | Game 2: Taboo | `1762261240` | `[ ] Pending` | `TICKET-1762261240` / `PLAN-1762261240` |
-| 2.6 | Game 3: 20 Questions | `1762261300` | `[ ] Pending` | `TICKET-1762261300` / `PLAN-1762261300` |
-| 2.7 | Discord Embed Templates (Game UI) | `1762261360` | `[ ] Pending` | `TICKET-1762261360` / `PLAN-1762261360` |
+| 2.1 | Ollama HTTP Client Wrapper | `1762261000` | `[COMPLETED]` | `TICKET-1762261000` / `PLAN-1762261000` |
+| 2.2 | Game Session State Machine | `1762261060` | `[CREATED]` | `TICKET-1762261060` / `PLAN-1762261060` |
+| 2.3 | AI Game Master Prompt System | `1762261120` | `[CREATED]` | `TICKET-1762261120` / `PLAN-1762261120` |
+| 2.4 | Game 1: Would You Rather? | `1762261180` | `[CREATED]` | `TICKET-1762261180` / `PLAN-1762261180` |
+| 2.5 | Game 2: Taboo | `1762261240` | `[CREATED]` | `TICKET-1762261240` / `PLAN-1762261240` |
+| 2.6 | Game 3: 20 Questions | `1762261300` | `[CREATED]` | `TICKET-1762261300` / `PLAN-1762261300` |
+| 2.7 | Discord Embed Templates (Game UI) | `1762261360` | `[CREATED]` | `TICKET-1762261360` / `PLAN-1762261360` |
 
 ### Detail Item Fase 2
 
@@ -214,14 +214,14 @@ Fase 4: Gamification       ← Fase 3: Speaking & Writing
 
 | # | Judul | Epoch Timestamp | Status | Pasangan |
 |---|-------|-----------------|--------|---------|
-| 3.1 | AI Feedback System (Grammar & Vocabulary) | `1762347400` | `[ ] Pending` | `TICKET-1762347400` / `PLAN-1762347400` |
-| 3.2 | Game 4: Job Interview | `1762347460` | `[ ] Pending` | `TICKET-1762347460` / `PLAN-1762347460` |
-| 3.3 | Game 5: Roleplay | `1762347520` | `[ ] Pending` | `TICKET-1762347520` / `PLAN-1762347520` |
-| 3.4 | Game 6: One Minute Challenge | `1762347580` | `[ ] Pending` | `TICKET-1762347580` / `PLAN-1762347580` |
-| 3.5 | Game 7: Story Relay | `1762347640` | `[ ] Pending` | `TICKET-1762347640` / `PLAN-1762347640` |
-| 3.6 | Game 8: Daily 5-Sentence Diary | `1762347700` | `[ ] Pending` | `TICKET-1762347700` / `PLAN-1762347700` |
-| 3.7 | Game 9: Five Word Writing Challenge | `1762347760` | `[ ] Pending` | `TICKET-1762347760` / `PLAN-1762347760` |
-| 3.8 | Difficulty Level System | `1762347820` | `[ ] Pending` | `TICKET-1762347820` / `PLAN-1762347820` |
+| 3.1 | AI Feedback System (Grammar & Vocabulary) | `1762347400` | `[CREATED]` | `TICKET-1762347400` / `PLAN-1762347400` |
+| 3.2 | Game 4: Job Interview | `1762347460` | `[CREATED]` | `TICKET-1762347460` / `PLAN-1762347460` |
+| 3.3 | Game 5: Roleplay | `1762347520` | `[CREATED]` | `TICKET-1762347520` / `PLAN-1762347520` |
+| 3.4 | Game 6: One Minute Challenge | `1762347580` | `[CREATED]` | `TICKET-1762347580` / `PLAN-1762347580` |
+| 3.5 | Game 7: Story Relay | `1762347640` | `[CREATED]` | `TICKET-1762347640` / `PLAN-1762347640` |
+| 3.6 | Game 8: Daily 5-Sentence Diary | `1762347700` | `[CREATED]` | `TICKET-1762347700` / `PLAN-1762347700` |
+| 3.7 | Game 9: Five Word Writing Challenge | `1762347760` | `[CREATED]` | `TICKET-1762347760` / `PLAN-1762347760` |
+| 3.8 | Difficulty Level System | `1762347820` | `[CREATED]` | `TICKET-1762347820` / `PLAN-1762347820` |
 
 ### Detail Item Fase 3
 
@@ -307,18 +307,18 @@ Fase 4: Gamification       ← Fase 3: Speaking & Writing
 
 | # | Judul | Epoch Timestamp | Status | Pasangan |
 |---|-------|-----------------|--------|---------|
-| 4.1 | XP Calculation & Level System | `1762433800` | `[ ] Pending` | `TICKET-1762433800` / `PLAN-1762433800` |
-| 4.2 | Streak Tracking (Daily Activity) | `1762433860` | `[ ] Pending` | `TICKET-1762433860` / `PLAN-1762433860` |
-| 4.3 | Achievements System | `1762433920` | `[ ] Pending` | `TICKET-1762433920` / `PLAN-1762433920` |
-| 4.4 | `/radovid progress` Command | `1762433980` | `[ ] Pending` | `TICKET-1762433980` / `PLAN-1762433980` |
-| 4.5 | HTMX Admin Dashboard | `1762434040` | `[ ] Pending` | `TICKET-1762434040` / `PLAN-1762434040` |
-| 4.6 | Game 10: Secret Mission | `1762434100` | `[ ] Pending` | `TICKET-1762434100` / `PLAN-1762434100` |
-| 4.7 | Game 11: Grammar Boss Fight | `1762434160` | `[ ] Pending` | `TICKET-1762434160` / `PLAN-1762434160` |
-| 4.8 | Game 12: Sentence Transformation Race | `1762434220` | `[ ] Pending` | `TICKET-1762434220` / `PLAN-1762434220` |
-| 4.9 | Game 13: Movie Review | `1762434280` | `[ ] Pending` | `TICKET-1762434280` / `PLAN-1762434280` |
-| 4.10 | Game 14: News Reporter | `1762434340` | `[ ] Pending` | `TICKET-1762434340` / `PLAN-1762434340` |
-| 4.11 | Game 15: Design Your Dream House | `1762434400` | `[ ] Pending` | `TICKET-1762434400` / `PLAN-1762434400` |
-| 4.12 | Daily Challenge Notifications | `1762434460` | `[ ] Pending` | `TICKET-1762434460` / `PLAN-1762434460` |
+| 4.1 | XP Calculation & Level System | `1762433800` | `[CREATED]` | `TICKET-1762433800` / `PLAN-1762433800` |
+| 4.2 | Streak Tracking (Daily Activity) | `1762433860` | `[CREATED]` | `TICKET-1762433860` / `PLAN-1762433860` |
+| 4.3 | Achievements System | `1762433920` | `[CREATED]` | `TICKET-1762433920` / `PLAN-1762433920` |
+| 4.4 | `/radovid progress` Command | `1762433980` | `[CREATED]` | `TICKET-1762433980` / `PLAN-1762433980` |
+| 4.5 | HTMX Admin Dashboard | `1762434040` | `[CREATED]` | `TICKET-1762434040` / `PLAN-1762434040` |
+| 4.6 | Game 10: Secret Mission | `1762434100` | `[CREATED]` | `TICKET-1762434100` / `PLAN-1762434100` |
+| 4.7 | Game 11: Grammar Boss Fight | `1762434160` | `[CREATED]` | `TICKET-1762434160` / `PLAN-1762434160` |
+| 4.8 | Game 12: Sentence Transformation Race | `1762434220` | `[CREATED]` | `TICKET-1762434220` / `PLAN-1762434220` |
+| 4.9 | Game 13: Movie Review | `1762434280` | `[CREATED]` | `TICKET-1762434280` / `PLAN-1762434280` |
+| 4.10 | Game 14: News Reporter | `1762434340` | `[CREATED]` | `TICKET-1762434340` / `PLAN-1762434340` |
+| 4.11 | Game 15: Design Your Dream House | `1762434400` | `[CREATED]` | `TICKET-1762434400` / `PLAN-1762434400` |
+| 4.12 | Daily Challenge Notifications | `1762434460` | `[CREATED]` | `TICKET-1762434460` / `PLAN-1762434460` |
 
 ### Detail Item Fase 4 (Ringkasan)
 
@@ -368,6 +368,6 @@ Fase 4: Gamification       ← Fase 3: Speaking & Writing
 > **[MODE 1 — Autonomous Planning]** Setiap item di atas harus dieksekusi sebagai pasangan `TICKET-[EPOCH]` + `PLAN-[EPOCH]`. Buat pasangan tersebut sebelum memulai implementasi, paparkan rencana ke developer, dan minta persetujuan eksplisit sebelum mutasi state apapun.
 
 **Aturan Centang Status:**
-- `[ ] Pending` — belum dimulai
+- `[CREATED]` — belum dimulai
 - `[~] In Progress` — sedang dikerjakan (sertakan epoch sesi aktif)
 - `[x] Done` — selesai, delivery gate lulus, tiket & rencana ditandai Done/Completed
