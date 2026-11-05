@@ -126,11 +126,11 @@ Fase 4: Gamification       ← Fase 3: Speaking & Writing
 | 2.2 | Docker Containerization & Ollama Service Orchestration | `1762261030` | `[COMPLETED]` | `TICKET-1762261030` / `PLAN-1762261030` |
 | 2.3 | Game Session State Machine | `1762261060` | `[COMPLETED]` | `TICKET-1762261060` / `PLAN-1762261060` |
 | 2.4 | Database Query Builder Utility | `1762261090` | `[COMPLETED]` | `TICKET-1762261090` / `PLAN-1762261090` |
-| 2.5 | AI Game Master Prompt System | `1762261120` | `[CREATED]` | `TICKET-1762261120` / `PLAN-1762261120` |
-| 2.6 | Game 1: Would You Rather? | `1762261180` | `[CREATED]` | `TICKET-1762261180` / `PLAN-1762261180` |
-| 2.7 | Game 2: Taboo | `1762261240` | `[CREATED]` | `TICKET-1762261240` / `PLAN-1762261240` |
-| 2.8 | Game 3: 20 Questions | `1762261300` | `[CREATED]` | `TICKET-1762261300` / `PLAN-1762261300` |
-| 2.9 | Discord Embed Templates (Game UI) | `1762261360` | `[CREATED]` | `TICKET-1762261360` / `PLAN-1762261360` |
+| 2.5 | AI Game Master Prompt System | `1762261120` | `[COMPLETED]` | `TICKET-1762261120` / `PLAN-1762261120` |
+| 2.6 | Game 1: Would You Rather? | `1762261180` | `[COMPLETED]` | `TICKET-1762261180` / `PLAN-1762261180` |
+| 2.7 | Game 2: Taboo | `1762261240` | `[COMPLETED]` | `TICKET-1762261240` / `PLAN-1762261240` |
+| 2.8 | Game 3: 20 Questions | `1762261300` | `[COMPLETED]` | `TICKET-1762261300` / `PLAN-1762261300` |
+| 2.9 | Discord Embed Templates (Game UI) | `1762261360` | `[COMPLETED]` | `TICKET-1762261360` / `PLAN-1762261360` |
 
 ### Detail Item Fase 2
 
@@ -182,47 +182,47 @@ Fase 4: Gamification       ← Fase 3: Speaking & Writing
 #### 2.5 AI Game Master Prompt System
 - **Deskripsi:** Sistem prompt template untuk AI Game Master yang bisa generate scenarios, questions, dan hints berdasarkan game type dan difficulty.
 - **Acceptance Criteria:**
-  - [ ] Prompt templates disimpan sebagai embedded files (`//go:embed`)
-  - [ ] Template mendukung variabel: `{{.GameType}}`, `{{.Difficulty}}`, `{{.Context}}`
-  - [ ] Struct `GameMasterRequest` dan `GameMasterResponse` terdefinisi di domain layer
-  - [ ] Response parsing untuk extract pertanyaan/skenario dari output Ollama
-  - [ ] Fallback jika Ollama tidak tersedia (preset static questions)
+  - [x] Prompt templates disimpan sebagai embedded files (`//go:embed`)
+  - [x] Template mendukung variabel: `{{.GameType}}`, `{{.Difficulty}}`, `{{.Context}}`
+  - [x] Struct `GameMasterRequest` dan `GameMasterResponse` terdefinisi di domain layer
+  - [x] Response parsing untuk extract pertanyaan/skenario dari output Ollama
+  - [x] Fallback jika Ollama tidak tersedia (preset static questions)
 
 #### 2.6 Game 1: Would You Rather?
 - **Deskripsi:** Game paling sederhana — AI generate dua pilihan, player memilih via Discord button, AI merespons dengan komentar dan follow-up question.
 - **Acceptance Criteria:**
-  - [ ] `/radovid play would-you-rather` memulai sesi
-  - [ ] AI generate dua opsi dalam English, ditampilkan sebagai Discord Embed + 2 buttons
-  - [ ] Player memilih tombol, bot mencatat pilihan dan generate komentar AI
-  - [ ] Sesi berlanjut minimal 3 ronde, kemudian ada opsi lanjut/selesai
-  - [ ] Hasil akhir ditampilkan sebagai embed dengan ringkasan pilihan
+  - [x] `/radovid play would-you-rather` memulai sesi
+  - [x] AI generate dua opsi dalam English, ditampilkan sebagai Discord Embed + 2 buttons
+  - [x] Player memilih tombol, bot mencatat pilihan dan generate komentar AI
+  - [x] Sesi berlanjut minimal 3 ronde, kemudian ada opsi lanjut/selesai
+  - [x] Hasil akhir ditampilkan sebagai embed dengan ringkasan pilihan
 
 #### 2.7 Game 2: Taboo
 - **Deskripsi:** Game vocabulary — AI generate kata target + daftar kata terlarang, player harus mendeskripsikan tanpa kata terlarang, AI menilai apakah deskripsi valid.
 - **Acceptance Criteria:**
-  - [ ] AI generate kata target dan 5 kata terlarang
-  - [ ] Player mengirim teks deskripsi via modal Discord
-  - [ ] AI menilai apakah kata terlarang digunakan dan apakah deskripsi cukup jelas
-  - [ ] Score system berdasarkan jumlah kata berhasil dideskripsikan dalam waktu yang ditentukan
-  - [ ] Turn-based: giliran per player dalam sesi multiplayer
+  - [x] AI generate kata target dan 5 kata terlarang
+  - [x] Player mengirim teks deskripsi via modal Discord
+  - [x] AI menilai apakah kata terlarang digunakan dan apakah deskripsi cukup jelas
+  - [x] Score system berdasarkan jumlah kata berhasil dideskripsikan dalam waktu yang ditentukan
+  - [x] Turn-based: giliran per player dalam sesi multiplayer
 
 #### 2.8 Game 3: 20 Questions
 - **Deskripsi:** AI "memikirkan" suatu benda/orang/tempat, player punya 20 pertanyaan yes/no untuk menebak.
 - **Acceptance Criteria:**
-  - [ ] AI generate topik rahasia dan menyimpan di session state (tidak visible ke player)
-  - [ ] Player mengirim pertanyaan via message atau modal, AI menjawab "Yes", "No", atau "Sometimes"
-  - [ ] Counter pertanyaan tersisa ditampilkan di setiap response embed
-  - [ ] Game berakhir saat player menebak benar atau 20 pertanyaan habis
-  - [ ] AI memberikan penjelasan singkat di akhir game
+  - [x] AI generate topik rahasia dan menyimpan di session state (tidak visible ke player)
+  - [x] Player mengirim pertanyaan via message atau modal, AI menjawab "Yes", "No", atau "Sometimes"
+  - [x] Counter pertanyaan tersisa ditampilkan di setiap response embed
+  - [x] Game berakhir saat player menebak benar atau 20 pertanyaan habis
+  - [x] AI memberikan penjelasan singkat di akhir game
 
 #### 2.9 Discord Embed Templates (Game UI)
 - **Deskripsi:** Library embed builder yang konsisten untuk semua tampilan game: session info, round display, hasil, error.
 - **Acceptance Criteria:**
-  - [ ] `EmbedBuilder` struct dengan method chaining untuk title, description, fields, color, footer
-  - [ ] Preset warna: biru untuk info, hijau untuk success, merah untuk error, kuning untuk warning
-  - [ ] Template fungsi untuk: session start, round display, result, error ephemeral
-  - [ ] Warna dan format konsisten di semua game
-  - [ ] Unit test untuk embed builder
+  - [x] `EmbedBuilder` struct dengan method chaining untuk title, description, fields, color, footer
+  - [x] Preset warna: biru untuk info, hijau untuk success, merah untuk error, kuning untuk warning
+  - [x] Template fungsi untuk: session start, round display, result, error ephemeral
+  - [x] Warna dan format konsisten di semua game
+  - [x] Unit test untuk embed builder
 
 ---
 

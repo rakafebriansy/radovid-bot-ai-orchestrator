@@ -2,7 +2,7 @@
 id: PLAN-1762261240
 ticket_id: TICKET-1762261240
 title: "Game 2: Taboo"
-status: Draft
+status: Completed
 created_at: 2026-11-04T00:15:00+07:00
 ---
 

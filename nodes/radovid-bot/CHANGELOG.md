@@ -4,6 +4,96 @@
 
 ---
 
+### [2026-11-05 17:38:00] - Discord Embed Templates (TICKET-1762261360)
+> **Trigger:** Autonomous Planning | **Branch:** `main` | **Repo:** `radovid-bot-ai-orchestrator`
+
+- **Konteks:** Eksekusi tiket `TICKET-1762261360` dan rencana `PLAN-1762261360` (Fase 2, Item 2.9: Discord Embed Templates) untuk standarisasi pembuatan antarmuka Discord Embed mencakup builder berkonsep fluent interface (`EmbedBuilder`), konstanta palet warna baku (`palette.go`), penanganan pemotongan teks aman berbasis UTF-8 rune (*safe truncation*) terhadap batas karakter Discord API (title max 256, description max 4096, footer max 2048, field value max 1024), pembatasan maksimal 25 fields, serta fungsi generator template visual siap pakai (`SessionStartEmbed`, `RoundDisplayEmbed`, `ResultSummaryEmbed`, `ErrorEphemeralEmbed`).
+- **Perubahan:**
+  - [Added] Definisi palet warna baku `internal/infrastructure/discord/palette.go` (`ColorInfo`, `ColorSuccess`, `ColorWarning`, `ColorError`, `ColorNeutral`, `ColorGMAccent`, `DefaultFooterText`).
+  - [Added] Pustaka generator template UI permainan `internal/infrastructure/discord/game_templates.go` dan unit test `game_templates_test.go`.
+  - [Changed] Implementasi struct `EmbedBuilder` dan fungsi pemotongan teks aman rune `truncateString` pada `internal/infrastructure/discord/embeds.go`.
+  - [Changed] Memperbarui unit test `internal/infrastructure/discord/embeds_test.go` dengan pengujian method chaining, truncation batas ekstrem, dan pembatasan 25 field.
+  - [Changed] Memperbarui status `TICKET-1762261360` menjadi `Done` dan `PLAN-1762261360` menjadi `Completed`.
+  - [Changed] Memperbarui roadmap pada `docs/development-planning.md` item 2.9 menjadi `[COMPLETED]` sekaligus menandai selesainya seluruh Fase 2 (Core Game Engine).
+- **Path File:** `../../../../radovid-bot-api/internal/infrastructure/discord/palette.go`, `../../../../radovid-bot-api/internal/infrastructure/discord/embeds.go`, `../../../../radovid-bot-api/internal/infrastructure/discord/embeds_test.go`, `../../../../radovid-bot-api/internal/infrastructure/discord/game_templates.go`, `../../../../radovid-bot-api/internal/infrastructure/discord/game_templates_test.go`, `tickets/TICKET-1762261360-discord-embed-templates.md`, `plans/PLAN-1762261360-discord-embed-templates.md`, `docs/development-planning.md`, `CHANGELOG.md`
+
+---
+
+### [2026-11-05 17:35:00] - Game 3: 20 Questions (TICKET-1762261300)
+> **Trigger:** Autonomous Planning | **Branch:** `main` | **Repo:** `radovid-bot-ai-orchestrator`
+
+- **Konteks:** Eksekusi tiket `TICKET-1762261300` dan rencana `PLAN-1762261300` (Fase 2, Item 2.8: Game 3 - 20 Questions) untuk game deduktif interaktif di mana AI Game Master menyimpan topik rahasia, pemain mengajukan pertanyaan ya/tidak hingga kuota 20 pertanyaan, AI mengevaluasi semantik pertanyaan ("Yes", "No", "Sometimes", "Invalid"), counter kuota tersisa dikurangi secara atomik, penanganan tebakan kata langsung pemain, pengungkapan topik rahasia (*reveal*) saat menang atau kuota habis, serta rekap perjalanan deduksi akhir sesi.
+- **Perubahan:**
+  - [Added] Domain entity `internal/domain/game/twenty_questions_entity.go` (`TQAnswerType`, `TQQAItem`, `TQGuessItem`, `TQSessionState`, `TQSummary`) dan unit test `twenty_questions_entity_test.go`.
+  - [Added] Use case game 20 Questions `internal/usecase/game/twenty_questions.go` dan unit test `twenty_questions_test.go`.
+  - [Added] Delivery Discord command `internal/delivery/discord/command_play_20q.go` dan unit test `command_play_20q_test.go`.
+  - [Added] Delivery Discord command `internal/delivery/discord/command_ask_20q.go` dan unit test `command_ask_20q_test.go`.
+  - [Added] Delivery Discord command `internal/delivery/discord/command_guess_20q.go` dan unit test `command_guess_20q_test.go`.
+  - [Changed] Menambahkan `GameTypeTwentyQuestions` pada `internal/domain/game/entity.go`.
+  - [Changed] Menambahkan subcommand `play 20-questions`, `ask`, dan `guess` pada `internal/delivery/discord/command_def.go` dan `command_test.go`.
+  - [Changed] Menambahkan router dispatch `ask` dan `guess` pada `internal/delivery/discord/handler.go`.
+  - [Changed] Memperbarui `GameHandler` dengan usecase 20 Questions dan registrasi prefix `tq:` pada `internal/delivery/discord/game_handler.go` dan `cmd/bot/main.go`.
+  - [Changed] Memperbarui status `TICKET-1762261300` menjadi `Done` dan `PLAN-1762261300` menjadi `Completed`.
+  - [Changed] Memperbarui roadmap pada `docs/development-planning.md` item 2.8 menjadi `[COMPLETED]`.
+- **Path File:** `../../../../radovid-bot-api/internal/domain/game/entity.go`, `../../../../radovid-bot-api/internal/domain/game/twenty_questions_entity.go`, `../../../../radovid-bot-api/internal/domain/game/twenty_questions_entity_test.go`, `../../../../radovid-bot-api/internal/usecase/game/twenty_questions.go`, `../../../../radovid-bot-api/internal/usecase/game/twenty_questions_test.go`, `../../../../radovid-bot-api/internal/delivery/discord/command_def.go`, `../../../../radovid-bot-api/internal/delivery/discord/command_test.go`, `../../../../radovid-bot-api/internal/delivery/discord/handler.go`, `../../../../radovid-bot-api/internal/delivery/discord/game_handler.go`, `../../../../radovid-bot-api/internal/delivery/discord/command_play_wyr.go`, `../../../../radovid-bot-api/internal/delivery/discord/command_play_20q.go`, `../../../../radovid-bot-api/internal/delivery/discord/command_play_20q_test.go`, `../../../../radovid-bot-api/internal/delivery/discord/command_ask_20q.go`, `../../../../radovid-bot-api/internal/delivery/discord/command_ask_20q_test.go`, `../../../../radovid-bot-api/internal/delivery/discord/command_guess_20q.go`, `../../../../radovid-bot-api/internal/delivery/discord/command_guess_20q_test.go`, `../../../../radovid-bot-api/cmd/bot/main.go`, `tickets/TICKET-1762261300-game-20-questions.md`, `plans/PLAN-1762261300-game-20-questions.md`, `docs/development-planning.md`, `CHANGELOG.md`
+
+---
+
+### [2026-11-05 17:15:00] - Game 2: Taboo (TICKET-1762261240)
+> **Trigger:** Autonomous Planning | **Branch:** `main` | **Repo:** `radovid-bot-ai-orchestrator`
+
+- **Konteks:** Eksekusi tiket `TICKET-1762261240` dan rencana `PLAN-1762261240` (Fase 2, Item 2.7: Game 2 - Taboo) untuk permainan turn-based 2-player interaktif deskripsi kata tanpa kata terlarang mencakup integrasi AI Game Master untuk generate kartu taboo, isolasi kartu rahasia via pesan ephemeral, penangkapan deskripsi pemain melalui Discord Modal TextInput Paragraph, sistem evaluasi hibrida (deteksi kata terlarang deterministik regex word-boundary + penilaian akurasi semantik AI), sistem scoring, pergantian giliran pemain, dan rekap skor akhir.
+- **Perubahan:**
+  - [Added] Domain entity `internal/domain/game/taboo_entity.go` (`TabooCard`, `TabooEvaluation`, `TabooTurn`, `TabooSessionState`, `TabooSummary`) dan unit test `taboo_entity_test.go`.
+  - [Added] Evaluator dua lapis `internal/usecase/game/taboo_evaluator.go` dan unit test `taboo_evaluator_test.go`.
+  - [Added] Use case game Taboo `internal/usecase/game/taboo.go` dan unit test `taboo_test.go`.
+  - [Added] Delivery Discord adapter `internal/delivery/discord/` (`command_play_taboo.go`, `command_play_taboo_test.go`, `interaction_taboo_modal.go`, `interaction_taboo_modal_test.go`).
+  - [Changed] Menambahkan `GameTypeTaboo` pada `internal/domain/game/entity.go`.
+  - [Changed] Menambahkan subcommand `taboo` pada `internal/delivery/discord/command_def.go`.
+  - [Changed] Menambahkan handler `InteractionModalSubmit` pada `internal/delivery/discord/router.go`.
+  - [Changed] Memperbarui `GameHandler` dan wiring dependensi lengkap pada `cmd/bot/main.go`.
+  - [Changed] Memperbarui status `TICKET-1762261240` menjadi `Done` dan `PLAN-1762261240` menjadi `Completed`.
+  - [Changed] Memperbarui roadmap pada `docs/development-planning.md` item 2.7 menjadi `[COMPLETED]`.
+- **Path File:** `../../../../radovid-bot-api/internal/domain/game/entity.go`, `../../../../radovid-bot-api/internal/domain/game/taboo_entity.go`, `../../../../radovid-bot-api/internal/domain/game/taboo_entity_test.go`, `../../../../radovid-bot-api/internal/usecase/game/taboo_evaluator.go`, `../../../../radovid-bot-api/internal/usecase/game/taboo_evaluator_test.go`, `../../../../radovid-bot-api/internal/usecase/game/taboo.go`, `../../../../radovid-bot-api/internal/usecase/game/taboo_test.go`, `../../../../radovid-bot-api/internal/delivery/discord/command_def.go`, `../../../../radovid-bot-api/internal/delivery/discord/router.go`, `../../../../radovid-bot-api/internal/delivery/discord/game_handler.go`, `../../../../radovid-bot-api/internal/delivery/discord/command_play_taboo.go`, `../../../../radovid-bot-api/internal/delivery/discord/command_play_taboo_test.go`, `../../../../radovid-bot-api/internal/delivery/discord/interaction_taboo_modal.go`, `../../../../radovid-bot-api/internal/delivery/discord/interaction_taboo_modal_test.go`, `../../../../radovid-bot-api/cmd/bot/main.go`, `tickets/TICKET-1762261240-game-taboo.md`, `plans/PLAN-1762261240-game-taboo.md`, `docs/development-planning.md`, `CHANGELOG.md`
+
+---
+
+### [2026-11-05 16:30:00] - Game 1: Would You Rather? (TICKET-1762261180)
+> **Trigger:** Autonomous Planning | **Branch:** `main` | **Repo:** `radovid-bot-ai-orchestrator`
+
+- **Konteks:** Eksekusi tiket `TICKET-1762261180` dan rencana `PLAN-1762261180` (Fase 2, Item 2.6: Game 1 - Would You Rather?) untuk alur gameplay lengkap game interaktif pertama Radovid Bot mencakup pemicu slash command (`/radovid play would-you-rather`), state lobby/session, pemanggilan AI Game Master, rendering Discord Embed dan Komponen Interactive Button Tipe 2 (Option A dan Option B), voting multi-pemain dengan pencegahan vote ganda, komentar follow-up AI, minimal 3 ronde permainan, dan layar ringkasan hasil akhir.
+- **Perubahan:**
+  - [Added] Migrasi database `migrations/004_create_game_rounds.sql` untuk tabel `game_rounds` dan `round_votes`.
+  - [Added] Domain entity & repository `internal/domain/game/` (`wyr_entity.go`, `wyr_entity_test.go`, `round_repository.go`).
+  - [Added] Implementasi konkret SQLite `internal/infrastructure/database/` (`round_repository.go`, `round_repository_test.go`).
+  - [Added] Use case game `internal/usecase/game/` (`would_you_rather.go`, `would_you_rather_test.go`).
+  - [Added] Delivery Discord adapter `internal/delivery/discord/` (`game_handler.go`, `command_play_wyr.go`, `command_play_wyr_test.go`, `interaction_wyr_button.go`, `interaction_wyr_button_test.go`).
+  - [Changed] Menambahkan `GameTypeWouldYouRather` pada `internal/domain/game/entity.go`.
+  - [Changed] Menambahkan opsi subcommand group `play` pada `internal/delivery/discord/command_def.go` dan `command_test.go`.
+  - [Changed] Menambahkan router message component button pada `internal/delivery/discord/router.go` dan router command dispatch pada `handler.go`.
+  - [Changed] Melakukan wiring dependency injection lengkap pada `cmd/bot/main.go`.
+  - [Changed] Memperbarui status `TICKET-1762261180` menjadi `Done` dan `PLAN-1762261180` menjadi `Completed`.
+  - [Changed] Memperbarui roadmap pada `docs/development-planning.md` item 2.6 menjadi `[COMPLETED]`.
+- **Path File:** `../../../../radovid-bot-api/migrations/004_create_game_rounds.sql`, `../../../../radovid-bot-api/internal/domain/game/entity.go`, `../../../../radovid-bot-api/internal/domain/game/wyr_entity.go`, `../../../../radovid-bot-api/internal/domain/game/wyr_entity_test.go`, `../../../../radovid-bot-api/internal/domain/game/round_repository.go`, `../../../../radovid-bot-api/internal/infrastructure/database/round_repository.go`, `../../../../radovid-bot-api/internal/infrastructure/database/round_repository_test.go`, `../../../../radovid-bot-api/internal/usecase/game/would_you_rather.go`, `../../../../radovid-bot-api/internal/usecase/game/would_you_rather_test.go`, `../../../../radovid-bot-api/internal/delivery/discord/command_def.go`, `../../../../radovid-bot-api/internal/delivery/discord/router.go`, `../../../../radovid-bot-api/internal/delivery/discord/handler.go`, `../../../../radovid-bot-api/internal/delivery/discord/game_handler.go`, `../../../../radovid-bot-api/internal/delivery/discord/command_play_wyr.go`, `../../../../radovid-bot-api/internal/delivery/discord/command_play_wyr_test.go`, `../../../../radovid-bot-api/internal/delivery/discord/interaction_wyr_button.go`, `../../../../radovid-bot-api/internal/delivery/discord/interaction_wyr_button_test.go`, `../../../../radovid-bot-api/cmd/bot/main.go`, `tickets/TICKET-1762261180-game-would-you-rather.md`, `plans/PLAN-1762261180-game-would-you-rather.md`, `docs/development-planning.md`, `CHANGELOG.md`
+
+---
+
+### [2026-11-05 15:35:00] - AI Game Master Prompt System (TICKET-1762261120)
+> **Trigger:** Autonomous Planning | **Branch:** `main` | **Repo:** `radovid-bot-ai-orchestrator`
+
+- **Konteks:** Eksekusi tiket `TICKET-1762261120` dan rencana `PLAN-1762261120` (Fase 2, Item 2.5: AI Game Master Prompt System) untuk arsitektur prompt template berbasis `//go:embed`, parser output teks LLM toleran markdown, serta bank soal cadangan statis (*static fallback questions*) per game type dan difficulty.
+- **Perubahan:**
+  - [Added] Domain entity & repository `internal/domain/gamemaster/` (`entity.go`, `repository.go`, `entity_test.go`).
+  - [Added] Template prompt ter-embed `internal/infrastructure/ollama/prompts/` (`would_you_rather.tmpl`, `taboo.tmpl`, `twenty_questions.tmpl`, `embed.go`, `embed_test.go`).
+  - [Added] Parser output LLM `internal/infrastructure/ollama/` (`parser.go`, `parser_test.go`).
+  - [Added] Bank soal fallback statis `internal/infrastructure/ollama/` (`fallback.go`, `fallback_test.go`).
+  - [Added] Use case game master `internal/usecase/game/` (`game_master.go`, `game_master_test.go`).
+  - [Changed] Memperbarui status `TICKET-1762261120` menjadi `Done` dan `PLAN-1762261120` menjadi `Completed`.
+  - [Changed] Memperbarui roadmap pada `docs/development-planning.md` item 2.5 menjadi `[COMPLETED]`.
+- **Path File:** `../../../../radovid-bot-api/internal/domain/gamemaster/entity.go`, `../../../../radovid-bot-api/internal/domain/gamemaster/repository.go`, `../../../../radovid-bot-api/internal/domain/gamemaster/entity_test.go`, `../../../../radovid-bot-api/internal/infrastructure/ollama/prompts/embed.go`, `../../../../radovid-bot-api/internal/infrastructure/ollama/prompts/embed_test.go`, `../../../../radovid-bot-api/internal/infrastructure/ollama/prompts/would_you_rather.tmpl`, `../../../../radovid-bot-api/internal/infrastructure/ollama/prompts/taboo.tmpl`, `../../../../radovid-bot-api/internal/infrastructure/ollama/prompts/twenty_questions.tmpl`, `../../../../radovid-bot-api/internal/infrastructure/ollama/parser.go`, `../../../../radovid-bot-api/internal/infrastructure/ollama/parser_test.go`, `../../../../radovid-bot-api/internal/infrastructure/ollama/fallback.go`, `../../../../radovid-bot-api/internal/infrastructure/ollama/fallback_test.go`, `../../../../radovid-bot-api/internal/usecase/game/game_master.go`, `../../../../radovid-bot-api/internal/usecase/game/game_master_test.go`, `tickets/TICKET-1762261120-ai-game-master-prompts.md`, `plans/PLAN-1762261120-ai-game-master-prompts.md`, `docs/development-planning.md`, `CHANGELOG.md`
+
+---
+
 ### [2026-11-05 08:08:00] - Database Query Builder Utility (TICKET-1762261090)
 > **Trigger:** Autonomous Planning | **Branch:** `main` | **Repo:** `radovid-bot-ai-orchestrator`
 

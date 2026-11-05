@@ -2,7 +2,7 @@
 id: PLAN-1762261300
 ticket_id: TICKET-1762261300
 title: "Game 3: 20 Questions"
-status: Draft
+status: Completed
 created_at: 2026-11-04T00:15:00+07:00
 ---
 
