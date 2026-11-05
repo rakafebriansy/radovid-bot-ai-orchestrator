@@ -4,6 +4,55 @@
 
 ---
 
+### [2026-11-05 08:08:00] - Database Query Builder Utility (TICKET-1762261090)
+> **Trigger:** Autonomous Planning | **Branch:** `main` | **Repo:** `radovid-bot-ai-orchestrator`
+
+- **Konteks:** Eksekusi tiket `TICKET-1762261090` dan rencana `PLAN-1762261090` (Fase 2, Item 2.4: Core Game Engine / Infrastructure) untuk pustaka utilitas query builder SQL berparameter yang dapat digunakan kembali (*reusable*) mencakup bulk insert, batch update, bulk case update, batch delete, dan batch select-in berbasis standard library Go dengan sanitasi identifier anti-SQL injection.
+- **Perubahan:**
+  - [Added] Utilitas query builder `internal/infrastructure/database/query_builder.go` (`ValidateIdentifier`, `BuildBulkInsertQuery`, `BuildBatchUpdateQuery`, `BuildCaseUpdateQuery`, `BuildBatchDeleteQuery`, `BuildSelectInQuery`, `buildPlaceholders`) dengan alokasi buffer efisien dan validasi regex/rune identifier.
+  - [Added] Unit test table-driven `internal/infrastructure/database/query_builder_test.go` dengan 35+ test case memvalidasi seluruh variasi fungsi builder, kasus batas (0 baris, slice kosong), dan deteksi upaya injeksi SQL ilegal pada identifier.
+  - [Changed] Me-refactor `CreateSession` pada `internal/infrastructure/database/session_repository.go` untuk mengonsumsi `BuildBulkInsertQuery` secara terpadu dan efisien.
+  - [Changed] Memperbarui status `TICKET-1762261090` menjadi `Done` dan `PLAN-1762261090` menjadi `Completed`.
+  - [Changed] Memperbarui roadmap pada `docs/development-planning.md` item 2.4 menjadi `[COMPLETED]`.
+- **Path File:** `../../../../radovid-bot-api/internal/infrastructure/database/query_builder.go`, `../../../../radovid-bot-api/internal/infrastructure/database/query_builder_test.go`, `../../../../radovid-bot-api/internal/infrastructure/database/session_repository.go`, `../../../../radovid-bot-api/internal/infrastructure/database/session_repository_test.go`, `tickets/TICKET-1762261090-database-query-builder-utility.md`, `plans/PLAN-1762261090-database-query-builder-utility.md`, `docs/development-planning.md`, `CHANGELOG.md`
+
+---
+
+### [2026-11-04 19:58:00] - Game Session State Machine (TICKET-1762261060)
+> **Trigger:** Autonomous Planning | **Branch:** `main` | **Repo:** `radovid-bot-ai-orchestrator`
+
+- **Konteks:** Eksekusi tiket `TICKET-1762261060` dan rencana `PLAN-1762261060` (Fase 2, Item 2.3: Core Game Engine) untuk finite state machine (FSM) siklus hidup sesi game Discord (`pending` -> `active` -> `completed` / `cancelled`), persistensi tabel SQLite (`game_sessions`, `session_participants`), pencegahan sesi aktif ganda, serta background goroutine ticker pembersih sesi kedaluwarsa.
+- **Perubahan:**
+  - [Added] Migrasi database `migrations/002_create_game_sessions.sql` (tabel sesi dengan epoch ms dan indeks komposit `(channel_id, status)`) dan `migrations/003_create_session_participants.sql` (tabel peserta relasi FK ke sesi dan pengguna).
+  - [Added] Domain entity & FSM `internal/domain/session/entity.go` (`GameSession`, `SessionParticipant`, `Start`, `Complete`, `Cancel`, `AddParticipant`, validasi terminal state dan kapasitas peserta).
+  - [Added] Typed sentinel errors `internal/domain/session/errors.go` (`ErrInvalidStateTransition`, `ErrSessionNotFound`, `ErrSessionAlreadyActive`, `ErrMaxParticipantsReached`, `ErrParticipantAlreadyExists`, dll.).
+  - [Added] Repository interface `internal/domain/session/repository.go` (`Repository`).
+  - [Added] Unit test domain FSM `internal/domain/session/entity_test.go` memverifikasi seluruh siklus hidup transisi dan kasus batas partisipan.
+  - [Added] Concrete SQLite repository `internal/infrastructure/database/session_repository.go` dengan query terparameterisasi dan atomic state transition.
+  - [Added] Integration test SQLite repository `internal/infrastructure/database/session_repository_test.go` memvalidasi operasi CRUD dan bulk cancellation sesi stale.
+  - [Added] Use case session manager `internal/usecase/session/session_manager.go` (`SessionManager`, `CreateSession`, `JoinSession`, `StartSession`, `CompleteSession`, `CancelSession`, `GetActiveSession`) dengan proteksi sesi aktif duplikat per-channel.
+  - [Added] Background timeout ticker `internal/usecase/session/timeout_ticker.go` (`TimeoutTicker`, `Start`, `Stop`, `CleanupExpiredSessions`) untuk mendeteksi dan membatalkan sesi kedaluwarsa secara otomatis.
+  - [Added] Unit test usecase `internal/usecase/session/session_manager_test.go` memvalidasi alur use case, concurrency ticker, dan mock repository.
+  - [Changed] Memperbarui status `TICKET-1762261060` menjadi `Done` dan `PLAN-1762261060` menjadi `Completed`.
+  - [Changed] Memperbarui roadmap pada `docs/development-planning.md` item 2.3 menjadi `[COMPLETED]`.
+- **Path File:** `../../../../radovid-bot-api/migrations/002_create_game_sessions.sql`, `../../../../radovid-bot-api/migrations/003_create_session_participants.sql`, `../../../../radovid-bot-api/internal/domain/session/entity.go`, `../../../../radovid-bot-api/internal/domain/session/errors.go`, `../../../../radovid-bot-api/internal/domain/session/repository.go`, `../../../../radovid-bot-api/internal/domain/session/entity_test.go`, `../../../../radovid-bot-api/internal/infrastructure/database/session_repository.go`, `../../../../radovid-bot-api/internal/infrastructure/database/session_repository_test.go`, `../../../../radovid-bot-api/internal/usecase/session/session_manager.go`, `../../../../radovid-bot-api/internal/usecase/session/timeout_ticker.go`, `../../../../radovid-bot-api/internal/usecase/session/session_manager_test.go`, `tickets/TICKET-1762261060-game-session-state-machine.md`, `plans/PLAN-1762261060-game-session-state-machine.md`, `docs/development-planning.md`, `CHANGELOG.md`
+
+---
+
+### [2026-11-04 18:24:00] - Docker Containerization & Ollama Orchestration (TICKET-1762261030)
+> **Trigger:** Autonomous Planning | **Branch:** `main` | **Repo:** `radovid-bot-ai-orchestrator`
+
+- **Konteks:** Eksekusi tiket `TICKET-1762261030` dan rencana `PLAN-1762261030` (Fase 2, Item 2.2) untuk kontainerisasi aplikasi Radovid Bot dan orkestrasi layanan Ollama offline dengan otomasi penarikan model Gemma 4b (`gemma3:4b`).
+- **Perubahan:**
+  - [Added] Konfigurasi `.dockerignore` untuk mengabaikan direktori git, cache build, database lokal, dan file environment sensitif.
+  - [Added] Multi-stage `Dockerfile` (build stage `golang:alpine` memproduksi biner CGO-free, runner stage `alpine:3.20` dengan bundle certificates, tzdata, dan volume SQLite `/app/data`).
+  - [Added] Orkestrasi `docker-compose.yml` terpadu dengan healthcheck pada service `ollama`, auto-pull model `gemma3:4b` pada service `ollama-pull`, serta service `radovid-bot` dengan dependensi sekuensial terjamin (`service_healthy` dan `service_completed_successfully`).
+  - [Changed] Memperbarui status `TICKET-1762261030` menjadi `Done` dan `PLAN-1762261030` menjadi `Completed`.
+  - [Changed] Memperbarui roadmap pada `docs/development-planning.md` item 2.2 menjadi `[COMPLETED]`.
+- **Path File:** `../../../../radovid-bot-api/.dockerignore`, `../../../../radovid-bot-api/Dockerfile`, `../../../../radovid-bot-api/docker-compose.yml`, `tickets/TICKET-1762261030-docker-containerization-ollama.md`, `plans/PLAN-1762261030-docker-containerization-ollama.md`, `docs/development-planning.md`, `CHANGELOG.md`
+
+---
+
 ### [2026-11-04 16:30:00] - Offline Ollama HTTP Client Wrapper (TICKET-1762261000)
 > **Trigger:** Autonomous Planning | **Branch:** `main` | **Repo:** `radovid-bot-ai-orchestrator`
 

@@ -2,7 +2,7 @@
 id: PLAN-1762261060
 ticket_id: TICKET-1762261060
 title: Game Session State Machine
-status: Draft
+status: Completed
 created_at: 2026-11-04T00:15:00+07:00
 ---
 

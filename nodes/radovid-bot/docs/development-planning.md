@@ -123,25 +123,36 @@ Fase 4: Gamification       ← Fase 3: Speaking & Writing
 | # | Judul | Epoch Timestamp | Status | Pasangan |
 |---|-------|-----------------|--------|---------|
 | 2.1 | Ollama HTTP Client Wrapper | `1762261000` | `[COMPLETED]` | `TICKET-1762261000` / `PLAN-1762261000` |
-| 2.2 | Game Session State Machine | `1762261060` | `[CREATED]` | `TICKET-1762261060` / `PLAN-1762261060` |
-| 2.3 | AI Game Master Prompt System | `1762261120` | `[CREATED]` | `TICKET-1762261120` / `PLAN-1762261120` |
-| 2.4 | Game 1: Would You Rather? | `1762261180` | `[CREATED]` | `TICKET-1762261180` / `PLAN-1762261180` |
-| 2.5 | Game 2: Taboo | `1762261240` | `[CREATED]` | `TICKET-1762261240` / `PLAN-1762261240` |
-| 2.6 | Game 3: 20 Questions | `1762261300` | `[CREATED]` | `TICKET-1762261300` / `PLAN-1762261300` |
-| 2.7 | Discord Embed Templates (Game UI) | `1762261360` | `[CREATED]` | `TICKET-1762261360` / `PLAN-1762261360` |
+| 2.2 | Docker Containerization & Ollama Service Orchestration | `1762261030` | `[COMPLETED]` | `TICKET-1762261030` / `PLAN-1762261030` |
+| 2.3 | Game Session State Machine | `1762261060` | `[COMPLETED]` | `TICKET-1762261060` / `PLAN-1762261060` |
+| 2.4 | Database Query Builder Utility | `1762261090` | `[COMPLETED]` | `TICKET-1762261090` / `PLAN-1762261090` |
+| 2.5 | AI Game Master Prompt System | `1762261120` | `[CREATED]` | `TICKET-1762261120` / `PLAN-1762261120` |
+| 2.6 | Game 1: Would You Rather? | `1762261180` | `[CREATED]` | `TICKET-1762261180` / `PLAN-1762261180` |
+| 2.7 | Game 2: Taboo | `1762261240` | `[CREATED]` | `TICKET-1762261240` / `PLAN-1762261240` |
+| 2.8 | Game 3: 20 Questions | `1762261300` | `[CREATED]` | `TICKET-1762261300` / `PLAN-1762261300` |
+| 2.9 | Discord Embed Templates (Game UI) | `1762261360` | `[CREATED]` | `TICKET-1762261360` / `PLAN-1762261360` |
 
 ### Detail Item Fase 2
 
 #### 2.1 Ollama HTTP Client Wrapper
 - **Deskripsi:** HTTP client untuk Ollama Generate API dengan timeout wajib, retry logic (max 2 retries), dan sanitasi input sebelum dikirim.
 - **Acceptance Criteria:**
-  - [ ] Client menggunakan `context.Context` dengan timeout dari `OLLAMA_TIMEOUT_SECONDS`
-  - [ ] Input sanitization: hapus Discord mention, strip markdown manipulatif, max 2000 karakter
-  - [ ] Retry dengan exponential backoff untuk error 5xx
-  - [ ] Return typed error untuk timeout vs connection refused vs model error
-  - [ ] Unit test table-driven untuk sanitization dan error handling
+  - [x] Client menggunakan `context.Context` dengan timeout dari `OLLAMA_TIMEOUT_SECONDS`
+  - [x] Input sanitization: hapus Discord mention, strip markdown manipulatif, max 2000 karakter
+  - [x] Retry dengan exponential backoff untuk error 5xx
+  - [x] Return typed error untuk timeout vs connection refused vs model error
+  - [x] Unit test table-driven untuk sanitization dan error handling
 
-#### 2.2 Game Session State Machine
+#### 2.2 Docker Containerization & Ollama Service Orchestration
+- **Deskripsi:** Kontainerisasi aplikasi bot Go (multi-stage build) dan orkestrasi layanan Ollama offline beserta otomasi penarikan model Gemma 4b via Docker Compose.
+- **Acceptance Criteria:**
+  - [ ] Multi-stage `Dockerfile` untuk memproduksi biner Go minimalis dan aman
+  - [ ] Berkas `.dockerignore` untuk mengabaikan git, data lokal, dan secrets
+  - [ ] `docker-compose.yml` terintegrasi dengan 3 layanan: `ollama`, `ollama-pull`, dan `radovid-bot`
+  - [ ] Otomasi penarikan model `gemma3:4b` pada inisialisasi awal container Ollama
+  - [ ] Persistensi volume untuk model Ollama dan SQLite database lokal
+
+#### 2.3 Game Session State Machine
 - **Deskripsi:** State machine untuk siklus hidup sesi game: PENDING → ACTIVE → COMPLETED → CANCELLED, dengan persistence ke SQLite.
 - **State Transitions:**
   ```
@@ -151,13 +162,24 @@ Fase 4: Gamification       ← Fase 3: Speaking & Writing
   PENDING → CANCELLED (saat host membatalkan)
   ```
 - **Acceptance Criteria:**
-  - [ ] Tabel `game_sessions` dengan UUID PK, state, game_type, dan epoch timestamps
-  - [ ] Tabel `session_players` untuk many-to-many user ↔ session
-  - [ ] Transisi state tervalidasi (tidak bisa dari COMPLETED ke ACTIVE)
-  - [ ] Session timeout handler via goroutine ticker
-  - [ ] Repository interface + SQLite implementation
+  - [x] Tabel `game_sessions` dengan UUID PK, state, game_type, dan epoch timestamps
+  - [x] Tabel `session_participants` untuk relasi user ↔ session
+  - [x] Transisi state tervalidasi (tidak bisa dari COMPLETED ke ACTIVE)
+  - [x] Session timeout handler via goroutine ticker
+  - [x] Repository interface + SQLite implementation
 
-#### 2.3 AI Game Master Prompt System
+#### 2.4 Database Query Builder Utility
+- **Deskripsi:** Pustaka utilitas SQL query builder ringan untuk operasi batch/bulk (insert, update, delete, select-in) berbasis standard library Go dengan sanitasi identifier.
+- **Acceptance Criteria:**
+  - [x] Fungsi `BuildBulkInsertQuery` untuk multi-row INSERT berparameter
+  - [x] Fungsi `BuildBatchUpdateQuery` untuk UPDATE dengan WHERE IN
+  - [x] Fungsi `BuildCaseUpdateQuery` untuk update nilai berbeda per primary key via CASE WHEN
+  - [x] Fungsi `BuildBatchDeleteQuery` untuk DELETE dengan WHERE IN
+  - [x] Fungsi `BuildSelectInQuery` untuk SELECT dengan WHERE IN
+  - [x] Validasi ketat nama identifier (tabel & kolom) mencegah SQL injection
+  - [x] Integrasi ke `session_repository.go` dan unit test 100% PASS
+
+#### 2.5 AI Game Master Prompt System
 - **Deskripsi:** Sistem prompt template untuk AI Game Master yang bisa generate scenarios, questions, dan hints berdasarkan game type dan difficulty.
 - **Acceptance Criteria:**
   - [ ] Prompt templates disimpan sebagai embedded files (`//go:embed`)
@@ -166,7 +188,7 @@ Fase 4: Gamification       ← Fase 3: Speaking & Writing
   - [ ] Response parsing untuk extract pertanyaan/skenario dari output Ollama
   - [ ] Fallback jika Ollama tidak tersedia (preset static questions)
 
-#### 2.4 Game 1: Would You Rather?
+#### 2.6 Game 1: Would You Rather?
 - **Deskripsi:** Game paling sederhana — AI generate dua pilihan, player memilih via Discord button, AI merespons dengan komentar dan follow-up question.
 - **Acceptance Criteria:**
   - [ ] `/radovid play would-you-rather` memulai sesi
@@ -175,7 +197,7 @@ Fase 4: Gamification       ← Fase 3: Speaking & Writing
   - [ ] Sesi berlanjut minimal 3 ronde, kemudian ada opsi lanjut/selesai
   - [ ] Hasil akhir ditampilkan sebagai embed dengan ringkasan pilihan
 
-#### 2.5 Game 2: Taboo
+#### 2.7 Game 2: Taboo
 - **Deskripsi:** Game vocabulary — AI generate kata target + daftar kata terlarang, player harus mendeskripsikan tanpa kata terlarang, AI menilai apakah deskripsi valid.
 - **Acceptance Criteria:**
   - [ ] AI generate kata target dan 5 kata terlarang
@@ -184,7 +206,7 @@ Fase 4: Gamification       ← Fase 3: Speaking & Writing
   - [ ] Score system berdasarkan jumlah kata berhasil dideskripsikan dalam waktu yang ditentukan
   - [ ] Turn-based: giliran per player dalam sesi multiplayer
 
-#### 2.6 Game 3: 20 Questions
+#### 2.8 Game 3: 20 Questions
 - **Deskripsi:** AI "memikirkan" suatu benda/orang/tempat, player punya 20 pertanyaan yes/no untuk menebak.
 - **Acceptance Criteria:**
   - [ ] AI generate topik rahasia dan menyimpan di session state (tidak visible ke player)
@@ -193,7 +215,7 @@ Fase 4: Gamification       ← Fase 3: Speaking & Writing
   - [ ] Game berakhir saat player menebak benar atau 20 pertanyaan habis
   - [ ] AI memberikan penjelasan singkat di akhir game
 
-#### 2.7 Discord Embed Templates (Game UI)
+#### 2.9 Discord Embed Templates (Game UI)
 - **Deskripsi:** Library embed builder yang konsisten untuk semua tampilan game: session info, round display, hasil, error.
 - **Acceptance Criteria:**
   - [ ] `EmbedBuilder` struct dengan method chaining untuk title, description, fields, color, footer
