@@ -4,6 +4,17 @@
 
 ---
 
+### [2026-11-05 22:40:00] - Fix: Foreign Key Constraint on Session Participant Insertion
+> **Trigger:** Bugfix | **Branch:** `main` | **Repo:** `radovid-bot-ai-orchestrator`
+
+- **Konteks:** Perbaikan galat runtime `FOREIGN KEY constraint failed (787)` saat pembuatan lobi atau penambahan partisipan sesi permainan baru di Discord. Tabel `session_participants` mewajibkan `user_id` terdaftar di tabel `users` (`REFERENCES users(id)`), namun akun Discord pemain baru belum tersimpan di database.
+- **Perubahan:**
+  - [Changed] Memperbarui `internal/infrastructure/database/session_repository.go` untuk mengeksekusi `INSERT OR IGNORE INTO users` secara atomik sebelum penambahan participant pada fungsi `CreateSession` dan `AddParticipant`.
+  - [Added] Menambahkan unit test `TestSessionRepositoryAutoCreatesNonExistentUser` pada `internal/infrastructure/database/session_repository_test.go`.
+- **Path File:** `../../../../radovid-bot-api/internal/infrastructure/database/session_repository.go`, `../../../../radovid-bot-api/internal/infrastructure/database/session_repository_test.go`, `CHANGELOG.md`
+
+---
+
 ### [2026-11-05 17:38:00] - Discord Embed Templates (TICKET-1762261360)
 > **Trigger:** Autonomous Planning | **Branch:** `main` | **Repo:** `radovid-bot-ai-orchestrator`
 
