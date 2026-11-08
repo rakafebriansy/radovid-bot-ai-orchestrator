@@ -236,86 +236,86 @@ Fase 4: Gamification       ← Fase 3: Speaking & Writing
 
 | # | Judul | Epoch Timestamp | Status | Pasangan |
 |---|-------|-----------------|--------|---------|
-| 3.1 | AI Feedback System (Grammar & Vocabulary) | `1762347400` | `[CREATED]` | `TICKET-1762347400` / `PLAN-1762347400` |
-| 3.2 | Game 4: Job Interview | `1762347460` | `[CREATED]` | `TICKET-1762347460` / `PLAN-1762347460` |
-| 3.3 | Game 5: Roleplay | `1762347520` | `[CREATED]` | `TICKET-1762347520` / `PLAN-1762347520` |
-| 3.4 | Game 6: One Minute Challenge | `1762347580` | `[CREATED]` | `TICKET-1762347580` / `PLAN-1762347580` |
-| 3.5 | Game 7: Story Relay | `1762347640` | `[CREATED]` | `TICKET-1762347640` / `PLAN-1762347640` |
-| 3.6 | Game 8: Daily 5-Sentence Diary | `1762347700` | `[CREATED]` | `TICKET-1762347700` / `PLAN-1762347700` |
-| 3.7 | Game 9: Five Word Writing Challenge | `1762347760` | `[CREATED]` | `TICKET-1762347760` / `PLAN-1762347760` |
-| 3.8 | Difficulty Level System | `1762347820` | `[CREATED]` | `TICKET-1762347820` / `PLAN-1762347820` |
+| 3.1 | AI Feedback System (Grammar & Vocabulary) | `1762347400` | `[COMPLETED]` | `TICKET-1762347400` / `PLAN-1762347400` |
+| 3.2 | Game 4: Job Interview | `1762347460` | `[COMPLETED]` | `TICKET-1762347460` / `PLAN-1762347460` |
+| 3.3 | Game 5: Roleplay | `1762347520` | `[COMPLETED]` | `TICKET-1762347520` / `PLAN-1762347520` |
+| 3.4 | Game 6: One Minute Challenge | `1762347580` | `[COMPLETED]` | `TICKET-1762347580` / `PLAN-1762347580` |
+| 3.5 | Game 7: Story Relay | `1762347640` | `[COMPLETED]` | `TICKET-1762347640` / `PLAN-1762347640` |
+| 3.6 | Game 8: Daily 5-Sentence Diary | `1762347700` | `[COMPLETED]` | `TICKET-1762347700` / `PLAN-1762347700` |
+| 3.7 | Game 9: Five Word Writing Challenge | `1762347760` | `[COMPLETED]` | `TICKET-1762347760` / `PLAN-1762347760` |
+| 3.8 | Difficulty Level System | `1762347820` | `[COMPLETED]` | `TICKET-1762347820` / `PLAN-1762347820` |
 
 ### Detail Item Fase 3
 
 #### 3.1 AI Feedback System (Grammar & Vocabulary)
 - **Deskripsi:** Sistem feedback AI yang dapat menganalisis teks tulisan/ucapan user dan memberikan koreksi grammar, saran vocabulary, dan skor komunikasi.
 - **Acceptance Criteria:**
-  - [ ] `FeedbackRequest` struct dengan teks input, konteks game, dan difficulty level
-  - [ ] `FeedbackResponse` struct dengan grammar corrections, vocabulary suggestions, dan overall score (1-10)
-  - [ ] Prompt template khusus untuk feedback mode (berbeda dari game master mode)
-  - [ ] Parsing structured output dari Ollama (JSON atau delimited format)
-  - [ ] Fallback response jika parsing gagal (generic encouragement)
+  - [x] `FeedbackRequest` struct dengan teks input, konteks game, dan difficulty level
+  - [x] `FeedbackResponse` struct dengan grammar corrections, vocabulary suggestions, dan overall score (1-10)
+  - [x] Prompt template khusus untuk feedback mode (berbeda dari game master mode)
+  - [x] Parsing structured output dari Ollama (JSON atau delimited format)
+  - [x] Fallback response jika parsing gagal (generic encouragement)
 
 #### 3.2 Game 4: Job Interview
 - **Deskripsi:** Roleplay — AI bertindak sebagai interviewer, mengajukan pertanyaan interview dalam English, player menjawab, AI memberikan feedback profesional.
 - **Acceptance Criteria:**
-  - [ ] Player memilih bidang pekerjaan (Tech, Marketing, Design, dll.) via select menu
-  - [ ] AI generate pertanyaan interview yang realistis sesuai bidang
-  - [ ] Player menjawab via Discord modal (teks panjang)
-  - [ ] AI memberikan feedback per jawaban: apa yang baik, apa yang perlu diperbaiki
-  - [ ] Sesi terdiri dari 5 pertanyaan, diakhiri dengan overall assessment
+  - [x] Player memilih bidang pekerjaan (Tech, Marketing, Design, dll.) via select menu
+  - [x] AI generate pertanyaan interview yang realistis sesuai bidang
+  - [x] Player menjawab via Discord modal (teks panjang)
+  - [x] AI memberikan feedback per jawaban: apa yang baik, apa yang perlu diperbaiki
+  - [x] Sesi terdiri dari 5 pertanyaan, diakhiri dengan overall assessment
 
 #### 3.3 Game 5: Roleplay
 - **Deskripsi:** AI generate situasi sehari-hari (di restoran, di bandara, melapor kehilangan, dll.), player dan AI saling bercakap-cakap dalam English.
 - **Acceptance Criteria:**
-  - [ ] AI generate skenario pembuka dengan konteks situasi
-  - [ ] Dialog turn-based: AI bertindak sebagai karakter dalam situasi
-  - [ ] AI secara subtle mengoreksi grammar besar tanpa memutus alur percakapan
-  - [ ] Sesi berakhir setelah situasi "terselesaikan" atau setelah 10 giliran
-  - [ ] Ringkasan koreksi grammar di akhir sesi
+  - [x] AI generate skenario pembuka dengan konteks situasi
+  - [x] Dialog turn-based: AI bertindak sebagai karakter dalam situasi
+  - [x] AI secara subtle mengoreksi grammar besar tanpa memutus alur percakapan
+  - [x] Sesi berakhir setelah situasi "terselesaikan" atau setelah 10 giliran
+  - [x] Ringkasan koreksi grammar di akhir sesi
 
 #### 3.4 Game 6: One Minute Challenge
 - **Deskripsi:** AI generate topik random, player berbicara (menulis dalam konteks Discord) tentang topik tersebut selama satu menit — fokus pada fluency bukan accuracy.
 - **Acceptance Criteria:**
-  - [ ] AI generate topik menarik dan unexpected (contoh: "Why cats are secretly spies")
-  - [ ] Timer 60 detik ditampilkan di embed (countdown via Discord message edit atau field update)
-  - [ ] Player mengirim teks respons setelah timer selesai
-  - [ ] AI memberikan feedback pada word count, variety, dan coherence
+  - [x] AI generate topik menarik dan unexpected (contoh: "Why cats are secretly spies")
+  - [x] Timer 60 detik ditampilkan di embed (countdown via Discord message edit atau field update)
+  - [x] Player mengirim teks respons setelah timer selesai
+  - [x] AI memberikan feedback pada word count, variety, dan coherence
 
 #### 3.5 Game 7: Story Relay
 - **Deskripsi:** Collaborative storytelling — AI memulai cerita, setiap player (atau AI dalam single-player) menambahkan satu-dua kalimat, AI melanjutkan dan mengevaluasi.
 - **Acceptance Criteria:**
-  - [ ] AI generate opening paragraph cerita
-  - [ ] Player menambahkan kelanjutan via modal (minimal 1 kalimat)
-  - [ ] AI melanjutkan cerita berdasarkan kontribusi player dan menjaga koherensi
-  - [ ] AI highlight kesalahan grammar signifikan setelah setiap giliran
-  - [ ] Cerita berakhir setelah round yang ditentukan dengan ending yang memuaskan
+  - [x] AI generate opening paragraph cerita
+  - [x] Player menambahkan kelanjutan via modal (minimal 1 kalimat)
+  - [x] AI melanjutkan cerita berdasarkan kontribusi player dan menjaga koherensi
+  - [x] AI highlight kesalahan grammar signifikan setelah setiap giliran
+  - [x] Cerita berakhir setelah round yang ditentukan dengan ending yang memuaskan
 
 #### 3.6 Game 8: Daily 5-Sentence Diary
 - **Deskripsi:** Player menulis 5 kalimat diary dalam English tentang hari mereka, AI memberikan grammar feedback dan vocabulary enrichment suggestions.
 - **Acceptance Criteria:**
-  - [ ] `/radovid diary` memunculkan Discord modal dengan 5 field teks
-  - [ ] AI menganalisis setiap kalimat secara individual dan memberikan feedback spesifik
-  - [ ] AI menyarankan 3 kata baru yang relevan dengan konteks diary
-  - [ ] Respons disimpan di database (tabel `diary_entries`) dengan timestamp
-  - [ ] Daily reminder notification support (lihat Fase 4)
+  - [x] `/radovid diary` memunculkan Discord modal dengan 5 field teks
+  - [x] AI menganalisis setiap kalimat secara individual dan memberikan feedback spesifik
+  - [x] AI menyarankan 3 kata baru yang relevan dengan konteks diary
+  - [x] Respons disimpan di database (tabel `daily_diaries`) dengan timestamp
+  - [x] Daily reminder notification support (terkoneksi dan siap diintegrasikan pada sistem penjadwalan Fase 4)
 
 #### 3.7 Game 9: Five Word Writing Challenge
 - **Deskripsi:** AI generate 5 kata random (kata benda, kata kerja, kata sifat campuran), player harus membuat satu paragraf yang menggunakan kelima kata tersebut.
 - **Acceptance Criteria:**
-  - [ ] AI generate 5 kata yang diverse dan menarik
-  - [ ] Player menulis paragraf via modal
-  - [ ] AI verifikasi semua 5 kata digunakan dan berikan feedback pada kualitas tulisan
-  - [ ] Score berdasarkan: semua kata terpakai, koherensi paragraf, kualitas grammar
+  - [x] AI generate 5 kata yang diverse dan menarik
+  - [x] Player menulis paragraf via modal
+  - [x] AI verifikasi semua 5 kata digunakan dan berikan feedback pada kualitas tulisan
+  - [x] Score berdasarkan: semua kata terpakai, koherensi paragraf, kualitas grammar
 
 #### 3.8 Difficulty Level System
 - **Deskripsi:** Sistem level kesulitan (Beginner/Intermediate/Advanced) yang mempengaruhi kompleksitas pertanyaan AI, vocabulary yang digunakan, dan toleransi error feedback.
 - **Acceptance Criteria:**
-  - [ ] Enum `Difficulty` dengan nilai `Beginner`, `Intermediate`, `Advanced`
-  - [ ] Player bisa set preferensi difficulty via `/radovid settings`
-  - [ ] Difficulty disimpan di tabel `users` dan persisten lintas sesi
-  - [ ] Prompt template menerima difficulty sebagai parameter yang mengubah instruksi AI
-  - [ ] Feedback lebih encouraging untuk Beginner, lebih teknis untuk Advanced
+  - [x] Enum `Difficulty` dengan nilai `Beginner`, `Intermediate`, `Advanced`
+  - [x] Player bisa set preferensi difficulty via `/radovid settings`
+  - [x] Difficulty disimpan di tabel `users` dan persisten lintas sesi
+  - [x] Prompt template menerima difficulty sebagai parameter yang mengubah instruksi AI
+  - [x] Feedback lebih encouraging untuk Beginner, lebih teknis untuk Advanced
 
 ---
 
@@ -329,18 +329,18 @@ Fase 4: Gamification       ← Fase 3: Speaking & Writing
 
 | # | Judul | Epoch Timestamp | Status | Pasangan |
 |---|-------|-----------------|--------|---------|
-| 4.1 | XP Calculation & Level System | `1762433800` | `[CREATED]` | `TICKET-1762433800` / `PLAN-1762433800` |
-| 4.2 | Streak Tracking (Daily Activity) | `1762433860` | `[CREATED]` | `TICKET-1762433860` / `PLAN-1762433860` |
-| 4.3 | Achievements System | `1762433920` | `[CREATED]` | `TICKET-1762433920` / `PLAN-1762433920` |
-| 4.4 | `/radovid progress` Command | `1762433980` | `[CREATED]` | `TICKET-1762433980` / `PLAN-1762433980` |
-| 4.5 | HTMX Admin Dashboard | `1762434040` | `[CREATED]` | `TICKET-1762434040` / `PLAN-1762434040` |
-| 4.6 | Game 10: Secret Mission | `1762434100` | `[CREATED]` | `TICKET-1762434100` / `PLAN-1762434100` |
-| 4.7 | Game 11: Grammar Boss Fight | `1762434160` | `[CREATED]` | `TICKET-1762434160` / `PLAN-1762434160` |
-| 4.8 | Game 12: Sentence Transformation Race | `1762434220` | `[CREATED]` | `TICKET-1762434220` / `PLAN-1762434220` |
-| 4.9 | Game 13: Movie Review | `1762434280` | `[CREATED]` | `TICKET-1762434280` / `PLAN-1762434280` |
-| 4.10 | Game 14: News Reporter | `1762434340` | `[CREATED]` | `TICKET-1762434340` / `PLAN-1762434340` |
-| 4.11 | Game 15: Design Your Dream House | `1762434400` | `[CREATED]` | `TICKET-1762434400` / `PLAN-1762434400` |
-| 4.12 | Daily Challenge Notifications | `1762434460` | `[CREATED]` | `TICKET-1762434460` / `PLAN-1762434460` |
+| 4.1 | XP Calculation & Level System | `1762433800` | `[COMPLETED]` | `TICKET-1762433800` / `PLAN-1762433800` |
+| 4.2 | Streak Tracking (Daily Activity) | `1762433860` | `[COMPLETED]` | `TICKET-1762433860` / `PLAN-1762433860` |
+| 4.3 | Achievements System | `1762433920` | `[COMPLETED]` | `TICKET-1762433920` / `PLAN-1762433920` |
+| 4.4 | `/radovid progress` Command | `1762433980` | `[COMPLETED]` | `TICKET-1762433980` / `PLAN-1762433980` |
+| 4.5 | HTMX Admin Dashboard | `1762434040` | `[COMPLETED]` | `TICKET-1762434040` / `PLAN-1762434040` |
+| 4.6 | Game 10: Secret Mission | `1762434100` | `[COMPLETED]` | `TICKET-1762434100` / `PLAN-1762434100` |
+| 4.7 | Game 11: Grammar Boss Fight | `1762434160` | `[COMPLETED]` | `TICKET-1762434160` / `PLAN-1762434160` |
+| 4.8 | Game 12: Sentence Transformation Race | `1762434220` | `[COMPLETED]` | `TICKET-1762434220` / `PLAN-1762434220` |
+| 4.9 | Game 13: Movie Review | `1762434280` | `[COMPLETED]` | `TICKET-1762434280` / `PLAN-1762434280` |
+| 4.10 | Game 14: News Reporter | `1762434340` | `[COMPLETED]` | `TICKET-1762434340` / `PLAN-1762434340` |
+| 4.11 | Game 15: Design Your Dream House | `1762434400` | `[COMPLETED]` | `TICKET-1762434400` / `PLAN-1762434400` |
+| 4.12 | Daily Challenge Notifications | `1762434460` | `[COMPLETED]` | `TICKET-1762434460` / `PLAN-1762434460` |
 
 ### Detail Item Fase 4 (Ringkasan)
 
@@ -348,40 +348,138 @@ Fase 4: Gamification       ← Fase 3: Speaking & Writing
 - XP diberikan per aktivitas selesai, dengan multiplier berdasarkan difficulty
 - Formula XP to next level: `level^2 * 100`
 - Tabel `user_xp_log` mencatat setiap XP gain dengan sumber aktivitas
+- **Acceptance Criteria:**
+  - [x] Migration DDL `008_create_user_progress.sql` dan `009_create_user_xp_log.sql`
+  - [x] Formula `CalculateLevel`, `XPRequiredForLevel`, dan `ApplyMultiplier` (Easy 1.0x, Medium 1.5x, Hard 2.0x)
+  - [x] Use case `AwardXP` dengan transaksi atomik SQLite
+  - [x] Deteksi event level-up via `LevelUpResult.LeveledUp`
+  - [x] Unit test 100% PASS mencakup batas nol, multi-level jump, dan input negatif
 
 #### 4.2 Streak Tracking
 - Streak increment jika user melakukan aktivitas dalam 24 jam dari aktivitas terakhir
 - Streak reset jika lewat 48 jam tanpa aktivitas
 - Streak bonus XP: `streak_days * 5` XP per hari
+- **Acceptance Criteria:**
+  - [x] Logika `EvaluateStreak` membedakan `StreakSameDay`, `StreakIncremented`, dan `StreakReset`
+  - [x] Streak reset ke 1 jika selisih waktu melampaui 48 jam (172.800.000 ms)
+  - [x] Kalkulasi bonus XP harian: `streak_days * 5` XP pada `StreakIncremented`
+  - [x] Use case `RecordDailyActivity` memperbarui `streak_days` & `last_activity_at` di tabel `user_progress` dan memicu `AwardXP`
+  - [x] Standar UTC murni untuk konsistensi tanggal global
+  - [x] Unit test komprehensif mencakup first activity, same day, consecutive day, batas 48 jam, dan clock drift
 
 #### 4.3 Achievements System
 - Achievement terdiri dari: `id`, `name`, `description`, `icon_emoji`, `xp_reward`, `trigger_condition`
-- Achievement awal: First Game, 7-Day Streak, 100 Games, Grammar Master, Vocabulary Champion
-- Achievement notification via Discord DM atau ephemeral response
+- Achievement awal: First Game, 7-Day Streak, 30-Day Streak, Grammar Master, Vocabulary Champion, Boss Slayer
+- Achievement notification via Discord embed perayaan
+- **Acceptance Criteria:**
+  - [x] Katalog statis 6 achievement dengan XP reward (`first_game`, `streak_7`, `streak_30`, `grammar_master`, `vocab_champion`, `boss_slayer`)
+  - [x] Engine `EvaluateAchievements` mengevaluasi statistik pengguna dan memfilter lencana yang sudah diperoleh
+  - [x] Idempotensi terjamin via `UNIQUE(user_id, achievement_type)` di SQLite dan pengecekan use case
+  - [x] Bonus XP otomatis dihadiahkan via `AwardXPUseCase` saat lencana baru terbuka
+  - [x] Embed builder `BuildAchievementUnlockedEmbed` menyajikan emoji, nama, deskripsi, dan bonus XP
+  - [x] Unit test 100% PASS mencakup seluruh kriteria milestone dan pencegahan duplikasi lencana
 
 #### 4.4 `/radovid progress` Command
 - Embed menampilkan: level, total XP, XP to next level, current streak, total games, achievements unlocked
 - Visual progress bar menggunakan Unicode block characters
+- **Acceptance Criteria:**
+  - [x] Perintah slash `/radovid progress` terdaftar di router Discord command framework
+  - [x] Embed Discord menyajikan visualisasi statistik: Level, Total XP, progress bar XP, streak (🔥), dan daftar lencana
+  - [x] Tersedia utilitas generator Unicode Progress Bar murni Go yang fleksibel dan aman dari overflow/divisi nol
+  - [x] Menampilkan deretan lencana pencapaian (Achievements) yang telah dibuka atau placeholder edukatif jika belum ada
+  - [x] Penanganan pengguna baru secara otomatis membuat profil inisial (Level 1, 0 XP, 0 Streak) tanpa error
+  - [x] Unit testing 100% PASS pada generator progress bar, use case, dan handler Discord
 
 #### 4.5 HTMX Admin Dashboard
-- HTTP server embedded di binary (port dari env var `DASHBOARD_PORT`)
-- Route: `/` (overview), `/sessions` (session history), `/users` (user list), `/health` (system status)
+- HTTP server embedded di binary (port dari env var `ADMIN_DASHBOARD_PORT`, default: 8080)
+- Route: `/admin` (overview), `/admin/sessions` (session history & filter), `/admin/users` (user list), `/admin/health` (system status)
 - HTMX untuk refresh data tanpa page reload
-- Basic Auth dari env var `DASHBOARD_USERNAME` / `DASHBOARD_PASSWORD`
-- Templates di-embed via `//go:embed web/templates/*.html`
+- Basic Auth dari env var `ADMIN_DASHBOARD_SECRET` (format: `user:password`)
+- Templates & static assets di-embed via `//go:embed templates/* static/*`
+- **Acceptance Criteria:**
+  - [x] Server HTTP tertanam berjalan pada goroutine mandiri mendengarkan port dari `ADMIN_DASHBOARD_PORT`
+  - [x] Middleware HTTP Basic Auth memvalidasi format `username:password` dari `ADMIN_DASHBOARD_SECRET`
+  - [x] Seluruh aset web (HTML templates dan aset statis) di-embed ke binary Go via `embed.FS`
+  - [x] Endpoint `/admin`, `/admin/sessions`, `/admin/users`, dan `/admin/health` tersedia dan berfungsi
+  - [x] HTMX partial swap memperbarui blok data spesifik secara asinkron tanpa full-page reload
+  - [x] Unit test 100% PASS pada middleware Basic Auth, use case, dan HTTP handler
 
-#### 4.6–4.11 Remaining Games
-- **Secret Mission:** Player mendapat misi rahasia dalam English, harus melaksanakan (melalui teks) tanpa ketahuan — AI menilai.
-- **Grammar Boss Fight:** AI generate kalimat salah grammar, player harus memperbaiki. Tiap perbaikan benar = damage ke "boss".
-- **Sentence Transformation Race:** AI memberikan kalimat aktif, player transformasi ke pasif (atau sebaliknya), atau dari direct ke indirect speech.
-- **Movie Review:** Player memilih film, AI bertanya pertanyaan review terstruktur, player menjawab dalam English, AI feedback pada ekspresi opini.
-- **News Reporter:** AI generate "breaking news" scenario, player harus melaporkan berita tersebut dalam format siaran berita.
-- **Design Your Dream House:** Roleplay kreatif — player mendeskripsikan rumah impian dalam English, AI membantu dengan vocabulary arsitektur dan memberikan visual description.
+#### 4.6 Game 10: Secret Mission
+- **Deskripsi:** Player mendapat misi rahasia dalam English (kata atau pola tata bahasa target), harus melaksanakan (melalui teks diskusi publik) tanpa ketahuan — AI menilai akurasi tata bahasa dan keluwesan (stealth/naturalness).
+- **Acceptance Criteria:**
+  - [x] Game Type `secret_mission` terdaftar dalam enum entitas game dan sub-command `/radovid play secret-mission`
+  - [x] Generator topik diskusi publik dan misi rahasia unik (kata/tata bahasa target)
+  - [x] Misi rahasia dikirim secara privat menggunakan Discord Ephemeral interaction response
+  - [x] Pemain mengirimkan kalimat/paragraf jawaban melalui Discord Modal
+  - [x] AI mengevaluasi input pemain dengan parameter: target_present, grammar_score, stealth_naturalness_score, critique_notes
+  - [x] Perolehan total score dan XP reward dihitung secara proporsional
+  - [x] Unit test 100% PASS mencakup domain, parsing respons AI, use case, dan delivery handler
+
+#### 4.7 Game 11: Grammar Boss Fight
+- **Deskripsi:** Player bertarung melawan Boss Grammar dalam mode RPG di mana pemain harus memperbaiki kalimat yang rusak untuk memberikan serangan (damage). AI mengevaluasi perbaikan (Critical, Standard, Miss) dan Boss melancarkan serangan balasan jika serangan meleset.
+- **Acceptance Criteria:**
+  - [x] Game Type `grammar_boss_fight` terdaftar di enum game dan sub-command `/radovid play grammar-boss-fight`
+  - [x] Entitas Boss Game menyimpan status state: `boss_name`, `max_hp`, `current_hp`, `player_lives`, `current_round`, dan riwayat pertarungan
+  - [x] Template prompt Ollama Gemma 3 4b dan generator kalimat dengan kesalahan tata bahasa tersembunyi sesuai tingkat kesulitan (Easy, Medium, Hard)
+  - [x] AI evaluator membandingkan koreksi pemain dengan kalimat rusak asli dan mengembalikan kalkulasi damage (0, 10-15, 25-35) serta penjelasan edukatif
+  - [x] Tampilan visual HP Boss disajikan menggunakan Unicode Bar grafis (`[████████░░] 80/100 HP`) pada Discord Embed interaktif
+  - [x] Kondisi akhir terkelola dengan baik: Kemenangan (Boss HP <= 0) memberikan bonus XP besar + achievement `boss_slayer`, atau Kekalahan (pemain kehabisan nyawa/ronde)
+  - [x] Unit testing 100% PASS terhadap kalkulasi damage, state machine HP & lives, dan parsing format evaluasi pertarungan
+
+#### 4.8 Game 12: Sentence Transformation Race
+- **Deskripsi:** Balapan transformasi kalimat cepat (*Sentence Transformation Race*) di mana AI memberikan kalimat acuan dan instruksi transformasi tata bahasa (seperti aktif ke pasif, langsung ke tidak langsung, pergeseran tenses, atau conditional sentences) di bawah batasan waktu yang kompetitif.
+- **Acceptance Criteria:**
+  - [x] Game Type `sentence_transformation` terdaftar di enum game dan menu `/radovid play transformation-race`
+  - [x] AI Game Master mengenerate tantangan kalimat awal beserta kategori transformasi yang valid sesuai level kesulitan
+  - [x] Timer countdown visual ditampilkan pada embed ronde (misal: 45 detik) dengan pencatatan timestamp waktu mulai dan waktu submit respon pemain
+  - [x] AI evaluator memverifikasi ketepatan gramatikal hasil transformasi, ekuivalensi semantik (makna kalimat tidak berubah), dan mengembalikan skor akurasi (1-100)
+  - [x] Rumus penilaian mengombinasikan akurasi sintaksis dan faktor kecepatan: $\text{RoundScore} = \text{Accuracy} \times \left(1.0 + \frac{\text{TimeRemaining}}{\text{TotalTime}} \times 0.5\right)$
+  - [x] Embed hasil ronde menyajikan perbandingan kalimat asli, transformasi pemain, kunci transformasi ideal dari AI, dan rincian skor
+  - [x] Unit test algoritma skoring kecepatan, parser response evaluasi AI, dan validasi jenis transformasi
+
+#### 4.9 Game 13: Movie Review
+- **Deskripsi:** Diskusi dan ulasan film terstruktur 3 fase (*Plot Premise & Setting*, *Character & Acting Analysis*, *Critical Verdict & Recommendation*) untuk melatih diskursus analitis dan memperkaya perbendaharaan kata evaluatif.
+- **Acceptance Criteria:**
+  - [x] Game Type `movie_review` terdaftar di enum game dan menu slash command `/radovid play movie-review`
+  - [x] State sesi mencatat 3 fase review sekuensial: `PhasePremise`, `PhaseCharacters`, `PhaseVerdict`
+  - [x] AI Game Master (Ollama Gemma 3 4b) menyesuaikan pertanyaan panduan berdasarkan judul film dan genre yang diinput oleh pemain
+  - [x] Pemain mengirimkan respon setiap fase melalui Discord Modal input teks panjang
+  - [x] Evaluasi akhir AI menghasilkan laporan komprehensif: skor koherensi, evaluasi ekspresi opini, daftar 3-5 kosakata sinematik alternatif (misal: *captivating*, *monotonous*, *thought-provoking*), dan skor keseluruhan (1-10)
+  - [x] Integrasi dengan modul progres: memberikan base XP plus bonus proporsional berdasarkan kualitas ulasan
+  - [x] Unit testing terhadap alur transisi fase, parser respon evaluasi ulasan film, dan validasi kelengkapan argumen
+
+#### 4.10 Game 14: News Reporter
+- **Deskripsi:** Simulasi peliputan berita breaking news di mana AI memberikan memo fakta peristiwa mentah 5W1H (Who, What, When, Where, Why, How), pemain menyusun naskah siaran berita formal melalui Discord Modal, dan AI mengevaluasi kelengkapan fakta 5W1H, laras bahasa formal (*formal register*), tata bahasa, serta menyajikan model naskah ideal (*exemplary news script*).
+- **Acceptance Criteria:**
+  - [x] Game Type `news_reporter` terdaftar di enum game dan pilihan menu `/radovid play news-reporter`
+  - [x] AI Game Master (Ollama Gemma 3 4b) menghasilkan skenario breaking news yang bervariasi lengkap dengan poin fakta 5W1H
+  - [x] Pemain menginput naskah siaran melalui Discord Modal interaktif
+  - [x] AI evaluator memvalidasi kelengkapan fakta 5W1H (mendeteksi fakta yang tercakup dan missing facts)
+  - [x] AI memberikan skor register formal (1-10) dan akurasi tata bahasa (1-10) dengan analisis konstruksi jurnalistik
+  - [x] Menyajikan revisi model broadcast berita yang ideal (*exemplary news script*) sebagai bahan perbandingan belajar pemain
+  - [x] Unit testing 100% PASS terhadap model berita 5W1H, use case orkestrasi, fallback deterministik, format embed Discord, dan handler modal
+
+#### 4.11 Game 15: Design Your Dream House
+- **Deskripsi:** Roleplay kreatif dan penulisan deskriptif terpandu — pemain mendeskripsikan rumah impian secara bertahap (Exterior, Interior Layout, Signature Sanctuary) dalam bahasa Inggris, AI memindai penggunaan preposisi spasial (*prepositions of place*) dan kosakata estetika arsitektur, memberikan saran kata sifat pengayaan nuansa (*evocative adjectives*), serta merangkum deskripsi ke dalam narasi sintesis arsitektural.
+- **Acceptance Criteria:**
+  - [x] Game Type `design_dream_house` terdaftar di enum game dan pilihan menu `/radovid play dream-house`
+  - [x] Sesi game mengelola 3 tahapan desain terstruktur: Eksterior & Lanskap, Tata Ruang Spasial Interior, dan Ruang Khusus Personal
+  - [x] Pemain menginput konsep deskriptif tiap tahapan melalui formulir Discord Modal
+  - [x] AI Game Master (Ollama Gemma 3 4b) memindai penggunaan preposisi spasial dan istilah estetika arsitektural
+  - [x] AI evaluator menghasilkan umpan balik terstruktur: skor deskripsi spasial (1-10), skor kekayaan kosakata sensorik (1-10), daftar 3 kata sifat arsitektural lanjutan baru, dan rangkuman sintetis (*architectural synthesis narration*)
+  - [x] Penambahan reward XP gamifikasi berdasarkan kelengkapan deskripsi dan kekayaan leksikal
+  - [x] Unit testing 100% PASS terhadap alur state mesin tahapan desain, ekstraksi terminologi spasial, format embed Discord, parser respons AI, dan use case orkestrasi
 
 #### 4.12 Daily Challenge Notifications
-- Goroutine dengan ticker harian (waktu dikonfigurasi via env var `DAILY_CHALLENGE_HOUR`)
-- Kirim Discord channel message (bukan DM) dengan daily challenge embed
-- Challenge dipilih secara rotasi atau random dari pool aktivitas tersedia
+- **Deskripsi:** Background worker goroutine terkelola yang mengirimkan notifikasi tantangan bahasa Inggris harian (*Daily Challenge*) ke channel Discord publik setiap pagi sesuai jadwal waktu UTC yang dikonfigurasi, dilengkapi kartu embed interaktif, tombol aksi "Accept Challenge", dan idempotensi pengiriman persisten.
+- **Acceptance Criteria:**
+  - [x] Tersedia background scheduler worker yang berjalan dalam goroutine dengan konteks *graceful shutdown* (`context.Context`)
+  - [x] Pengaturan waktu harian dikonfigurasi melalui variabel lingkungan `DAILY_CHALLENGE_HOUR` (format jam 0-23 UTC) dan channel tujuan `DAILY_CHALLENGE_CHANNEL_ID`
+  - [x] Algoritma scheduler menghitung durasi waktu tunda awal (*initial delay*) hingga jadwal jam target berikutnya tercapai, lalu mengaktifkan interval perulangan `time.NewTicker(24 * time.Hour)`
+  - [x] Idempotensi pengiriman persisten via SQLite `daily_challenge_dispatches`: jika bot di-restart pada hari yang sama setelah pesan terkirim, scheduler tidak mengirimkan pesan duplikat
+  - [x] Embed Discord tantangan harian menyajikan kartu interaktif dengan tema harian (Word of the Day, Grammar Quick Fix, Story Prompt, Sanctuary Room, News Dispatch, Dynamic Syntax, Weekly Reflection), panduan, dan tombol aksi "Accept Challenge"
+  - [x] Scheduler berhenti dengan bersih (*clean exit*) saat sinyal shutdown (SIGTERM/SIGINT) diterima tanpa menyisakan *dangling goroutines*
+  - [x] Unit testing 100% PASS terhadap kalkulasi waktu tunda scheduler, penanganan pembatalan konteks, idempotensi, embed presentation, dan pengiriman pesan Discord
 
 ---
 

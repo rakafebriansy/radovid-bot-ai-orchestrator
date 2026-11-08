@@ -2,7 +2,7 @@
 id: PLAN-1762347580
 ticket_id: TICKET-1762347580
 title: Game 6: One Minute Challenge
-status: Draft
+status: Completed
 created_at: 2026-11-04
 ---
 

@@ -2,7 +2,7 @@
 id: PLAN-1762434400
 ticket_id: TICKET-1762434400
 title: "Game 15: Design Your Dream House"
-status: Draft
+status: Completed
 created_at: 2026-11-04
 ---
 
@@ -27,14 +27,27 @@ created_at: 2026-11-04
 ## 3. Ruang Lingkup Mutasi Berkas (Target Files)
 | Tipe Aksi | Path Berkas (Relative) | Deskripsi Perubahan |
 | :--- | :--- | :--- |
-| `CREATE` | `../../../../radovid-bot-api/internal/domain/game/dream_house.go` | Model HouseDesignPhase, HouseDesignState, ArchitecturalAssessment |
+| `CREATE` | `../../../../radovid-bot-api/internal/domain/game/dream_house.go` | Model HouseDesignPhase, HouseDesignState, ArchitecturalAssessment, skoring, XP, dan spatial prepositions detection |
+| `CREATE` | `../../../../radovid-bot-api/internal/domain/game/dream_house_test.go` | Unit test domain model, validasi deskripsi (15-2000 chars), spatial prepositions, skoring, XP |
 | `MODIFY` | `../../../../radovid-bot-api/internal/domain/game/entity.go` | Pendaftaran konstanta `GameTypeDesignDreamHouse = "design_dream_house"` |
-| `CREATE` | `../../../../radovid-bot-api/internal/usecase/game/dream_house_game.go` | Use case alur tahapan perancangan, evaluasi kosakata spasial, dan feedback |
-| `CREATE` | `../../../../radovid-bot-api/internal/usecase/game/dream_house_game_test.go` | Unit test transisi tahapan desain dan evaluasi kosakata spasial |
-| `MODIFY` | `../../../../radovid-bot-api/internal/infrastructure/ollama/prompts.go` | Prompt pemandu perancangan rumah dan prompt kurator arsitektur |
-| `MODIFY` | `../../../../radovid-bot-api/internal/delivery/discord/radovid_start.go` | Pendaftaran game type design dream house pada command start |
-| `MODIFY` | `../../../../radovid-bot-api/internal/delivery/discord/game_handlers.go` | Modal form input tahapan eksterior, interior, dan sanctuary |
-| `MODIFY` | `../../../../radovid-bot-api/internal/delivery/discord/embeds.go` | Format embed visual arsitektur dan sintesis presentasi hunian |
+| `MODIFY` | `../../../../radovid-bot-api/internal/domain/game/entity_test.go` | Unit test validasi GameTypeDesignDreamHouse |
+| `CREATE` | `../../../../radovid-bot-api/internal/infrastructure/ollama/prompts/dream_house.tmpl` | Prompt template Ollama pembuat evaluasi arsitektur dan sintesis hunian |
+| `MODIFY` | `../../../../radovid-bot-api/internal/infrastructure/ollama/prompts/embed_test.go` | Unit test rendering prompt dream house |
+| `MODIFY` | `../../../../radovid-bot-api/internal/infrastructure/ollama/parser.go` | Parser respons terstruktur `parseDreamHouse` dan `ParseDreamHouseEvaluation` |
+| `MODIFY` | `../../../../radovid-bot-api/internal/infrastructure/ollama/parser_test.go` | Unit test parsing output AI dream house |
+| `MODIFY` | `../../../../radovid-bot-api/internal/infrastructure/ollama/fallback.go` | Fallback data evaluasi arsitektur deterministik `dreamHouseFallbacks` |
+| `MODIFY` | `../../../../radovid-bot-api/internal/infrastructure/ollama/fallback_test.go` | Unit test fallback dream house |
+| `CREATE` | `../../../../radovid-bot-api/internal/usecase/game/dream_house.go` | Use case orkestrasi 3 tahapan desain rumah, evaluasi LLM, dan perolehan XP |
+| `CREATE` | `../../../../radovid-bot-api/internal/usecase/game/dream_house_test.go` | Unit test use case, transisi fase, pemanggilan Ollama, skoring, fallback, dan perolehan XP |
+| `MODIFY` | `../../../../radovid-bot-api/internal/infrastructure/discord/game_templates.go` | Embed builder fase perancangan (`BuildDreamHousePhaseEmbed`) dan hasil akhir (`BuildDreamHouseEvaluationEmbed`) |
+| `MODIFY` | `../../../../radovid-bot-api/internal/infrastructure/discord/game_templates_test.go` | Unit test format embed dan komponen interaksi dream house Discord |
+| `MODIFY` | `../../../../radovid-bot-api/internal/delivery/discord/command_def.go` | Pendaftaran subcommand slash `dream-house` dengan opsi `theme` dan `difficulty` |
+| `MODIFY` | `../../../../radovid-bot-api/internal/delivery/discord/command_test.go` | Unit test definisi subcommand slash dream house |
+| `MODIFY` | `../../../../radovid-bot-api/internal/delivery/discord/command_play_wyr.go` | Routing subcommand `dream-house` ke `HandlePlayDreamHouse` |
+| `MODIFY` | `../../../../radovid-bot-api/internal/delivery/discord/game_handler.go` | Injeksi `dreamHouseUseCase` ke `GameHandler` dan delegator component/modal |
+| `CREATE` | `../../../../radovid-bot-api/internal/delivery/discord/game_dream_house.go` | Handler play, modal open, dan modal submit tiap fase perancangan rumah |
+| `CREATE` | `../../../../radovid-bot-api/internal/delivery/discord/game_dream_house_test.go` | Unit test delivery handler Discord dream house |
+| `MODIFY` | `../../../../radovid-bot-api/cmd/bot/main.go` | Inisialisasi use case dan registrasi handler interaction prefix `dreamhouse:` |
 
 ---
 

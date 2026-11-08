@@ -2,7 +2,7 @@
 id: PLAN-1762434040
 ticket_id: TICKET-1762434040
 title: HTMX Admin Dashboard
-status: Draft
+status: Completed
 created_at: 2026-11-04
 ---
 
@@ -33,6 +33,10 @@ created_at: 2026-11-04
 | `CREATE` | `../../../../radovid-bot-api/internal/delivery/http/admin_handler_test.go` | Unit test HTTP route responses dan status codes |
 | `CREATE` | `../../../../radovid-bot-api/internal/delivery/http/router.go` | Setup http.ServeMux dan binding embed.FS templates |
 | `CREATE` | `../../../../radovid-bot-api/internal/usecase/admin/dashboard_stats.go` | Use case kalkulasi ringkasan metrik dashboard |
+| `CREATE` | `../../../../radovid-bot-api/internal/usecase/admin/dashboard_stats_test.go` | Unit test use case dashboard |
+| `CREATE` | `../../../../radovid-bot-api/internal/infrastructure/database/admin_repository.go` | Repositori SQLite untuk statistik admin |
+| `CREATE` | `../../../../radovid-bot-api/internal/infrastructure/database/admin_repository_test.go` | Unit test repositori admin SQLite |
+| `CREATE` | `../../../../radovid-bot-api/web/embed.go` | Embedding aset templates dan static ke binary Go |
 | `CREATE` | `../../../../radovid-bot-api/web/templates/base.html` | Layout dasar HTML5 dengan CDN/lokal HTMX import |
 | `CREATE` | `../../../../radovid-bot-api/web/templates/dashboard.html` | View panel ringkasan metrik bot |
 | `CREATE` | `../../../../radovid-bot-api/web/templates/sessions.html` | View tabel sesi dengan atribut `hx-get` filter |
@@ -40,6 +44,7 @@ created_at: 2026-11-04
 | `CREATE` | `../../../../radovid-bot-api/web/templates/health.html` | View partial status kesehatan koneksi bot & Ollama |
 | `CREATE` | `../../../../radovid-bot-api/web/static/style.css` | Stylesheet CSS minimalis bertema gelap (dark mode) |
 | `CREATE` | `../../../../radovid-bot-api/web/static/htmx.min.js` | Berkas pustaka JavaScript HTMX versi terkompresi |
+| `MODIFY` | `../../../../radovid-bot-api/internal/infrastructure/ollama/client.go` | Penambahan method `CheckHealth` untuk pemeriksaan ketersediaan Ollama |
 | `MODIFY` | `../../../../radovid-bot-api/cmd/bot/main.go` | Menyalakan HTTP server pada goroutine dengan konteks shutdown |
 
 ---

@@ -2,7 +2,7 @@
 id: PLAN-1762433920
 ticket_id: TICKET-1762433920
 title: Achievements System
-status: Draft
+status: Completed
 created_at: 2026-11-04
 ---
 
@@ -27,15 +27,18 @@ created_at: 2026-11-04
 ## 3. Ruang Lingkup Mutasi Berkas (Target Files)
 | Tipe Aksi | Path Berkas (Relative) | Deskripsi Perubahan |
 | :--- | :--- | :--- |
-| `CREATE` | `../../../../radovid-bot-api/internal/domain/achievement/entity.go` | Struct Achievement, UserAchievement, TriggerCriteria |
+| `CREATE` | `../../../../radovid-bot-api/migrations/010_create_achievements.sql` | DDL pembuatan tabel achievements dan indeks unique |
+| `CREATE` | `../../../../radovid-bot-api/internal/domain/achievement/entity.go` | Struct Achievement, UserAchievement, UserMetrics |
 | `CREATE` | `../../../../radovid-bot-api/internal/domain/achievement/catalog.go` | Registry statis katalog seluruh achievement dan definisi threshold |
 | `CREATE` | `../../../../radovid-bot-api/internal/domain/achievement/evaluator.go` | Pure function mencocokkan user metric terhadap trigger criteria |
 | `CREATE` | `../../../../radovid-bot-api/internal/domain/achievement/repository.go` | Interface port repository query dan unlock achievement |
 | `CREATE` | `../../../../radovid-bot-api/internal/domain/achievement/evaluator_test.go` | Unit test evaluasi milestone pencapaian |
 | `CREATE` | `../../../../radovid-bot-api/internal/usecase/achievement/check_and_unlock.go` | Use case orkestrasi pengecekan, persistensi lencana baru, dan bonus XP |
 | `CREATE` | `../../../../radovid-bot-api/internal/usecase/achievement/check_and_unlock_test.go` | Unit test skenario unlocking dengan mock dependencies |
-| `CREATE` | `../../../../radovid-bot-api/internal/infrastructure/sqlite/achievement_repository.go` | Implementasi query SQLite untuk tabel `achievements` |
-| `MODIFY` | `../../../../radovid-bot-api/internal/delivery/discord/embeds.go` | Penambahan fungsi helper pembuatan Discord embed achievement unlocked |
+| `CREATE` | `../../../../radovid-bot-api/internal/infrastructure/database/achievement_repository.go` | Implementasi query SQLite untuk tabel achievements |
+| `CREATE` | `../../../../radovid-bot-api/internal/infrastructure/database/achievement_repository_test.go` | Unit test in-memory SQLite untuk achievement repository |
+| `MODIFY` | `../../../../radovid-bot-api/internal/infrastructure/discord/game_templates.go` | Penambahan fungsi helper pembuatan Discord embed achievement unlocked |
+| `MODIFY` | `../../../../radovid-bot-api/internal/infrastructure/discord/game_templates_test.go` | Unit test untuk embed achievement unlocked |
 
 ---
 

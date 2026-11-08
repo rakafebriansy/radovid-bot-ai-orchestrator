@@ -2,7 +2,7 @@
 id: PLAN-1762433860
 ticket_id: TICKET-1762433860
 title: Streak Tracking (Daily Activity)
-status: Draft
+status: Completed
 created_at: 2026-11-04
 ---
 
@@ -27,11 +27,14 @@ created_at: 2026-11-04
 ## 3. Ruang Lingkup Mutasi Berkas (Target Files)
 | Tipe Aksi | Path Berkas (Relative) | Deskripsi Perubahan |
 | :--- | :--- | :--- |
+| `MODIFY` | `../../../../radovid-bot-api/internal/domain/progress/entity.go` | Penambahan struct DailyActivityResult |
+| `MODIFY` | `../../../../radovid-bot-api/internal/domain/progress/repository.go` | Penambahan method UpdateStreak pada ProgressRepository interface |
 | `CREATE` | `../../../../radovid-bot-api/internal/domain/progress/streak.go` | Domain service kalkulasi streak dan status aktivitas harian |
 | `CREATE` | `../../../../radovid-bot-api/internal/domain/progress/streak_test.go` | Unit test variasi interval waktu streak (Same Day, Consecutive, Expired) |
 | `CREATE` | `../../../../radovid-bot-api/internal/usecase/progress/record_daily_activity.go` | Use case evaluasi streak dan orkestrasi bonus XP |
 | `CREATE` | `../../../../radovid-bot-api/internal/usecase/progress/record_daily_activity_test.go` | Unit test flow update streak dengan mock repository |
-| `MODIFY` | `../../../../radovid-bot-api/internal/infrastructure/sqlite/progress_repository.go` | Penambahan method update streak dan last_activity_at |
+| `MODIFY` | `../../../../radovid-bot-api/internal/infrastructure/database/progress_repository.go` | Penambahan method update streak dan last_activity_at |
+| `MODIFY` | `../../../../radovid-bot-api/internal/infrastructure/database/progress_repository_test.go` | Unit test UpdateStreak pada repository SQLite |
 
 ---
 

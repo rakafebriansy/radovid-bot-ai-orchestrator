@@ -2,7 +2,7 @@
 id: PLAN-1762433980
 ticket_id: TICKET-1762433980
 title: /radovid progress Command
-status: Draft
+status: Completed
 created_at: 2026-11-04
 ---
 
@@ -28,12 +28,18 @@ created_at: 2026-11-04
 | Tipe Aksi | Path Berkas (Relative) | Deskripsi Perubahan |
 | :--- | :--- | :--- |
 | `CREATE` | `../../../../radovid-bot-api/internal/delivery/discord/radovid_progress.go` | Handler slash command `/radovid progress` |
+| `CREATE` | `../../../../radovid-bot-api/internal/delivery/discord/radovid_progress_test.go` | Unit test handler slash command `/radovid progress` |
 | `CREATE` | `../../../../radovid-bot-api/internal/delivery/discord/progress_bar.go` | Generator string Unicode progress bar |
 | `CREATE` | `../../../../radovid-bot-api/internal/delivery/discord/progress_bar_test.go` | Unit test visualisasi progress bar |
 | `CREATE` | `../../../../radovid-bot-api/internal/usecase/progress/get_progress.go` | Use case pengumpulan metrik progres dan achievements pengguna |
 | `CREATE` | `../../../../radovid-bot-api/internal/usecase/progress/get_progress_test.go` | Unit test query profil progres |
-| `MODIFY` | `../../../../radovid-bot-api/internal/delivery/discord/handler.go` | Registrasi router sub-command `/radovid progress` |
-| `MODIFY` | `../../../../radovid-bot-api/internal/delivery/discord/embeds.go` | Fungsi pembuatan embed visualisasi statistik pengguna |
+| `MODIFY` | `../../../../radovid-bot-api/internal/delivery/discord/handler.go` | Routing interaksi sub-command `/radovid progress` |
+| `MODIFY` | `../../../../radovid-bot-api/internal/delivery/discord/command_def.go` | Pendaftaran opsi subcommand `progress` pada command `/radovid` |
+| `MODIFY` | `../../../../radovid-bot-api/internal/delivery/discord/command_test.go` | Pembaruan ekspektasi jumlah sub-command |
+| `MODIFY` | `../../../../radovid-bot-api/internal/delivery/discord/game_handler.go` | Integrasi `GetProgressUseCase` ke `GameHandler` |
+| `MODIFY` | `../../../../radovid-bot-api/internal/infrastructure/discord/game_templates.go` | Template Discord embed visualisasi statistik progres pengguna |
+| `MODIFY` | `../../../../radovid-bot-api/internal/infrastructure/discord/game_templates_test.go` | Unit test embed visualisasi progres |
+| `MODIFY` | `../../../../radovid-bot-api/cmd/bot/main.go` | Inisialisasi dependensi use case dan penyuntikan ke handler |
 
 ---
 

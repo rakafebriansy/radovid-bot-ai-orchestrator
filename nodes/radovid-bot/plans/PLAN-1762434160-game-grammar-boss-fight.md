@@ -2,7 +2,7 @@
 id: PLAN-1762434160
 ticket_id: TICKET-1762434160
 title: "Game 11: Grammar Boss Fight"
-status: Draft
+status: Completed
 created_at: 2026-11-04
 ---
 
@@ -18,7 +18,7 @@ created_at: 2026-11-04
 ## 2. Ringkasan Eksekutif & Analisis Arsitektur
 - **Tujuan Teknis:** Mengembangkan mode game RPG interaktif "Grammar Boss Fight" (`grammar_boss_fight`) di mana pemain menyerang HP monster virtual dengan cara mengidentifikasi dan membetulkan kalimat salah grammar yang digenerate oleh Ollama, disertai visualisasi HP bar interaktif pada Discord embed.
 - **Hasil Pemetaan Ketergantungan (Graphify Query):**
-  - Modul / Fungsi Pemanggil: Discord interaction dispatcher (`radovid_start.go` dan modal submission handler).
+  - Modul / Fungsi Pemanggil: Discord interaction dispatcher (`command_play_wyr.go` dan modal submission handler `game_boss_fight.go`).
   - Komponen Terdampak: `internal/domain/game`, `internal/usecase/game`, `internal/infrastructure/ollama`, progress XP awarder, dan achievement checker (`boss_slayer`).
   - Potensi Efek Samping: Multi-user turn synchronization: jika ada 2 pemain dalam sesi, giliran menyerang atau submit jawaban bergantian secara teratur.
 
@@ -27,14 +27,27 @@ created_at: 2026-11-04
 ## 3. Ruang Lingkup Mutasi Berkas (Target Files)
 | Tipe Aksi | Path Berkas (Relative) | Deskripsi Perubahan |
 | :--- | :--- | :--- |
-| `CREATE` | `../../../../radovid-bot-api/internal/domain/game/boss_fight.go` | Model Boss, BossAttack, PlayerCorrection, Damage Tier |
+| `CREATE` | `../../../../radovid-bot-api/internal/domain/game/boss_fight.go` | Model Boss, AttackTier, BossFightState, ApplyBossDamage, ApplyPlayerCounterAttack |
+| `CREATE` | `../../../../radovid-bot-api/internal/domain/game/boss_fight_test.go` | Unit test domain model, tier damage, pengurangan HP, lives, dan sanitasi input |
 | `MODIFY` | `../../../../radovid-bot-api/internal/domain/game/entity.go` | Pendaftaran konstanta `GameTypeGrammarBossFight = "grammar_boss_fight"` |
-| `CREATE` | `../../../../radovid-bot-api/internal/usecase/game/boss_fight_game.go` | Use case alur pertarungan boss, evaluasi perbaikan, mutasi HP |
-| `CREATE` | `../../../../radovid-bot-api/internal/usecase/game/boss_fight_game_test.go` | Unit test kalkulasi damage, pengurangan HP, dan win/loss conditions |
-| `MODIFY` | `../../../../radovid-bot-api/internal/infrastructure/ollama/prompts.go` | Template prompt pembuatan boss sentence & evaluasi damage |
-| `MODIFY` | `../../../../radovid-bot-api/internal/delivery/discord/radovid_start.go` | Opsi slash command start untuk `grammar_boss_fight` |
-| `MODIFY` | `../../../../radovid-bot-api/internal/delivery/discord/game_handlers.go` | Modal input koreksi kalimat dan update battle message |
-| `MODIFY` | `../../../../radovid-bot-api/internal/delivery/discord/embeds.go` | Builder Discord battle embed dengan HP bar boss dan health indicator |
+| `MODIFY` | `../../../../radovid-bot-api/internal/domain/game/entity_test.go` | Pengujian enum konstanta `GameTypeGrammarBossFight` |
+| `CREATE` | `../../../../radovid-bot-api/internal/infrastructure/ollama/prompts/grammar_boss.tmpl` | Template prompt evaluasi perbaikan kalimat dan perhitungan damage |
+| `MODIFY` | `../../../../radovid-bot-api/internal/infrastructure/ollama/prompts/embed_test.go` | Pengujian render template prompt `grammar_boss` |
+| `MODIFY` | `../../../../radovid-bot-api/internal/infrastructure/ollama/parser.go` | Parser respons evaluasi `parseGrammarBoss` |
+| `MODIFY` | `../../../../radovid-bot-api/internal/infrastructure/ollama/parser_test.go` | Unit test parser respons boss fight |
+| `MODIFY` | `../../../../radovid-bot-api/internal/infrastructure/ollama/fallback.go` | Fallback data challenge dan evaluasi boss fight |
+| `MODIFY` | `../../../../radovid-bot-api/internal/infrastructure/ollama/fallback_test.go` | Unit test fallback data boss fight |
+| `CREATE` | `../../../../radovid-bot-api/internal/usecase/game/boss_fight.go` | Use case alur pertarungan boss, evaluasi perbaikan, mutasi HP & lives |
+| `CREATE` | `../../../../radovid-bot-api/internal/usecase/game/boss_fight_test.go` | Unit test use case alur pertarungan, critical hit, miss, victory, game over, dan fallback |
+| `MODIFY` | `../../../../radovid-bot-api/internal/infrastructure/discord/game_templates.go` | Builder Discord battle embed dengan HP bar boss `[████████░░] 80/100 HP`, player hearts, victory & defeat embeds |
+| `MODIFY` | `../../../../radovid-bot-api/internal/infrastructure/discord/game_templates_test.go` | Unit test visual embed boss battle, HP bar, victory, dan defeat |
+| `MODIFY` | `../../../../radovid-bot-api/internal/delivery/discord/command_def.go` | Pendaftaran opsi subcommand `grammar-boss-fight` pada grup `play` |
+| `MODIFY` | `../../../../radovid-bot-api/internal/delivery/discord/command_test.go` | Pengujian pendaftaran subcommand `grammar-boss-fight` |
+| `MODIFY` | `../../../../radovid-bot-api/internal/delivery/discord/command_play_wyr.go` | Perutean subcommand `grammar-boss-fight` |
+| `MODIFY` | `../../../../radovid-bot-api/internal/delivery/discord/game_handler.go` | Integrasi `BossFightUseCase` ke `GameHandler` dan penambahan delegator handler |
+| `CREATE` | `../../../../radovid-bot-api/internal/delivery/discord/game_boss_fight.go` | Delivery handler `HandlePlayBossFight`, `HandleBossFightComponentInteraction`, `HandleBossFightModalSubmit` |
+| `CREATE` | `../../../../radovid-bot-api/internal/delivery/discord/game_boss_fight_test.go` | Unit test delivery handler boss fight |
+| `MODIFY` | `../../../../radovid-bot-api/cmd/bot/main.go` | Inisialisasi usecase dan registrasi router prefix `bossfight:` |
 
 ---
 

@@ -2,7 +2,7 @@
 id: PLAN-1762347760
 ticket_id: TICKET-1762347760
 title: Game 9: Five Word Writing Challenge
-status: Draft
+status: Completed
 created_at: 2026-11-04
 ---
 
@@ -27,12 +27,26 @@ created_at: 2026-11-04
 ## 3. Ruang Lingkup Mutasi Berkas (Target Files)
 | Tipe Aksi | Path Berkas (Relative) | Deskripsi Perubahan |
 | :--- | :--- | :--- |
-| `CREATE` | `../../../../radovid-bot-api/internal/domain/game/five_word.go` | Definisi struct target kata, status penggunaan kata, dan hasil evaluasi |
-| `CREATE` | `../../../../radovid-bot-api/internal/usecase/game/five_word.go` | Logika generator kata, verifikasi kehadiran kata reguler/infleksi, dan panggilan LLM |
-| `CREATE` | `../../../../radovid-bot-api/internal/usecase/game/five_word_test.go` | Unit test algoritma pencocokan kata (word presence matcher) dan agregasi skor |
+| `MODIFY` | `../../../../radovid-bot-api/internal/domain/game/entity.go` | Pendaftaran konstanta `GameTypeFiveWordChallenge` |
+| `CREATE` | `../../../../radovid-bot-api/internal/domain/game/five_word.go` | Definisi struct `TargetWord`, `PartOfSpeech`, `FiveWordResult`, `FiveWordState`, katalog kata per difficulty, dan algoritma verifikasi kata infleksi |
+| `CREATE` | `../../../../radovid-bot-api/internal/domain/game/five_word_test.go` | Unit test algoritma pencocokan kata (word presence matcher), case-insensitivity, tanda baca, dan scoring |
 | `CREATE` | `../../../../radovid-bot-api/internal/infrastructure/ollama/prompts/five_word.tmpl` | Prompt template penilaian koherensi integrasi kata dalam paragraf |
-| `CREATE` | `../../../../radovid-bot-api/internal/delivery/discord/game_five_word.go` | Handler tombol, modal dialog submit paragraf, dan builder komponen |
-| `MODIFY` | `../../../../radovid-bot-api/internal/delivery/discord/embeds.go` | Embed visual kartu tantangan 5 kata dan badge checklist kelulusan kata |
+| `MODIFY` | `../../../../radovid-bot-api/internal/infrastructure/ollama/prompts/embed_test.go` | Verifikasi rendering prompt `five_word.tmpl` |
+| `MODIFY` | `../../../../radovid-bot-api/internal/infrastructure/ollama/parser.go` | Parser respons evaluasi LLM untuk Five Word Challenge |
+| `MODIFY` | `../../../../radovid-bot-api/internal/infrastructure/ollama/parser_test.go` | Unit test parser respons Five Word Challenge |
+| `MODIFY` | `../../../../radovid-bot-api/internal/infrastructure/ollama/fallback.go` | Data fallback evaluasi Five Word Challenge jika Ollama offline |
+| `MODIFY` | `../../../../radovid-bot-api/internal/infrastructure/ollama/fallback_test.go` | Unit test fallback data Five Word Challenge |
+| `CREATE` | `../../../../radovid-bot-api/internal/usecase/game/five_word.go` | Usecase `FiveWordUseCase`: generator 5 kata berimbang, delegasi evaluasi ke LLM/fallback, dan agregasi skor |
+| `CREATE` | `../../../../radovid-bot-api/internal/usecase/game/five_word_test.go` | Unit test usecase table-driven untuk `StartGame` dan `SubmitParagraph` |
+| `MODIFY` | `../../../../radovid-bot-api/internal/infrastructure/discord/game_templates.go` | Builder Discord Embed: kartu tantangan 5 kata dan scorecard checklist hasil evaluasi |
+| `MODIFY` | `../../../../radovid-bot-api/internal/infrastructure/discord/game_templates_test.go` | Unit test embed builder untuk Five Word Challenge |
+| `MODIFY` | `../../../../radovid-bot-api/internal/delivery/discord/command_def.go` | Registrasi slash subcommand `/radovid play five-word-challenge` dengan opsi `difficulty` |
+| `MODIFY` | `../../../../radovid-bot-api/internal/delivery/discord/command_play_wyr.go` | Perutean slash command untuk `five-word-challenge` |
+| `MODIFY` | `../../../../radovid-bot-api/internal/delivery/discord/game_handler.go` | Integrasi `FiveWordUseCase` ke handler utama game |
+| `CREATE` | `../../../../radovid-bot-api/internal/delivery/discord/game_five_word.go` | Handler tombol "Write Paragraph" dan Discord modal submit paragraf |
+| `CREATE` | `../../../../radovid-bot-api/internal/delivery/discord/game_five_word_test.go` | Unit test handler interaction Discord untuk Five Word Challenge |
+| `MODIFY` | `../../../../radovid-bot-api/internal/delivery/discord/command_test.go` | Unit test pendaftaran subcommand Discord |
+| `MODIFY` | `../../../../radovid-bot-api/cmd/bot/main.go` | Inisialisasi usecase, dependency injection, dan registrasi prefix modal/button `fiveword:` |
 
 ---
 

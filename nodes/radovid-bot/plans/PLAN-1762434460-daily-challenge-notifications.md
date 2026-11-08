@@ -2,7 +2,7 @@
 id: PLAN-1762434460
 ticket_id: TICKET-1762434460
 title: Daily Challenge Notifications
-status: Draft
+status: Completed
 created_at: 2026-11-04
 ---
 
@@ -27,13 +27,20 @@ created_at: 2026-11-04
 ## 3. Ruang Lingkup Mutasi Berkas (Target Files)
 | Tipe Aksi | Path Berkas (Relative) | Deskripsi Perubahan |
 | :--- | :--- | :--- |
-| `CREATE` | `../../../../radovid-bot-api/internal/domain/notification/entity.go` | Model DailyChallenge, ChallengeType, DispatchLog |
-| `CREATE` | `../../../../radovid-bot-api/internal/usecase/notification/daily_challenge_scheduler.go` | Background worker logic, penentuan durasi tunda, dan pemicu notifikasi |
-| `CREATE` | `../../../../radovid-bot-api/internal/usecase/notification/daily_challenge_scheduler_test.go` | Unit test kalkulasi jadwal jam UTC dan respons cancel context |
-| `CREATE` | `../../../../radovid-bot-api/internal/delivery/discord/notification_sender.go` | Adapter pengiriman pesan embed dan tombol interaktif ke Discord channel |
-| `MODIFY` | `../../../../radovid-bot-api/internal/delivery/discord/embeds.go` | Format embed visual "Daily English Challenge" dengan preset warna cerah |
 | `MODIFY` | `../../../../radovid-bot-api/config/config.go` | Penambahan variabel konfigurasi `DAILY_CHALLENGE_HOUR` & `DAILY_CHALLENGE_CHANNEL_ID` |
-| `MODIFY` | `../../../../radovid-bot-api/cmd/bot/main.go` | Menjalankan scheduler dalam background goroutine dengan sinkronisasi `sync.WaitGroup` |
+| `MODIFY` | `../../../../radovid-bot-api/config/config_test.go` | Unit test konfigurasi jam harian dan channel ID tantangan |
+| `CREATE` | `../../../../radovid-bot-api/migrations/011_create_daily_challenge_dispatches.sql` | Skema tabel SQLite `daily_challenge_dispatches` untuk idempotensi pengiriman |
+| `CREATE` | `../../../../radovid-bot-api/internal/domain/notification/entity.go` | Model DailyChallenge, ChallengeType, DispatchLog, pool tantangan harian deterministik |
+| `CREATE` | `../../../../radovid-bot-api/internal/domain/notification/entity_test.go` | Unit test validasi DailyChallenge dan rotasi tantangan harian |
+| `CREATE` | `../../../../radovid-bot-api/internal/infrastructure/database/dispatch_repository.go` | Implementasi SQLite DispatchRepository untuk pengecekan idempotensi |
+| `CREATE` | `../../../../radovid-bot-api/internal/infrastructure/database/dispatch_repository_test.go` | Unit test operasi basis data dispatch repository |
+| `MODIFY` | `../../../../radovid-bot-api/internal/infrastructure/discord/game_templates.go` | Format embed visual `BuildDailyChallengeEmbed` dan tombol `BuildDailyChallengeComponents` |
+| `MODIFY` | `../../../../radovid-bot-api/internal/infrastructure/discord/game_templates_test.go` | Unit test embed tantangan harian dan tombol Accept Challenge |
+| `CREATE` | `../../../../radovid-bot-api/internal/delivery/discord/notification_sender.go` | Adapter pengiriman pesan kompleks Discord dan handler interaksi Accept Challenge |
+| `CREATE` | `../../../../radovid-bot-api/internal/delivery/discord/notification_sender_test.go` | Unit test pengiriman pesan Discord dan validasi interaksi |
+| `CREATE` | `../../../../radovid-bot-api/internal/usecase/notification/daily_challenge_scheduler.go` | Background worker scheduler, kalkulasi delay UTC, dan eksekusi dispatch |
+| `CREATE` | `../../../../radovid-bot-api/internal/usecase/notification/daily_challenge_scheduler_test.go` | Unit test kalkulasi jadwal jam UTC, respons cancel context, dan idempotensi |
+| `MODIFY` | `../../../../radovid-bot-api/cmd/bot/main.go` | Menjalankan scheduler dalam background goroutine dengan sinkronisasi `sync.WaitGroup` dan graceful shutdown |
 
 ---
 

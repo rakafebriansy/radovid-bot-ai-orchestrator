@@ -2,7 +2,7 @@
 id: PLAN-1762347640
 ticket_id: TICKET-1762347640
 title: Game 7: Story Relay
-status: Draft
+status: Completed
 created_at: 2026-11-04
 ---
 

@@ -2,7 +2,7 @@
 id: PLAN-1762433800
 ticket_id: TICKET-1762433800
 title: XP Calculation & Level System
-status: Draft
+status: Completed
 created_at: 2026-11-04
 ---
 

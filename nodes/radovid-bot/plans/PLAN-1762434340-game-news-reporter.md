@@ -2,7 +2,7 @@
 id: PLAN-1762434340
 ticket_id: TICKET-1762434340
 title: "Game 14: News Reporter"
-status: Draft
+status: Completed
 created_at: 2026-11-04
 ---
 
@@ -18,23 +18,36 @@ created_at: 2026-11-04
 ## 2. Ringkasan Eksekutif & Analisis Arsitektur
 - **Tujuan Teknis:** Mengimplementasikan game simulasi peliputan berita "News Reporter" (`news_reporter`), menghubungkan generator peristiwa 5W1H Ollama Gemma 3 4b dengan antarmuka modal Discord, serta merancang engine evaluasi laras bahasa jurnalistik dan kelengkapan fakta wacana.
 - **Hasil Pemetaan Ketergantungan (Graphify Query):**
-  - Modul / Fungsi Pemanggil: Handler perintah slash Discord (`radovid_start.go`) dan interaction event router.
-  - Komponen Terdampak: `internal/domain/game`, `internal/usecase/game`, prompt registry di `internal/infrastructure/ollama`, dan modul akumulasi skor XP.
-  - Potensi Efek Samping: Evaluasi 5W1H membutuhkan ketelitian AI dalam membedakan ada/tidaknya fakta spesifik; format JSON output dari LLM harus divalidasi dengan ketat agar tidak menimbulkan kegagalan unmarshal.
+  - Modul / Fungsi Pemanggil: Handler perintah slash Discord (`command_play_wyr.go`) dan interaction event router (`game_handler.go`, `cmd/bot/main.go`).
+  - Komponen Terdampak: `internal/domain/game`, `internal/usecase/game`, prompt registry di `internal/infrastructure/ollama`, template visual di `internal/infrastructure/discord`, dan modul akumulasi skor XP.
+  - Penanganan Error & Fallback: Evaluasi 5W1H divalidasi dengan parser terstruktur dan dataset fallback deterministik multi-kategori (Environmental, Science & Tech, Archaeology, Unusual Discovery) untuk menjamin ketahanan terhadap kegagalan LLM.
 
 ---
 
 ## 3. Ruang Lingkup Mutasi Berkas (Target Files)
 | Tipe Aksi | Path Berkas (Relative) | Deskripsi Perubahan |
 | :--- | :--- | :--- |
-| `CREATE` | `../../../../radovid-bot-api/internal/domain/game/news_reporter.go` | Model NewsDispatch, FactSheet5W1H, BroadcastReport, NewsAssessment |
+| `CREATE` | `../../../../radovid-bot-api/internal/domain/game/news_reporter.go` | Model NewsDispatch, FactSheet5W1H, NewsAssessment, NewsReporterState, skoring & XP |
+| `CREATE` | `../../../../radovid-bot-api/internal/domain/game/news_reporter_test.go` | Unit test domain model, validasi naskah (25-2000 chars), skoring & XP |
 | `MODIFY` | `../../../../radovid-bot-api/internal/domain/game/entity.go` | Pendaftaran konstanta `GameTypeNewsReporter = "news_reporter"` |
-| `CREATE` | `../../../../radovid-bot-api/internal/usecase/game/news_reporter_game.go` | Use case orkestrasi skenario berita, pemrosesan naskah, dan verifikasi fakta |
-| `CREATE` | `../../../../radovid-bot-api/internal/usecase/game/news_reporter_game_test.go` | Unit test kelengkapan 5W1H dan validasi skor jurnalisme |
-| `MODIFY` | `../../../../radovid-bot-api/internal/infrastructure/ollama/prompts.go` | Prompt pembuat memo berita 5W1H dan prompt reviewer siaran berita |
-| `MODIFY` | `../../../../radovid-bot-api/internal/delivery/discord/radovid_start.go` | Integrasi game type news reporter ke pilihan slash command |
-| `MODIFY` | `../../../../radovid-bot-api/internal/delivery/discord/game_handlers.go` | Handler tombol "Mulai Siaran" dan modal editor naskah berita |
-| `MODIFY` | `../../../../radovid-bot-api/internal/delivery/discord/embeds.go` | Format embed telegram berita mendesak (breaking news) dan kartu evaluasi |
+| `MODIFY` | `../../../../radovid-bot-api/internal/domain/game/entity_test.go` | Unit test validasi GameTypeNewsReporter |
+| `CREATE` | `../../../../radovid-bot-api/internal/infrastructure/ollama/prompts/news_reporter.tmpl` | Prompt template Ollama pembuat evaluasi naskah berita 5W1H |
+| `MODIFY` | `../../../../radovid-bot-api/internal/infrastructure/ollama/prompts/embed_test.go` | Unit test rendering prompt news reporter |
+| `MODIFY` | `../../../../radovid-bot-api/internal/infrastructure/ollama/parser.go` | Parser respons terstruktur `parseNewsReporter` dan `ParseNewsReporterEvaluation` |
+| `MODIFY` | `../../../../radovid-bot-api/internal/infrastructure/ollama/parser_test.go` | Unit test parsing output AI news reporter |
+| `MODIFY` | `../../../../radovid-bot-api/internal/infrastructure/ollama/fallback.go` | Fallback data evaluasi berita deterministik `newsReporterFallbacks` |
+| `MODIFY` | `../../../../radovid-bot-api/internal/infrastructure/ollama/fallback_test.go` | Unit test fallback news reporter |
+| `CREATE` | `../../../../radovid-bot-api/internal/usecase/game/news_reporter.go` | Use case orkestrasi skenario berita, pemrosesan naskah, dan verifikasi fakta |
+| `CREATE` | `../../../../radovid-bot-api/internal/usecase/game/news_reporter_test.go` | Unit test use case, pemanggilan Ollama, skoring, fallback, dan perolehan XP |
+| `MODIFY` | `../../../../radovid-bot-api/internal/infrastructure/discord/game_templates.go` | Embed builder memo breaking news (`BuildNewsReporterDispatchEmbed`) dan hasil siaran (`BuildNewsReporterEvaluationEmbed`) |
+| `MODIFY` | `../../../../radovid-bot-api/internal/infrastructure/discord/game_templates_test.go` | Unit test format embed berita Discord |
+| `MODIFY` | `../../../../radovid-bot-api/internal/delivery/discord/command_def.go` | Pendaftaran subcommand slash `news-reporter` dengan opsi `category` dan `difficulty` |
+| `MODIFY` | `../../../../radovid-bot-api/internal/delivery/discord/command_test.go` | Unit test definisi subcommand slash news reporter |
+| `MODIFY` | `../../../../radovid-bot-api/internal/delivery/discord/command_play_wyr.go` | Routing subcommand `news-reporter` ke `HandlePlayNewsReporter` |
+| `MODIFY` | `../../../../radovid-bot-api/internal/delivery/discord/game_handler.go` | Injeksi `newsReporterUseCase` ke `GameHandler` dan delegator component/modal |
+| `CREATE` | `../../../../radovid-bot-api/internal/delivery/discord/game_news_reporter.go` | Handler tombol "Siarkan Berita" dan modal editor naskah berita |
+| `CREATE` | `../../../../radovid-bot-api/internal/delivery/discord/game_news_reporter_test.go` | Unit test delivery handler Discord news reporter |
+| `MODIFY` | `../../../../radovid-bot-api/cmd/bot/main.go` | Inisialisasi use case dan registrasi handler interaction prefix `newsreporter:` |
 
 ---
 

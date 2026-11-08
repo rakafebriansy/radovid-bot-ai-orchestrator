@@ -2,7 +2,7 @@
 id: PLAN-1762434100
 ticket_id: TICKET-1762434100
 title: "Game 10: Secret Mission"
-status: Draft
+status: Completed
 created_at: 2026-11-04
 ---
 
@@ -28,13 +28,24 @@ created_at: 2026-11-04
 | Tipe Aksi | Path Berkas (Relative) | Deskripsi Perubahan |
 | :--- | :--- | :--- |
 | `CREATE` | `../../../../radovid-bot-api/internal/domain/game/secret_mission.go` | Model domain misi rahasia, target kosa kata, skor naturalitas |
+| `CREATE` | `../../../../radovid-bot-api/internal/domain/game/secret_mission_test.go` | Unit test domain misi rahasia |
 | `MODIFY` | `../../../../radovid-bot-api/internal/domain/game/entity.go` | Pendaftaran konstanta `GameTypeSecretMission = "secret_mission"` |
-| `CREATE` | `../../../../radovid-bot-api/internal/usecase/game/secret_mission_game.go` | Use case orkestrasi fase briefing, submission, dan evaluasi AI |
-| `CREATE` | `../../../../radovid-bot-api/internal/usecase/game/secret_mission_game_test.go` | Unit test alur state game dan parsing evaluasi JSON |
-| `MODIFY` | `../../../../radovid-bot-api/internal/infrastructure/ollama/prompts.go` | Penambahan prompt generator misi dan prompt evaluator naturalness |
-| `MODIFY` | `../../../../radovid-bot-api/internal/delivery/discord/radovid_start.go` | Opsi game type `secret_mission` di slash command start |
-| `MODIFY` | `../../../../radovid-bot-api/internal/delivery/discord/game_handlers.go` | Modal submit respons dan dispatcher tombol ambil misi |
-| `MODIFY` | `../../../../radovid-bot-api/internal/delivery/discord/embeds.go` | Embed briefing publik dan embed kartu misi ephemeral |
+| `MODIFY` | `../../../../radovid-bot-api/internal/domain/game/entity_test.go` | Unit test tipe game |
+| `CREATE` | `../../../../radovid-bot-api/internal/usecase/game/secret_mission.go` | Use case orkestrasi fase briefing, submission, dan evaluasi AI |
+| `CREATE` | `../../../../radovid-bot-api/internal/usecase/game/secret_mission_test.go` | Unit test alur state game dan parsing evaluasi |
+| `CREATE` | `../../../../radovid-bot-api/internal/infrastructure/ollama/prompts/secret_mission.tmpl` | Prompt template evaluasi misi rahasia |
+| `MODIFY` | `../../../../radovid-bot-api/internal/infrastructure/ollama/prompts/embed_test.go` | Unit test render prompt |
+| `MODIFY` | `../../../../radovid-bot-api/internal/infrastructure/ollama/parser.go` | Parser respons evaluasi misi rahasia |
+| `MODIFY` | `../../../../radovid-bot-api/internal/infrastructure/ollama/parser_test.go` | Unit test parser respons misi rahasia |
+| `MODIFY` | `../../../../radovid-bot-api/internal/infrastructure/ollama/fallback.go` | Fallback data respons misi rahasia |
+| `MODIFY` | `../../../../radovid-bot-api/internal/infrastructure/discord/game_templates.go` | Embed briefing publik, kartu misi ephemeral, dan debrief hasil |
+| `MODIFY` | `../../../../radovid-bot-api/internal/infrastructure/discord/game_templates_test.go` | Unit test embed visualisasi misi rahasia |
+| `MODIFY` | `../../../../radovid-bot-api/internal/delivery/discord/command_def.go` | Pendaftaran opsi subcommand `secret-mission` |
+| `MODIFY` | `../../../../radovid-bot-api/internal/delivery/discord/command_play_wyr.go` | Routing subcommand `secret-mission` |
+| `MODIFY` | `../../../../radovid-bot-api/internal/delivery/discord/game_handler.go` | Integrasi `SecretMissionUseCase` ke `GameHandler` |
+| `CREATE` | `../../../../radovid-bot-api/internal/delivery/discord/game_secret_mission.go` | Handler Discord untuk secret mission (perintah, ephemeral button, modal) |
+| `CREATE` | `../../../../radovid-bot-api/internal/delivery/discord/game_secret_mission_test.go` | Unit test interaksi delivery secret mission |
+| `MODIFY` | `../../../../radovid-bot-api/cmd/bot/main.go` | Inisialisasi use case dan routing prefix di entrypoint |
 
 ---
 

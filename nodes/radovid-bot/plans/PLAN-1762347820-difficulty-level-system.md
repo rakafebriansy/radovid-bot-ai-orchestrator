@@ -2,7 +2,7 @@
 id: PLAN-1762347820
 ticket_id: TICKET-1762347820
 title: Difficulty Level System
-status: Draft
+status: Completed
 created_at: 2026-11-04
 ---
 
@@ -27,14 +27,23 @@ created_at: 2026-11-04
 ## 3. Ruang Lingkup Mutasi Berkas (Target Files)
 | Tipe Aksi | Path Berkas (Relative) | Deskripsi Perubahan |
 | :--- | :--- | :--- |
-| `CREATE` | `../../../../radovid-bot-api/migrations/009_add_difficulty_to_users.sql` | DDL penambahan kolom `difficulty` pada tabel `users` dengan default `'Beginner'` |
-| `CREATE` | `../../../../radovid-bot-api/internal/domain/user/difficulty.go` | Definisi enum `Difficulty`, validasi level, dan metadata pemetaan CEFR |
-| `MODIFY` | `../../../../radovid-bot-api/internal/domain/user/repository.go` | Penambahan method `UpdateDifficulty(ctx, userID, difficulty)` pada port repository |
-| `CREATE` | `../../../../radovid-bot-api/internal/usecase/user/settings.go` | Logika pembacaan dan pembaruan preferensi pengguna |
-| `CREATE` | `../../../../radovid-bot-api/internal/usecase/user/settings_test.go` | Unit test validasi enum, penanganan input tidak valid, dan persistensi |
-| `MODIFY` | `../../../../radovid-bot-api/internal/infrastructure/sqlite/user_repository.go` | Implementasi SQL `UPDATE users SET difficulty = ?` dan pembacaan saat scan struct |
-| `CREATE` | `../../../../radovid-bot-api/internal/delivery/discord/radovid_settings.go` | Slash command `/radovid settings` dan komponen Discord Select Menu / Buttons |
-| `MODIFY` | `../../../../radovid-bot-api/internal/delivery/discord/embeds.go` | Embed visual pengaturan profil dengan badge tingkat kesulitan aktif |
+| `CREATE` | `../../../../radovid-bot-api/migrations/007_add_difficulty_to_users.sql` | DDL penambahan kolom `difficulty` pada tabel `users` dengan default `'Beginner'` |
+| `CREATE` | `../../../../radovid-bot-api/internal/domain/user/difficulty.go` | Definisi enum `Difficulty`, validasi level, metode `CEFRLevel()`, dan fungsi `ParseDifficulty()` |
+| `CREATE` | `../../../../radovid-bot-api/internal/domain/user/difficulty_test.go` | Unit test validasi enum, pemetaan CEFR, dan fungsi parsing difficulty |
+| `MODIFY` | `../../../../radovid-bot-api/internal/domain/user/entity.go` | Penambahan field `Difficulty Difficulty` pada struct `User` |
+| `MODIFY` | `../../../../radovid-bot-api/internal/domain/user/entity_test.go` | Pembaruan unit test struct `User` |
+| `MODIFY` | `../../../../radovid-bot-api/internal/domain/user/repository.go` | Penambahan metode `UpdateDifficulty` dan `GetOrCreateByDiscordID` pada port repository |
+| `CREATE` | `../../../../radovid-bot-api/internal/infrastructure/database/user_repository.go` | Implementasi SQLite repository untuk entitas `User` dan operasi mutasi difficulty |
+| `CREATE` | `../../../../radovid-bot-api/internal/infrastructure/database/user_repository_test.go` | Unit test in-memory SQLite untuk `UserRepository` |
+| `CREATE` | `../../../../radovid-bot-api/internal/usecase/user/settings.go` | Logika usecase pembacaan profil pengguna dan pembaruan preferensi kesulitan |
+| `CREATE` | `../../../../radovid-bot-api/internal/usecase/user/settings_test.go` | Unit test table-driven usecase pengaturan preferensi pengguna |
+| `MODIFY` | `../../../../radovid-bot-api/internal/infrastructure/discord/game_templates.go` | Builder Discord Embed tampilan antarmuka pengaturan profil pengguna |
+| `MODIFY` | `../../../../radovid-bot-api/internal/infrastructure/discord/game_templates_test.go` | Unit test visual embed builder untuk pengaturan profil |
+| `MODIFY` | `../../../../radovid-bot-api/internal/delivery/discord/command_def.go` | Pendaftaran slash command `/radovid settings` |
+| `MODIFY` | `../../../../radovid-bot-api/internal/delivery/discord/handler.go` | Dispatching router untuk perintah `/radovid settings` |
+| `CREATE` | `../../../../radovid-bot-api/internal/delivery/discord/radovid_settings.go` | Handler slash command `/radovid settings` dan komponen tombol/select menu pembaruan level |
+| `CREATE` | `../../../../radovid-bot-api/internal/delivery/discord/radovid_settings_test.go` | Unit test handler interaksi Discord untuk pengaturan difficulty |
+| `MODIFY` | `../../../../radovid-bot-api/cmd/bot/main.go` | Inisialisasi `userRepo`, `settingsUseCase`, dan pendaftaran prefix komponen `settings:` |
 
 ---
 
