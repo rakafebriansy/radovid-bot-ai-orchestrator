@@ -483,6 +483,27 @@ Fase 4: Gamification       ← Fase 3: Speaking & Writing
 
 ---
 
+## Fase 5: Hardening & Bug Remediation (Audit Hunt `hunt-001-2026-11-08`)
+
+> **Tujuan:** Remediasi seluruh 10 temuan bug dan celah ketahanan sistem dari sesi eksplorasi kualitas [`hunt-001-2026-11-08.md`](../hunt/hunt-001-2026-11-08.md) (Kehilangan Data -> Keamanan -> Alur Bisnis Patah -> Kosmetik/UI).
+
+### Backlog Fase 5
+
+| # | Judul | Epoch Timestamp | Status | Pasangan |
+|---|-------|-----------------|--------|---------|
+| 5.1 | [BUG] Progression Loop Terputus (XP, Streak & Achievement Tidak Tercatat Saat Game Selesai) | `1762520000` | `[COMPLETED]` | `TICKET-1762520000` / `PLAN-1762520000` |
+| 5.2 | [BUG] Inkonsistensi Format User Primary Key (`usr-<discordID>` vs `<discordID>`) Memicu Foreign Key Error | `1762520060` | `[COMPLETED]` | `TICKET-1762520060` / `PLAN-1762520060` |
+| 5.3 | [BUG] Evaluasi Streak Harian Bertambah Meski Pengguna Melewatkan 1 Hari Kalender Penuh | `1762520120` | `[COMPLETED]` | `TICKET-1762520120` / `PLAN-1762520120` |
+| 5.4 | [BUG] Hardcoded Fallback Secret `'admin:admin'` pada HTMX Admin Dashboard | `1762520180` | `[COMPLETED]` | `TICKET-1762520180` / `PLAN-1762520180` |
+| 5.5 | [BUG] Pembajakan Giliran oleh Penonton (Spectator Turn Hijack) pada Tombol Would You Rather | `1762520240` | `[COMPLETED]` | `TICKET-1762520240` / `PLAN-1762520240` |
+| 5.6 | [BUG] `TimeoutTicker` Tidak Pernah Dijalankan di `main.go` (Channel Discord Terkunci Permanen) | `1762520300` | `[COMPLETED]` | `TICKET-1762520300` / `PLAN-1762520300` |
+| 5.7 | [BUG] Lobby Multiplayer Memulai Game 2-Pemain dengan 1 Pemain Saat Host Menjalankan Command Kedua Kali | `1762520360` | `[COMPLETED]` | `TICKET-1762520360` / `PLAN-1762520360` |
+| 5.8 | [BUG] Preferensi Difficulty Pengguna (`/radovid settings`) Diabaikan di Seluruh Mini-Game | `1762520420` | `[COMPLETED]` | `TICKET-1762520420` / `PLAN-1762520420` |
+| 5.9 | [BUG] Global Mutex Freeze Saat Request HTTP LLM & Kebocoran Memori Status Game (`uc.states`) | `1762520480` | `[COMPLETED]` | `TICKET-1762520480` / `PLAN-1762520480` |
+| 5.10 | [BUG] Pemotongan Byte Mentah UTF-8 pada Template Embed & Clock Drift pada Daily Scheduler | `1762520540` | `[COMPLETED]` | `TICKET-1762520540` / `PLAN-1762520540` |
+
+---
+
 ## Catatan Pengerjaan
 
 > **[MODE 1 — Autonomous Planning]** Setiap item di atas harus dieksekusi sebagai pasangan `TICKET-[EPOCH]` + `PLAN-[EPOCH]`. Buat pasangan tersebut sebelum memulai implementasi, paparkan rencana ke developer, dan minta persetujuan eksplisit sebelum mutasi state apapun.
