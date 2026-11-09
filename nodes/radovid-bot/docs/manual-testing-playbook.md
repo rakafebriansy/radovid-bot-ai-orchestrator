@@ -103,11 +103,11 @@ Untuk memastikan pengujian berjalan akurat (termasuk fitur lobi, multiplayer, da
     `Radovid Bot — English Learning Companion`
   - Deskripsi: *"Welcome! Practice and enhance your English conversation, vocabulary, and grammar skills through interactive AI-assisted games with a partner or solo."*
   - **5 Field Lengkap Berisi Seluruh Perintah:**
-    1. **📖 Core Commands:** Menampilkan `/radovid help`, `/radovid settings [level]`, `/radovid progress`, dan `/radovid diary`.
-    2. **❓ 20 Questions Game Commands:** Menampilkan `/radovid ask question:<text>` dan `/radovid guess answer:<text>`.
-    3. **🎮 Multiplayer Games (/radovid play <game>):** Menampilkan 7 game 2-pemain (`would-you-rather`, `taboo`, `20-questions`, `story-relay`, `secret-mission`, `grammar-boss-fight`, `transformation-race`).
-    4. **🎯 Solo Practice Games (/radovid play <game>):** Menampilkan 8 game latihan mandiri (`job-interview`, `roleplay`, `one-minute-challenge`, `five-word-challenge`, `movie-review`, `news-reporter`, `dream-house`, `diary`).
-    5. **💡 Learning Guidelines:** Pesan bimbingan belajar santai dan konsistensi menjaga streak harian.
+    1. **Core Commands:** Menampilkan `/radovid help`, `/radovid settings [level]`, `/radovid progress`, dan `/radovid diary`.
+    2. **20 Questions Game Commands:** Menampilkan `/radovid ask question:<text>` dan `/radovid guess answer:<text>`.
+    3. **Multiplayer Games (/radovid play <game>):** Menampilkan 7 game 2-pemain (`would-you-rather`, `taboo`, `20-questions`, `story-relay`, `secret-mission`, `grammar-boss-fight`, `transformation-race`).
+    4. **Solo Practice Games (/radovid play <game>):** Menampilkan 8 game latihan mandiri (`job-interview`, `roleplay`, `one-minute-challenge`, `five-word-challenge`, `movie-review`, `news-reporter`, `dream-house`, `diary`).
+    5. **Learning Guidelines:** Pesan bimbingan belajar santai dan konsistensi menjaga streak harian.
 - **Kasus Ekstrem (Edge Cases):**
   - **EC-HLP-01 (Spam Invocation & Channel Cleanliness):** Jalankan `/radovid help` 3 kali berturut-turut dengan cepat oleh seorang user.  
     *Hasil yang Diharapkan:* Setiap pesan dibalas secara mandiri dan cepat sebagai pesan **Ephemeral** di layar user tanpa menimbulkan duplikasi/spam di channel publik server dan tanpa error *"Interaction failed"*.
@@ -123,7 +123,11 @@ Untuk memastikan pengujian berjalan akurat (termasuk fitur lobi, multiplayer, da
   - **Metode B (Opsi Langsung):** Ketik `/radovid settings level:Advanced` lalu tekan Enter.
 - **Tampilan yang Muncul:**
   - **Pesan Bersifat Ephemeral:** Hanya terlihat oleh Anda (*Only you can see this*).
-  - Embed profil setting memuat tingkat kesulitan saat ini (default: *Beginner*).
+  - Embed profil setting memuat:
+    - **Player Profile:** Mention `<@User>` dan username.
+    - **Current Level:** Tingkat kesulitan saat ini (`Beginner [A1-A2]`, `Intermediate [B1-B2]`, atau `Advanced [C1-C2]`).
+    - **Proficiency Levels (CEFR):** Panduan ringkas perbedaan gaya bahasa tiap level.
+    - **Notice (Pemberitahuan Efek Sesi):** *"Difficulty changes will take effect starting from your next game session. Any active game currently in progress will finish with its initial difficulty."*
   - Terdapat **3 Tombol Komponen**:
     - `🟢 Beginner (A1-A2)` (Warna Hijau jika sedang aktif)
     - `🟡 Intermediate (B1-B2)` (Warna Biru/Abu jika tidak aktif)
@@ -131,8 +135,8 @@ Untuk memastikan pengujian berjalan akurat (termasuk fitur lobi, multiplayer, da
   - Klik tombol `🔴 Advanced (C1-C2)`.
   - Embed langsung ter-update seketika: Level aktif berubah menjadi Advanced dan tombol Advanced kini menyala terang.
 - **Kasus Ekstrem (Edge Cases):**
-  - **EC-SET-01 (Mid-Game Setting Change):** Saat game sedang aktif di channel, buka tab settings dan ubah ke Advanced.  
-    *Hasil yang Diharapkan:* Game yang sedang berlangsung tetap menyelesaikan putarannya dengan difficulty lama; game baru berikutnya yang dimulai akan otomatis menggunakan level Advanced.
+  - **EC-SET-01 (Mid-Game Setting Change & Notice Verification):** Saat game sedang aktif di channel, buka tab settings dan ubah ke Advanced.  
+    *Hasil yang Diharapkan:* Embed memuat teks pemberitahuan bahwa perubahan berlaku di sesi berikutnya; game yang sedang berlangsung tetap menyelesaikan putarannya dengan difficulty lama; game baru berikutnya yang dimulai akan otomatis menggunakan level Advanced.
 
 ---
 
@@ -144,7 +148,7 @@ Untuk memastikan pengujian berjalan akurat (termasuk fitur lobi, multiplayer, da
     - Judul: `English Learning Progress` lengkap dengan Avatar dan Username Discord Anda.
     - **Current Level:** Contoh `Level 1 • Novice` atau `Level 2 • Apprentice`.
     - **Visual Progress Bar:** Baris blok visual XP, contoh: `[▰▰▰▰▱▱▱▱▱▱] 40 / 100 XP`.
-    - **Streak Tracker:** `🔥 1 Days Active Streak`.
+    - **Streak Tracker:** `1 Days Active Streak`.
     - **Lencana Prestasi (Achievements):** Lencana yang sudah diraih (🌱 *First Steps*, ⚔️ *Dragon Tamer*) dan yang masih terkunci (`🔒 Locked`).
 - **Kasus Ekstrem (Edge Cases):**
   - **EC-PROG-01 (Akun Baru / Zero State):** Akun yang belum pernah bermain game menjalankan perintah ini.  
@@ -229,7 +233,7 @@ Untuk memastikan pengujian berjalan akurat (termasuk fitur lobi, multiplayer, da
      Bot membalas: `"Yes, it runs on electricity."` (Counter bertambah: 1/20).
   3. Jika sudah yakin, tebak menggunakan perintah:  
      `/radovid guess answer: "Laptop"`  
-     Bot memvalidasi: `"🎉 Correct! The secret object was LAPTOP!"`.
+     Bot memvalidasi: `"Correct! The secret object was LAPTOP!"`.
 - **Kasus Ekstrem (Edge Cases):**
   - **EC-20Q-01 (Pertanyaan Bukan Yes/No):** Pemain mengetik `/radovid ask question: "What is your favorite color?"`.  
     *Hasil yang Diharapkan:* Bot mengingatkan untuk menggunakan format pertanyaan Yes/No.
