@@ -4,6 +4,19 @@
 
 ---
 
+### [2026-11-09 08:27:00] - Make Radovid Help Command Response Ephemeral (TICKET-1794187566)
+> **Trigger:** Prompt Driven | **Branch:** `main` | **Repo:** `radovid-bot-ai-orchestrator` & `radovid-bot-api`
+
+- **Konteks:** Menuntaskan `TICKET-1794187566` dan rencana `PLAN-1794187566` untuk mengubah respon slash command `/radovid help` menjadi Ephemeral (`discordgo.MessageFlagsEphemeral`). Hal ini mencegah pemanggilan berkali-kali oleh pengguna membanjiri (*spam*) teks di channel publik server Discord, sekaligus menjaga privasi pengguna saat membaca seluruh katalog perintah.
+- **Perubahan:**
+  - [Added] Unit test TDD `TestBuildHelpResponseData_EphemeralFlag` pada `internal/delivery/discord/radovid_help_test.go` (terbukti gagal saat fase Red dengan `undefined: BuildHelpResponseData` dan kini lulus memvalidasi flag ephemeral bernilai `discordgo.MessageFlagsEphemeral`).
+  - [Changed] Menambahkan helper function `BuildHelpResponseData() *discordgo.InteractionResponseData` dan memperbarui `HandleRadovidHelp` di `internal/delivery/discord/radovid_help.go` dengan flag ephemeral.
+  - [Changed] Memperbarui `nodes/radovid-bot/docs/manual-testing-playbook.md` pada tabel seksi 3 (`Ephemeral Embed`) dan seksi 4.1 dengan rincian pengujian spam invocation `EC-HLP-01`, privasi isolasi `EC-HLP-02`, dan batasan karakter `EC-HLP-03`.
+  - [Changed] Memperbarui status `TICKET-1794187566` menjadi `Done` dan `PLAN-1794187566` menjadi `Completed`.
+- **Path File:** `../../../../radovid-bot-api/internal/delivery/discord/radovid_help.go`, `../../../../radovid-bot-api/internal/delivery/discord/radovid_help_test.go`, `docs/manual-testing-playbook.md`, `tickets/TICKET-1794187566-ephemeral-radovid-help-response.md`, `plans/PLAN-1794187566-ephemeral-radovid-help-response.md`, `CHANGELOG.md`
+
+---
+
 ### [2026-11-09 07:47:00] - Fix Radovid Help Command to List All Commands and Mini-Games (TICKET-1762520600)
 > **Trigger:** Prompt Driven | **Branch:** `main` | **Repo:** `radovid-bot-ai-orchestrator` & `radovid-bot-api`
 

@@ -68,7 +68,7 @@ Untuk memastikan pengujian berjalan akurat (termasuk fitur lobi, multiplayer, da
 
 | Perintah Discord yang Diketik | Tipe Respons | Fungsi Utama |
 |---|---|---|
-| `/radovid help` | Public Embed | Menampilkan panduan umum belajar dan daftar perintah |
+| `/radovid help` | Ephemeral Embed | Menampilkan panduan umum belajar dan daftar perintah (Hanya terlihat oleh pemanggil) |
 | `/radovid start` | Public Embed | Menginisialisasi sesi belajar baru (menunggu Partner) |
 | `/radovid settings` | Ephemeral + 3 Tombol | Melihat profil tingkat kemahiran & tombol ganti level |
 | `/radovid settings level:[Choice]` | Ephemeral + 3 Tombol | Langsung mengatur tingkat kesulitan ke Beginner / Inter / Adv |
@@ -100,6 +100,7 @@ Untuk memastikan pengujian berjalan akurat (termasuk fitur lobi, multiplayer, da
 - **Cara Menjalankan:**
   1. Di chat bar, ketik `/radovid help` lalu tekan Enter.
 - **Tampilan yang Muncul:**
+  - **Pesan Bersifat Ephemeral:** Hanya terlihat oleh Anda (*Only you can see this*), tidak mengotori obrolan publik channel.
   - Embed berwarna hijau zamrud (*Emerald*) dengan judul:  
     `Radovid Bot — English Learning Companion`
   - Deskripsi: *"Welcome! Practice and enhance your English conversation, vocabulary, and grammar skills through interactive AI-assisted games with a partner or solo."*
@@ -110,9 +111,11 @@ Untuk memastikan pengujian berjalan akurat (termasuk fitur lobi, multiplayer, da
     4. **🎯 Solo Practice Games (/radovid play <game>):** Menampilkan 8 game latihan mandiri (`job-interview`, `roleplay`, `one-minute-challenge`, `five-word-challenge`, `movie-review`, `news-reporter`, `dream-house`, `diary`).
     5. **💡 Learning Guidelines:** Pesan bimbingan belajar santai dan konsistensi menjaga streak harian.
 - **Kasus Ekstrem (Edge Cases):**
-  - **EC-HLP-01 (Spam Invocation):** Jalankan `/radovid help` 3 kali berturut-turut dengan cepat.  
-    *Hasil yang Diharapkan:* Setiap pesan dibalas secara independen tanpa error *"Interaction failed"*.
-  - **EC-HLP-02 (Character Limit Validation):** Seluruh isi field embed tidak melebihi 1024 karakter per field Discord API.
+  - **EC-HLP-01 (Spam Invocation & Channel Cleanliness):** Jalankan `/radovid help` 3 kali berturut-turut dengan cepat oleh seorang user.  
+    *Hasil yang Diharapkan:* Setiap pesan dibalas secara mandiri dan cepat sebagai pesan **Ephemeral** di layar user tanpa menimbulkan duplikasi/spam di channel publik server dan tanpa error *"Interaction failed"*.
+  - **EC-HLP-02 (Spectator/Peer Privacy Isolation):** Saat Tester A menjalankan `/radovid help`, periksa layar Tester B dan Tester C di channel yang sama.  
+    *Hasil yang Diharapkan:* Tester B dan Tester C sama sekali tidak melihat aktivitas atau embed help dari Tester A, menjaga kerahasiaan dan kebersihan tampilan channel obrolan bersama.
+  - **EC-HLP-03 (Character Limit Validation):** Seluruh isi field embed tidak melebihi 1024 karakter per field Discord API.
 
 ---
 
