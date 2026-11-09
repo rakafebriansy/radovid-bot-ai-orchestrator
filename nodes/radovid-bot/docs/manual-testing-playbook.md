@@ -10,12 +10,11 @@
 
 1. [Cara Menggunakan Slash Command Radovid di Discord](#1-cara-menggunakan-slash-command-radovid-di-discord)
 2. [Persiapan Lingkungan & Peran Akun Penguji](#2-persiapan-lingkungan--peran-akun-penguji)
-3. [Daftar Lengkap 21 Perintah Slash Resmi](#3-daftar-lengkap-21-perintah-slash-resmi)
+3. [Daftar Lengkap 20 Perintah Slash Resmi](#3-daftar-lengkap-20-perintah-slash-resmi)
 4. [Skenario Pengujian Fitur Utilitas & Manajemen Akun](#4-skenario-pengujian-fitur-utilitas--manajemen-akun)
    - 4.1 [`/radovid help`](#41-radovid-help)
-   - 4.2 [`/radovid start`](#42-radovid-start)
-   - 4.3 [`/radovid settings`](#43-radovid-settings)
-   - 4.4 [`/radovid progress`](#44-radovid-progress)
+   - 4.2 [`/radovid settings`](#42-radovid-settings)
+   - 4.3 [`/radovid progress`](#43-radovid-progress)
 5. [Skenario Pengujian Jurnal Harian 5-Kalimat](#5-skenario-pengujian-jurnal-harian-5-kalimat)
    - 5.1 [`/radovid diary`](#51-radovid-diary)
 6. [Skenario Pengujian 15 Mini-Games Resmi (`/radovid play <game>`)](#6-skenario-pengujian-15-mini-games-resmi-radovid-play-game)
@@ -64,12 +63,11 @@ Untuk memastikan pengujian berjalan akurat (termasuk fitur lobi, multiplayer, da
 
 ---
 
-## 3. Daftar Lengkap 21 Perintah Slash Resmi
+## 3. Daftar Lengkap 20 Perintah Slash Resmi
 
 | Perintah Discord yang Diketik | Tipe Respons | Fungsi Utama |
 |---|---|---|
 | `/radovid help` | Ephemeral Embed | Menampilkan panduan umum belajar dan daftar perintah (Hanya terlihat oleh pemanggil) |
-| `/radovid start` | Public Embed | Menginisialisasi sesi belajar baru (menunggu Partner) |
 | `/radovid settings` | Ephemeral + 3 Tombol | Melihat profil tingkat kemahiran & tombol ganti level |
 | `/radovid settings level:[Choice]` | Ephemeral + 3 Tombol | Langsung mengatur tingkat kesulitan ke Beginner / Inter / Adv |
 | `/radovid progress` | Ephemeral Embed | Menampilkan Level, Progress Bar XP, Streak api, & Lencana |
@@ -105,7 +103,7 @@ Untuk memastikan pengujian berjalan akurat (termasuk fitur lobi, multiplayer, da
     `Radovid Bot — English Learning Companion`
   - Deskripsi: *"Welcome! Practice and enhance your English conversation, vocabulary, and grammar skills through interactive AI-assisted games with a partner or solo."*
   - **5 Field Lengkap Berisi Seluruh Perintah:**
-    1. **📖 Core Commands:** Menampilkan `/radovid help`, `/radovid start`, `/radovid settings [level]`, `/radovid progress`, dan `/radovid diary`.
+    1. **📖 Core Commands:** Menampilkan `/radovid help`, `/radovid settings [level]`, `/radovid progress`, dan `/radovid diary`.
     2. **❓ 20 Questions Game Commands:** Menampilkan `/radovid ask question:<text>` dan `/radovid guess answer:<text>`.
     3. **🎮 Multiplayer Games (/radovid play <game>):** Menampilkan 7 game 2-pemain (`would-you-rather`, `taboo`, `20-questions`, `story-relay`, `secret-mission`, `grammar-boss-fight`, `transformation-race`).
     4. **🎯 Solo Practice Games (/radovid play <game>):** Menampilkan 8 game latihan mandiri (`job-interview`, `roleplay`, `one-minute-challenge`, `five-word-challenge`, `movie-review`, `news-reporter`, `dream-house`, `diary`).
@@ -119,20 +117,7 @@ Untuk memastikan pengujian berjalan akurat (termasuk fitur lobi, multiplayer, da
 
 ---
 
-### 4.2 `/radovid start`
-- **Cara Menjalankan:**
-  1. Ketik `/radovid start` lalu tekan Enter.
-- **Tampilan yang Muncul:**
-  - Embed publik berjudul: `Game Session Initialized`.
-  - Host: `**[Nama Anda]** has requested a new English learning session!`.
-  - Status: `Pending Player 2 (Session skeleton initialized)`.
-  - Phase: `Phase 1 Foundation Complete. Game engine will activate in Phase 2.`.
-- **Kasus Ekstrem (Edge Cases):**
-  - **EC-STA-01 (Nickname vs Username):** Jika akun memiliki Server Nickname, pastikan nama yang muncul di embed mencantumkan Nickname tersebut.
-
----
-
-### 4.3 `/radovid settings`
+### 4.2 `/radovid settings`
 - **Cara Menjalankan:**
   - **Metode A (Menu Interaktif):** Ketik `/radovid settings` lalu tekan Enter.
   - **Metode B (Opsi Langsung):** Ketik `/radovid settings level:Advanced` lalu tekan Enter.
@@ -151,7 +136,7 @@ Untuk memastikan pengujian berjalan akurat (termasuk fitur lobi, multiplayer, da
 
 ---
 
-### 4.4 `/radovid progress`
+### 4.3 `/radovid progress`
 - **Cara Menjalankan:**
   1. Ketik `/radovid progress` lalu tekan Enter.
 - **Tampilan yang Muncul:**

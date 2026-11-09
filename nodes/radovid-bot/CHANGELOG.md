@@ -4,6 +4,22 @@
 
 ---
 
+### [2026-11-09 08:48:00] - Remove Deprecated Radovid Start Command (TICKET-1794188809)
+> **Trigger:** Prompt Driven | **Branch:** `main` | **Repo:** `radovid-bot-ai-orchestrator` & `radovid-bot-api`
+
+- **Konteks:** Menuntaskan `TICKET-1794188809` dan rencana `PLAN-1794188809` untuk menghapus perintah legacy `/radovid start` yang merupakan artefak placeholder dari Fase 1 fondasi bot, sehingga interaksi pengguna terfokus pada perintah game riil (`/radovid play <game>`), jurnal (`/radovid diary`), profil (`/radovid settings`, `/radovid progress`), dan bantuan (`/radovid help`).
+- **Perubahan:**
+  - [Removed] Menghapus berkas `internal/delivery/discord/radovid_start.go` beserta handler `HandleRadovidStart`.
+  - [Removed] Menghapus subcommand `start` dari `internal/delivery/discord/command_def.go` (jumlah subcommands berkurang dari 8 menjadi 7).
+  - [Removed] Menghapus `case "start":` pada routing `HandleRadovidCommand` di `internal/delivery/discord/handler.go` dan memperbarui teks pesan error fallback tanpa opsi.
+  - [Removed] Menghapus `/radovid start` dari teks embed `BuildHelpEmbed()` pada `internal/delivery/discord/radovid_help.go`.
+  - [Changed] Memperbarui unit test `command_test.go` dan `radovid_help_test.go` untuk memverifikasi ketiadaan `start`.
+  - [Changed] Memperbarui `nodes/radovid-bot/docs/manual-testing-playbook.md` dengan menghapus seksi 4.2 `/radovid start` dan merevisi total katalog perintah resmi dari 21 menjadi 20.
+  - [Changed] Memperbarui status `TICKET-1794188809` menjadi `Done` dan `PLAN-1794188809` menjadi `Completed`.
+- **Path File:** `../../../../radovid-bot-api/internal/delivery/discord/command_def.go`, `../../../../radovid-bot-api/internal/delivery/discord/handler.go`, `../../../../radovid-bot-api/internal/delivery/discord/radovid_start.go`, `../../../../radovid-bot-api/internal/delivery/discord/radovid_help.go`, `../../../../radovid-bot-api/internal/delivery/discord/radovid_help_test.go`, `../../../../radovid-bot-api/internal/delivery/discord/command_test.go`, `docs/manual-testing-playbook.md`, `tickets/TICKET-1794188809-remove-deprecated-radovid-start-command.md`, `plans/PLAN-1794188809-remove-deprecated-radovid-start-command.md`, `CHANGELOG.md`
+
+---
+
 ### [2026-11-09 08:27:00] - Make Radovid Help Command Response Ephemeral (TICKET-1794187566)
 > **Trigger:** Prompt Driven | **Branch:** `main` | **Repo:** `radovid-bot-ai-orchestrator` & `radovid-bot-api`
 
