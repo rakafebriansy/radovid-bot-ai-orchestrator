@@ -4,6 +4,77 @@
 
 ---
 
+### [2026-11-09 07:47:00] - Fix Radovid Help Command to List All Commands and Mini-Games (TICKET-1762520600)
+> **Trigger:** Prompt Driven | **Branch:** `main` | **Repo:** `radovid-bot-ai-orchestrator` & `radovid-bot-api`
+
+- **Konteks:** Menuntaskan `TICKET-1762520600` dan rencana `PLAN-1762520600` untuk melengkapi respon bantuan pada command `/radovid help` di `internal/delivery/discord/radovid_help.go` agar memuat katalog lengkap seluruh perintah inti (`start`, `help`, `settings`, `progress`, `diary`), perintah deduksi 20 Questions (`ask`, `guess`), serta seluruh 15 varian `/radovid play <game>` yang dipisah modular ke dalam kategori multiplayer dan solo practice di bawah batas 1024 karakter per field Discord.
+- **Perubahan:**
+  - [Added] Unit test verifikasi Red-Green `TestBuildHelpEmbed_ContainsAllCommandsAndGames` dan `TestHandleRadovidHelp_NilChecks` pada `internal/delivery/discord/radovid_help_test.go` (terbukti gagal saat fasa Red karena `BuildHelpEmbed` belum didefinisikan dan mendeteksi panjang field melampaui 1024 karakter sebelum modularisasi, kini lulus 100%).
+  - [Changed] Memperbarui `internal/delivery/discord/radovid_help.go` dengan fungsi helper `BuildHelpEmbed() *discordgo.MessageEmbed` yang menyajikan 5 field modular: `📖 Core Commands`, `❓ 20 Questions Game Commands`, `🎮 Multiplayer Games`, `🎯 Solo Practice Games`, dan `💡 Learning Guidelines`.
+  - [Changed] Memperbarui status `TICKET-1762520600` menjadi `Done` dan `PLAN-1762520600` menjadi `Completed`.
+- **Path File:** `../../../../radovid-bot-api/internal/delivery/discord/radovid_help.go`, `../../../../radovid-bot-api/internal/delivery/discord/radovid_help_test.go`, `tickets/TICKET-1762520600-fix-radovid-help-command-list.md`, `plans/PLAN-1762520600-fix-radovid-help-command-list.md`, `CHANGELOG.md`
+
+---
+
+### [2026-11-09 07:43:00] - Refine Discord Manual Testing Playbook for Genuine Client Autocomplete UX
+> **Trigger:** Prompt Driven | **Branch:** `main` | **Repo:** `radovid-bot-ai-orchestrator`
+
+- **Konteks:** Menyempurnakan dokumen panduan pengujian manual (`manual-testing-playbook.md`) agar selaras dengan pengalaman nyata antarmuka aplikasi Discord, di mana pengetikan `/radovid` mewajibkan pemilihan subcommand dari menu autocomplete suggestion Discord client dan tidak dapat dikirim polos begitu saja.
+- **Perubahan:**
+  - [Changed] Memperbarui `nodes/radovid-bot/docs/manual-testing-playbook.md`:
+    1. Mengeliminasi skenario tidak realistis pengetikan bare `/radovid` tanpa opsi.
+    2. Menambahkan panduan praktis interaksi Discord slash command autocomplete di Bagian 1.
+    3. Menyusun 21 skenario pengujian langkah-demi-langkah yang 100% nyata dapat diketik, dipilih, dan dikirimkan oleh penguji di klien Discord (mencakup `/radovid help`, `/radovid start`, `/radovid settings`, `/radovid progress`, `/radovid diary`, dan seluruh 15 mini-games di bawah `/radovid play <subcommand>`).
+    4. Merinci tampilan nyata masing-masing komponen: 3 tombol pada `/radovid settings`, modal dialog 5-kalimat pada `/radovid diary`, dan embed ephemeral pada `/radovid progress`.
+- **Path File:** `docs/manual-testing-playbook.md`, `CHANGELOG.md`
+
+---
+
+### [2026-11-09 07:39:00] - Align Manual Testing Playbook to Unified /radovid Root Command Architecture
+> **Trigger:** Prompt Driven | **Branch:** `main` | **Repo:** `radovid-bot-ai-orchestrator`
+
+- **Konteks:** Menyelaraskan seluruh perintah dan panduan pada `manual-testing-playbook.md` dengan implementasi riil arsitektur command Discord di `internal/delivery/discord/command_def.go` dan `handler.go`, menghapus perintah palsu `/ping` dan standalone `/help`, serta menstandarkan seluruh interaksi di bawah root slash command tunggal `/radovid`.
+- **Perubahan:**
+  - [Removed] Menghapus seluruh referensi perintah `/ping` (tidak pernah terdaftar di arsitektur Discord Radovid).
+  - [Changed] Memperbarui struktur seluruh perintah menjadi sub-command `/radovid`:
+    1. `/radovid help` (panduan interaktif belajar).
+    2. `/radovid start` (inisialisasi sesi belajar awal).
+    3. `/radovid diary` (membuka modal form 5-kalimat harian terstruktur).
+    4. `/radovid settings` dan `/radovid progress`.
+    5. `/radovid ask` dan `/radovid guess` (khusus deduksi 20 Questions).
+    6. Seluruh 15 mini-game di bawah sub-command group `/radovid play <subcommand>` selaras 100% dengan `command_def.go` (`one-minute-challenge`, `five-word-challenge`, `grammar-boss-fight`, `transformation-race`, dll.).
+  - [Added] Menambahkan skenario pengujian edge case untuk pemanggilan bare command `/radovid` tanpa opsi yang diverifikasi menghasilkan balasan pesan ephemeral bantuan.
+- **Path File:** `docs/manual-testing-playbook.md`, `CHANGELOG.md`
+
+---
+
+### [2026-11-09 07:18:00] - Refactor Manual Testing Playbook to Discord-Exclusive User-Facing & Exhaustive Edge Cases
+> **Trigger:** Prompt Driven | **Branch:** `main` | **Repo:** `radovid-bot-ai-orchestrator`
+
+- **Konteks:** Menyelaraskan dokumen panduan pengujian manual (`manual-testing-playbook.md`) agar 100% berfokus eksklusif pada fitur yang berinteraksi langsung dengan pengguna Discord (mengeliminasi langkah backend/terminal/admin web), serta memperluas skenario kasus batas ekstrem (*Edge Case Atlas*) secara masif dan sedetail mungkin di seluruh 15 mini-game, command, modal, tombol interaktif, dan notifikasi siar harian.
+- **Perubahan:**
+  - [Changed] Memperbarui `nodes/radovid-bot/docs/manual-testing-playbook.md`:
+    1. Menyaring seluruh pengujian agar murni dari perspektif klien Discord (slash commands, component buttons, dropdown menus, modal forms, visual embeds, ephemeral validations).
+    2. Menambahkan skenario *Edge Cases* detail pada setiap modul mencakup sumbu Who (spectator turn hijack, multi-user race), Which Input (emoji multibyte 4-byte, 4000 char limits, prompt injection, bahasa campuran, spasi murni), When (timer 59.9s vs 61s, 30m idle session timeout, UTC midnight rollover), What State (mid-game settings mutation, premature single-player lobby start, channel locking), dan How Much (20Q exhausted, Boss HP 0, infleksi kata Five-Word).
+    3. Menyusun tabel master *Matriks Edge Case Atlas (9 Sumbu Ekstrem Discord)* sebagai checklist verifikasi cepat penguji QA.
+- **Path File:** `docs/manual-testing-playbook.md`, `CHANGELOG.md`
+
+---
+
+### [2026-11-09 07:15:00] - Create Comprehensive Manual Testing Playbook for All 44 Tickets
+> **Trigger:** Prompt Driven | **Branch:** `main` | **Repo:** `radovid-bot-ai-orchestrator`
+
+- **Konteks:** Pembuatan panduan skenario pengujian manual komprehensif (*Manual Testing Playbook*) untuk seluruh 44 tiket backlog Radovid Bot (Fase 1 s/d Fase 5) guna memfasilitasi QA testing, acceptance testing, dan verifikasi fungsionalitas end-to-end melalui Discord client, browser HTTP Dashboard, dan CLI.
+- **Perubahan:**
+  - [Added] Menyusun dokumen panduan pengujian terpusat `nodes/radovid-bot/docs/manual-testing-playbook.md` yang merinci:
+    1. Panduan setup lingkungan uji (multi-account Discord, env variables, SQLite, Ollama local & fallback).
+    2. Matriks indeks pengujian 44 tiket mencakup tipe interaksi dan estimasi durasi pengujian.
+    3. Prosedur pengujian langkah-demi-langkah per tiket (prasyarat, perintah Discord/HTTP, data input uji, ekspektasi hasil, kriteria lolos, dan edge case testing).
+    4. Prosedur pelaporan defect/cacat berbasis template standar.
+- **Path File:** `docs/manual-testing-playbook.md`, `CHANGELOG.md`
+
+---
+
 ### [2026-11-08 10:27:00] - Fix UTF-8 Multibyte Rune Truncation & Scheduler Cumulative Clock Drift (TICKET-1762520540)
 > **Trigger:** Autonomous Planning | **Branch:** `main` | **Repo:** `radovid-bot-ai-orchestrator` & `radovid-bot-api`
 
