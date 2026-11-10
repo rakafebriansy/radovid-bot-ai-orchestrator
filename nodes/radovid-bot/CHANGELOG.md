@@ -4,6 +4,35 @@
 
 ---
 
+### [2026-11-10 19:15:00] - Fix Multiplayer Lobby Timeout on Player 2 Join and Add Stuck Session Reset Action (TICKET-1794307528)
+> **Trigger:** Bug Driven | **Branch:** `main` | **Repo:** `radovid-bot-ai-orchestrator` & `radovid-bot-api`
+
+- **Konteks:** Menuntaskan `TICKET-1794307528` dan rencana `PLAN-1794307528` untuk mengatasi kendala batas waktu interaksi Discord (3 detik) yang menyebabkan kegagalan respons pada saat Player 2 bergabung ke dalam lobi permainan multiplayer (`would-you-rather`, `taboo`, dan `20-questions`), serta mengeliminasi kebuntuan (*channel lock*) akibat ketiadaan mekanisme pembatalan sesi yang macet.
+- **Perubahan:**
+  - [Fixed] Menambahkan deferral interaksi segera (`discordgo.InteractionResponseDeferredChannelMessageWithSource`) pada saat Player 2 bergabung di `command_play_wyr.go`, `command_play_taboo.go`, dan `command_play_20q.go` sebelum pemanggilan Ollama (`StartRound` / `StartGame`), lalu mengirim soal dan komponen tombol ronde pertama menggunakan `FollowupMessageCreate`.
+  - [Fixed] Menambahkan penanganan pembatalan otomatis (*rollback* sesi ke `StatusCancelled`) apabila inferensi AI gagal saat inisialisasi putaran pertama, sehingga channel tidak terkunci.
+  - [Added] Menambahkan deteksi vote penentu ronde melalui `WillVoteFinishRound` pada `internal/usecase/game/would_you_rather.go` dan menerapkan `InteractionResponseDeferredMessageUpdate` pada `interaction_wyr_button.go` untuk aksi `vote` (saat voter terakhir memicu AI commentary), `next` (saat membuat soal ronde berikutnya), dan `finish` (saat menyusun rangkuman sesi akhir), lalu memperbarui pesan melalui `InteractionResponseEdit`.
+  - [Added] Menambahkan pesan ephemeral peringatan disertai tombol bahaya merah (*danger button*) `Cancel Stuck Game & Reset` (`<game>:cancel:<sessionID>`) ketika pemain memanggil `/radovid play <game>` pada channel yang memiliki sesi aktif, serta menangani aksi pembatalan di seluruh handler tombol komponen terkait (`HandleButtonInteraction`, `HandleTabooButtonInteraction`, `HandleTQButtonInteraction`).
+  - [Added] Menambahkan unit test komprehensif pada `command_play_wyr_test.go`, `interaction_wyr_button_test.go`, `command_play_taboo_test.go`, dan `command_play_20q_test.go` yang memvalidasi alur deferral, pengiriman followup, dan pembatalan sesi macet dengan pemenuhan prinsip TDD Disiplin O-07 (terbukti gagal pada kode lama sebelum perbaikan).
+  - [Changed] Memperbarui status `TICKET-1794307528` menjadi `Done` dan `PLAN-1794307528` menjadi `Completed`.
+- **Path File:** `../../../../radovid-bot-api/internal/delivery/discord/command_play_wyr.go`, `../../../../radovid-bot-api/internal/delivery/discord/command_play_wyr_test.go`, `../../../../radovid-bot-api/internal/delivery/discord/interaction_wyr_button.go`, `../../../../radovid-bot-api/internal/delivery/discord/interaction_wyr_button_test.go`, `../../../../radovid-bot-api/internal/delivery/discord/command_play_taboo.go`, `../../../../radovid-bot-api/internal/delivery/discord/command_play_taboo_test.go`, `../../../../radovid-bot-api/internal/delivery/discord/command_play_20q.go`, `../../../../radovid-bot-api/internal/delivery/discord/command_play_20q_test.go`, `../../../../radovid-bot-api/internal/usecase/game/would_you_rather.go`, `tickets/TICKET-1794307528-fix-multiplayer-lobby-timeout-and-stuck-session-reset.md`, `plans/PLAN-1794307528-fix-multiplayer-lobby-timeout-and-stuck-session-reset.md`, `CHANGELOG.md`
+
+---
+
+### [2026-11-10 11:30:00] - Fix Ollama Token Truncation and Add Graceful JSON Repair for Daily Diary
+> **Trigger:** Hotfix / Bug Driven | **Branch:** `main` | **Repo:** `radovid-bot-ai-orchestrator` & `radovid-bot-api`
+
+- **Konteks:** Memperbaiki galat `unexpected end of JSON input` saat evaluasi `/radovid diary` yang disebabkan oleh batas bawaan Ollama `num_predict` (default 128 token) yang memotong JSON sebelum seluruh 5 kalimat evaluasi dan kosakata selesai dihasilkan oleh model lokal.
+- **Perubahan:**
+  - [Fixed] Menambahkan opsi `"num_predict": 1024` dan `Format: "json"` pada `client.go` dan `models.go` saat prompt meminta JSON (`strings.Contains(sanitizedPrompt, "JSON")`), sehingga Ollama memberikan kapasitas token yang memadai dan mengaktifkan grammar constraint untuk validitas format JSON.
+  - [Fixed] Memperbarui `daily_diary.tmpl` untuk membatasi rekomendasi kosakata tepat 3 kata guna mengoptimalkan panjang token output.
+  - [Fixed] Menambahkan fungsi `tryRepairTruncatedJSON` pada `diary.go` yang secara otomatis menutup tanda kutip string, kurung siku array, dan kurung kurawal objek jika model lokal terpotong beberapa karakter sebelum EOF, sehingga evaluasi kalimat berhasil dipulihkan tanpa galat.
+  - [Fixed] Menambahkan logging deskriptif `log.Printf` saat pemrosesan output LLM gagal untuk mempermudah pemantauan live di `docker logs`.
+  - [Added] Menambahkan unit test `repairs truncated json when token limit is hit` pada `diary_test.go` untuk memverifikasi ketahanan parser terhadap JSON terpotong.
+- **Path File:** `../../../../radovid-bot-api/internal/infrastructure/ollama/client.go`, `../../../../radovid-bot-api/internal/infrastructure/ollama/models.go`, `../../../../radovid-bot-api/internal/infrastructure/ollama/prompts/daily_diary.tmpl`, `../../../../radovid-bot-api/internal/usecase/feedback/diary.go`, `../../../../radovid-bot-api/internal/usecase/feedback/diary_test.go`, `CHANGELOG.md`
+
+---
+
 ### [2026-11-10 11:03:00] - Eliminate LLM Hallucinations and Duplicate Vocabularies in Daily Diary (TICKET-1794282864)
 > **Trigger:** Prompt Driven | **Branch:** `main` | **Repo:** `radovid-bot-ai-orchestrator` & `radovid-bot-api`
 
