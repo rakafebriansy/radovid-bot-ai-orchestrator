@@ -4,6 +4,21 @@
 
 ---
 
+### [2026-11-10 11:03:00] - Eliminate LLM Hallucinations and Duplicate Vocabularies in Daily Diary (TICKET-1794282864)
+> **Trigger:** Prompt Driven | **Branch:** `main` | **Repo:** `radovid-bot-ai-orchestrator` & `radovid-bot-api`
+
+- **Konteks:** Menuntaskan `TICKET-1794282864` dan rencana `PLAN-1794282864` untuk mengeliminasi halusinasi penjelasan tata bahasa, penambahan kata berlebih yang tidak perlu, dan pengulangan kosakata input pengguna pada fitur `/radovid diary` saat menggunakan model lokal berukuran kecil (`qwen2.5:1.5b`).
+- **Perubahan:**
+  - [Changed] Memperbarui `internal/infrastructure/ollama/prompts/daily_diary.tmpl` dengan membersihkan seluruh contoh literal spesifik (seperti `"skills"`, `"the"`, dan `"coding skills"`) yang memicu perilaku *copy-paste hallucination* pada model LLM kecil, serta menambahkan aturan eksplisit yang melarang penambahan kata baru pada kalimat yang sudah benar secara tata bahasa.
+  - [Changed] Memperbarui `internal/usecase/feedback/diary.go` pada `normalizeExplanation` dengan algoritma deteksi deterministik: apabila perbedaan antara kalimat asli (`Original`) dan koreksi (`Corrected`) murni hanya berupa huruf kapital dan/atau tanda baca akhir (`strings.EqualFold(origBase, corrBase)` bernilai true), penjelasan LLM di-override dengan penjelasan kapitalisasi dan mekanika kalimat yang akurat (`"Capitalized the sentence start and the pronoun 'I'."`, `"Capitalized the first word of the sentence."`, dsb.), mengeliminasi 100% halusinasi LLM pada kalimat yang susunan katanya sudah benar.
+  - [Changed] Memperbarui `isNoCorrectionExplanation` di `diary.go` agar mendeteksi variasi frase tanpa-kesalahan (`"no errors in this sentence"`, `"is correct"`, `"no issue"`, dsb.) secara aman tanpa salah mencocokkan kata kerja seperti `"Corrected"`.
+  - [Changed] Menambahkan pemfilteran deterministik kosakata baru (`extractUserWords` dan `filterNewVocabularies`) di `diary.go` untuk menyaring kata rekomendasi agar tidak mengulang kata yang sudah ditulis pengguna di dalam 5 kalimat input, didukung oleh koleksi kosakata refleksi kontekstual terkurasi (CEFR B2-C1) untuk menjamin tepat 3 rekomendasi kosakata baru.
+  - [Changed] Menambahkan pengujian komprehensif di `diary_test.go` dan `embed_test.go` untuk memverifikasi pencegahan halusinasi penjelasan, eliminasi contoh bias dari prompt, serta pemfilteran kata duplikat.
+  - [Changed] Memperbarui status `TICKET-1794282864` menjadi `Done` dan `PLAN-1794282864` menjadi `Completed`.
+- **Path File:** `../../../../radovid-bot-api/internal/infrastructure/ollama/prompts/daily_diary.tmpl`, `../../../../radovid-bot-api/internal/infrastructure/ollama/prompts/embed_test.go`, `../../../../radovid-bot-api/internal/usecase/feedback/diary.go`, `../../../../radovid-bot-api/internal/usecase/feedback/diary_test.go`, `tickets/TICKET-1794282864-refine-diary-evaluation-accuracy.md`, `plans/PLAN-1794282864-refine-diary-evaluation-accuracy.md`, `CHANGELOG.md`
+
+---
+
 ### [2026-11-09 17:05:00] - Enforce Fail-Fast Policy Across All Commands (TICKET-1794218076)
 > **Trigger:** Prompt Driven | **Branch:** `main` | **Repo:** `radovid-bot-ai-orchestrator` & `radovid-bot-api`
 
