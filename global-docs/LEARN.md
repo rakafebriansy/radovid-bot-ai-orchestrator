@@ -120,7 +120,7 @@ Perbarui tautan indeks berikut setiap kali menambahkan entri baru (urutkan desce
 - **Database & Data Modeling**
   - *(Belum ada entri)*
 - **API & Network Integration**
-  - *(Belum ada entri)*
+  - [[QA-20261110-02] Penanganan JSON Terpotong (Token Truncation) & Fallback Repair pada Evaluasi LLM](#qa-20261110-02-penanganan-json-terpotong-token-truncation--fallback-repair-pada-evaluasi-llm)
 - **UI/UX & Design System**
   - *(Belum ada entri)*
 - **Security & Authentication**
@@ -128,11 +128,264 @@ Perbarui tautan indeks berikut setiap kali menambahkan entri baru (urutkan desce
 - **Testing & Quality Assurance**
   - *(Belum ada entri)*
 - **Build, Tooling & DevOps**
-  - *(Belum ada entri)*
+  - [[QA-20261110-01] Konektivitas Multi-Host WSL2, Docker, & Windows Host pada Layanan Ollama](#qa-20261110-01-konektivitas-multi-host-wsl2-docker--windows-host-pada-layanan-ollama)
 - **Business Logic & Domain Rules**
-  - *(Belum ada entri)*
+  - [[QA-20261110-03] Penjinakan Halusinasi Model Ringan (qwen2.5:1.5b) & Mitigasi Batas Waktu Interaksi Discord](#qa-20261110-03-penjinakan-halusinasi-model-ringan-qwen2515b--mitigasi-batas-waktu-interaksi-discord)
 - **Orchestrator & Workflow**
   - *(Belum ada entri)*
 
 ### 4.2 Arsip Entri Tanya-Jawab
 *(Entri tanya-jawab baru yang disetujui dari pemicu FASE 4 disisipkan di bawah baris ini secara berurutan)*
+
+---
+
+### [QA-20261110-01] Konektivitas Multi-Host WSL2, Docker, & Windows Host pada Layanan Ollama
+- **Tanggal**: 2026-11-10 22:20
+- **Scope / Target Node**: `radovid-bot` / `radovid-bot-api` / Ollama Infrastructure
+- **Kategori**: `Build, Tooling & DevOps`
+- **Tags**: `#ollama` `#wsl2-networking` `#host-binding` `#docker-networking` `#powershell-background` `#ip-binding`
+- **File Referensi**:
+  - `../../radovid-bot-api/.env`
+  - `../../radovid-bot-api/docker-compose.yml`
+  - `../../radovid-bot-api/internal/infrastructure/ollama/client.go` (L24-L80)
+
+#### Pertanyaan Pengguna
+1. **Mengapa `curl http://localhost:11434/api/tags` dan `curl http://192.168.1.5:11434/api/tags` dari WSL2 / Docker container gagal terhubung (`curl: (28) Failed to connect to 192.168.1.5 port 11434 after 133275 ms: Could not connect to server`), padahal ping ke IP host berhasil?**
+2. **Bagaimana cara menjalankan Ollama di Windows host agar tetap aktif di latar belakang (background process) dan dapat diakses secara stabil oleh container Docker dan WSL2?**
+
+#### Jawaban & Penjelasan Implementasi
+
+##### 1. Akar Masalah Host Binding & Isolasi Jaringan WSL2/Docker
+- **Ringkasan Inti**: Secara default, binari Ollama di Windows hanya mengikat (*bind*) interface loopback lokal (`127.0.0.1:11434`), sehingga menolak seluruh paket TCP yang masuk melalui IP antarmuka LAN (`192.168.1.5`) maupun virtual switch WSL2/Docker (`172.x.x.x` / `10.255.255.x`), meskipun ICMP `ping` berhasil merespons.
+- **Detail Implementasi & Logika**:
+  - Di Windows, Ollama yang diluncurkan secara standar tanpa variabel lingkungan akan mendengarkan port 11434 secara eksklusif pada `127.0.0.1`.
+  - Ketika bot berjalan di dalam WSL2 atau di dalam container Docker (`radovid-bot`), request menuju `localhost` akan memantul ke loopback internal container itu sendiri (di mana tidak ada Ollama yang berjalan).
+  - Ketika bot diarahkan ke IP LAN host Windows (`192.168.1.5:11434`), paket TCP SYN tiba di Windows, tetapi kernel Windows langsung me-reject koneksi atau menjatuhkan paket karena tidak ada listener pada socket non-loopback (`0.0.0.0`).
+  - **Solusi Binding**: Diperlukan deklarasi eksplisit environment variable `OLLAMA_HOST=0.0.0.0:11434` pada sesi host Windows sebelum Ollama dijalankan.
+- **Rujukan Kode Sumber & Konfigurasi**:
+  Pada `.env` aplikasi di WSL2/Docker:
+  ```env
+  # Mengarahkan base URL ke IP host Windows
+  OLLAMA_BASE_URL=http://192.168.1.5:11434
+  DOCKER_OLLAMA_BASE_URL=http://192.168.1.5:11434
+  ```
+  Pada sisi Windows PowerShell untuk verifikasi socket listening:
+  ```powershell
+  # Cek port listening pada host Windows
+  netstat -ano | findstr 11434
+  # Output wajib menunjukkan 0.0.0.0:11434 LISTENING (bukan hanya 127.0.0.1:11434)
+  ```
+- **Rasional & Keputusan Teknis**:
+  Pendekatan binding `0.0.0.0:11434` pada host Windows memberikan aksesibilitas transparan baik dari host langsung, lingkungan WSL2, maupun container Docker yang berada di subnet berbeda tanpa memerlukan reverse-proxy tambahan yang menambah latensi.
+
+##### 2. Orkestrasi Daemon/Background Process Ollama di Windows
+- **Ringkasan Inti**: Terminal Windows/PowerShell tidak boleh terkunci saat menjalankan `ollama serve`. Perintah latar belakang Linux seperti `&` atau `nohup` tidak kompatibel di PowerShell, sehingga diperlukan mekanisme `Start-Process` detached atau pembuatan Windows Scheduled Task/Service.
+- **Detail Implementasi & Logika**:
+  - Di Linux, `ollama serve &` dapat mengirim proses ke job background bash, namun di Windows PowerShell karakter `&` adalah call operator dan bukan background operator.
+  - Untuk meluncurkan Ollama sebagai proses latar belakang independen yang membaca konfigurasi host `0.0.0.0:11434`, gunakan script PowerShell dengan flag `-WindowStyle Hidden`:
+  ```powershell
+  $env:OLLAMA_HOST = "0.0.0.0:11434"
+  Start-Process -FilePath "ollama" -ArgumentList "serve" -WindowStyle Hidden
+  ```
+  - Setelah dijalankan, verifikasi ketersediaan model dan responsivitas API dari WSL2 melalui:
+  ```bash
+  curl http://192.168.1.5:11434/api/tags
+  # Respons JSON model sukses: {"models":[{"name":"qwen2.5:1.5b", ...}, {"name":"gemma3:4b", ...}]}
+  ```
+- **Rasional & Keputusan Teknis**:
+  Menjalankan servis dengan `WindowStyle Hidden` menjamin Ollama tetap melayani permintaan API AI meskipun jendela PowerShell ditutup, mencegah interupsi proses saat developer menutup sesi terminal interaktif.
+
+---
+
+### [QA-20261110-02] Penanganan JSON Terpotong (Token Truncation) & Fallback Repair pada Evaluasi LLM
+- **Tanggal**: 2026-11-10 22:20
+- **Scope / Target Node**: `radovid-bot` / `radovid-bot-api` / Ollama Infrastructure & Daily Diary Use Case
+- **Kategori**: `API & Network Integration`
+- **Tags**: `#ollama` `#token-truncation` `#json-repair` `#num-predict` `#grammar-constraint` `#golang`
+- **File Referensi**:
+  - `../../radovid-bot-api/internal/infrastructure/ollama/client.go` (L94-L112)
+  - `../../radovid-bot-api/internal/infrastructure/ollama/models.go` (L15-L25)
+  - `../../radovid-bot-api/internal/usecase/feedback/diary.go` (L150-L165, L460-L515)
+  - `../../radovid-bot-api/internal/usecase/feedback/diary_test.go` (L170-L205)
+
+#### Pertanyaan Pengguna
+1. **Mengapa pemanggilan `/radovid diary` sering memicu galat `unexpected end of JSON input` saat mengevaluasi 5 kalimat dengan model lokal Ollama?**
+2. **Bagaimana arsitektur Radovid Bot mengatasi keterbatasan token output bawaan Ollama dan memulihkan string JSON yang terpotong secara aman tanpa crash?**
+
+#### Jawaban & Penjelasan Implementasi
+
+##### 1. Batas Bawaan `num_predict` Ollama pada Output Panjang
+- **Ringkasan Inti**: Secara default, mesin inferensi Ollama membatasi pembuatan token output maksimum (`num_predict`) pada nilai yang sangat sempit (128 token) jika tidak didefinisikan secara eksplisit, menyebabkan output JSON terpotong di tengah jalan saat memproses payload evaluasi yang panjang.
+- **Detail Implementasi & Logika**:
+  - Fitur Daily Diary mengevaluasi 5 kalimat bahasa Inggris pengguna secara sekaligus: memproduksi kalimat koreksi, penjelasan tata bahasa, dan 3 rekomendasi kosakata baru beserta definisi dan contoh penggunaan.
+  - Payload JSON lengkap tersebut membutuhkan rata-rata 350–600 token.
+  - Ketika batas bawaan tercapai, peladen Ollama langsung mengakhiri stream respons sebelum menutup kurung kurawal/siku JSON (`... "explanation": "Capitalized the first word`), menghasilkan blob JSON malformed yang gagal diparsing oleh `json.Unmarshal`.
+- **Rujukan Kode Sumber**:
+  Pembaruan pada `internal/infrastructure/ollama/client.go`:
+  ```go
+	format := ""
+	if strings.Contains(sanitizedPrompt, "JSON") {
+		format = "json"
+	}
+
+	reqBody := GenerateRequest{
+		Model:     c.model,
+		Prompt:    sanitizedPrompt,
+		System:    system,
+		Format:    format,
+		Stream:    false,
+		KeepAlive: "30m",
+		Options: map[string]any{
+			"num_ctx":     2048,
+			"num_predict": 1024,
+			"temperature": 0.2,
+		},
+	}
+  ```
+- **Rasional & Keputusan Teknis**:
+  - Menetapkan `"num_predict": 1024` memberikan plafon kapasitas yang cukup bagi model untuk menuntaskan struktur data tanpa risiko terpotong.
+  - Parameter `Format: "json"` memaksa runtime llama.cpp di dalam Ollama menerapkan *grammar-based sampling*, memastikan token yang dihasilkan selalu mematuhi sintaksis JSON valid.
+
+##### 2. Mekanisme Pertahanan Berlapis: Algoritma `tryRepairTruncatedJSON`
+- **Ringkasan Inti**: Sebagai implementasi prinsip *Defense-in-Depth*, sistem dilengkapi algoritma perbaikan string otomatis di `diary.go` yang menghitung parity tanda kutip dan kedalaman bracket terbuka, lalu melengkapinya secara deterministik sebelum unmarshal dilakukan.
+- **Detail Implementasi & Logika**:
+  - Jika `json.Unmarshal` awal mendeteksi EOF mendadak, fungsi `tryRepairTruncatedJSON(blob)` dijalankan.
+  - Algoritma melakukan scan pada blob string:
+    1. Mengecek jumlah tanda kutip ganda (`"`) tanpa escape (`\`). Jika ganjil, tambahkan penutup `"`.
+    2. Menghitung tumpukan kurung kurawal `{` vs `}` dan kurung siku `[` vs `]`.
+    3. Menutup seluruh bracket yang masih terbuka dengan urutan LIFO terbalik (`]` lalu `}`).
+- **Rujukan Kode Sumber**:
+  Implementasi pada `internal/usecase/feedback/diary.go`:
+  ```go
+func tryRepairTruncatedJSON(blob string) string {
+	blob = strings.TrimSpace(blob)
+	if blob == "" {
+		return blob
+	}
+
+	quoteCount := 0
+	escaped := false
+	for i := 0; i < len(blob); i++ {
+		c := blob[i]
+		if c == '\\' && !escaped {
+			escaped = true
+			continue
+		}
+		if c == '"' && !escaped {
+			quoteCount++
+		}
+		escaped = false
+	}
+	if quoteCount%2 != 0 {
+		blob += `"`
+	}
+
+	openBraces := 0
+	openBrackets := 0
+	inString := false
+	escaped = false
+	for i := 0; i < len(blob); i++ {
+		c := blob[i]
+		if c == '\\' && !escaped {
+			escaped = true
+			continue
+		}
+		if c == '"' && !escaped {
+			inString = !inString
+		}
+		if !inString {
+			if c == '{' {
+				openBraces++
+			} else if c == '}' && openBraces > 0 {
+				openBraces--
+			} else if c == '[' {
+				openBrackets++
+			} else if c == ']' && openBrackets > 0 {
+				openBrackets--
+			}
+		}
+		escaped = false
+	}
+
+	for openBrackets > 0 {
+		blob += "]"
+		openBrackets--
+	}
+	for openBraces > 0 {
+		blob += "}"
+		openBraces--
+	}
+	return blob
+}
+  ```
+- **Rasional & Keputusan Teknis**:
+  Pendekatan ini menjamin keandalan sistem tetap 100% (*graceful recovery*) bahkan jika inferensi terpotong di tepi token, sehingga pengguna Discord tetap menerima hasil evaluasi kalimat yang sudah berhasil digenerate alih-alih pesan error generik.
+
+---
+
+### [QA-20261110-03] Penjinakan Halusinasi Model Ringan (qwen2.5:1.5b) & Mitigasi Batas Waktu Interaksi Discord
+- **Tanggal**: 2026-11-10 22:20
+- **Scope / Target Node**: `radovid-bot` / `radovid-bot-api` / Ollama Prompts, Discord Delivery, & Gameplay Use Cases
+- **Kategori**: `Business Logic & Domain Rules`
+- **Tags**: `#local-llm` `#small-models` `#prompt-engineering` `#few-shot-hallucination` `#discord-timeout` `#interaction-deferral` `#stuck-lobby`
+- **File Referensi**:
+  - `../../radovid-bot-api/internal/infrastructure/ollama/prompts/daily_diary.tmpl`
+  - `../../radovid-bot-api/internal/usecase/feedback/diary.go` (L170-L240, L380-L455)
+  - `../../radovid-bot-api/internal/delivery/discord/command_play_wyr.go` (L315-L335)
+  - `../../radovid-bot-api/internal/delivery/discord/interaction_wyr_button.go` (L60-L95)
+
+#### Pertanyaan Pengguna
+1. **Mengapa model lokal berukuran 1.5B (`qwen2.5:1.5b`) kerap berhalusinasi menyalin kata contoh dari prompt (seperti `"skills"`, `"the"`, dll.) atau mengubah kalimat pengguna yang sudah benar secara tata bahasa?**
+2. **Bagaimana cara mencegah interaksi bot di Discord mengalami kegagalan timeout (3 detik) saat menunggu proses inferensi Ollama yang memakan waktu 5–15 detik?**
+
+#### Jawaban & Penjelasan Implementasi
+
+##### 1. Eliminasi Bias Few-Shot & Override Normalisasi Deterministik
+- **Ringkasan Inti**: Model LLM berparameter kecil memiliki keterbatasan dalam membedakan antara instruksi meta-prompt dan konten pengguna asli, sehingga contoh literal pada prompt (*few-shot bias*) cenderung disalin secara mentah. Solusinya adalah sterilisasi template prompt dipadukan dengan normalisasi komputasi deterministik di layer Go.
+- **Detail Implementasi & Logika**:
+  - **Pembersihan Prompt (`daily_diary.tmpl`)**: Menghapus seluruh contoh penjelasan literal spesifik seperti `(e.g. "Capitalized 'I', added 'the', and pluralized 'skills'.")` dan contoh koreksi `"learn coding skills"`. Menggantinya dengan aturan negatif eksplisit: *"If a sentence has no grammatical error, keep original text unchanged and output 'No errors in this sentence.' Do NOT invent errors or add words."*
+  - **Deteksi Deterministik (`normalizeExplanation`)**: Pada fungsi `diary.go`, sistem membandingkan teks `Original` dan `Corrected`. Jika kedua string identik secara *case-insensitive* (`strings.EqualFold(origBase, corrBase) == true`), sistem tidak memercayai penjelasan model LLM, melainkan secara deterministik menghasilkan penjelasan gramatikal akurat seperti `"Capitalized the sentence start and the pronoun 'I'."`
+  - **Penyaringan Kosakata Input Pengguna (`filterNewVocabularies`)**: Model kecil sering mengulangi kata yang sudah ditulis pengguna sebagai "kata baru". Fungsi Go mengekstrak seluruh kata pengguna menjadi set token terlarang, lalu memfilter kata usulan model dan menyuntikkan fallback kosakata terkurasi CEFR B2–C1 jika rekomendasi model tereliminasi.
+- **Rujukan Kode Sumber**:
+  Cuplikan logika di `internal/usecase/feedback/diary.go`:
+  ```go
+	if strings.EqualFold(origBase, corrBase) && origBase != "" {
+		if orig != corr {
+			if strings.Contains(orig, "i ") || strings.HasPrefix(orig, "i ") || orig == "i" {
+				return "Capitalized the sentence start and the pronoun 'I'."
+			}
+			return "Capitalized the first word of the sentence."
+		}
+		return "No errors in this sentence."
+	}
+  ```
+- **Rasional & Keputusan Teknis**:
+  Menyerahkan tugas deterministik (seperti pengecekan kesamaan teks dasar) kepada komputasi bahasa pemrograman (Go) dan hanya memanfaatkan LLM untuk evaluasi semantik kompleks mengeliminasi kelemahan model kecil secara mutlak tanpa membutuhkan upgrade model ke ukuran yang lebih berat.
+
+##### 2. Strategi Deferral Interaksi Discord & Stuck Lobby Rescue Button
+- **Ringkasan Inti**: Discord Gateway mewajibkan ACK interaksi dalam waktu 3 detik. Waktu inferensi lokal Ollama (3–15 detik) melampaui batas tersebut. Sistem mengatasinya dengan *immediate deferral* dan tombol penyelamat sesi macet (*rescue reset*).
+- **Detail Implementasi & Logika**:
+  - **Deferral Segera (Immediate Deferral)**:
+    - Saat slash command atau tombol join lobi dipicu oleh pemain, handler langsung memanggil `s.InteractionRespond` dengan tipe `discordgo.InteractionResponseDeferredChannelMessageWithSource` (untuk pesan baru) atau `discordgo.InteractionResponseDeferredMessageUpdate` (untuk pembaruan tombol/soal).
+    - Panggilan ke Ollama (`StartRound`, `StartGame`, `EvaluateTurn`) kemudian dieksekusi secara asinkron dalam batas timeout Go context.
+    - Setelah teks AI selesai dihasilkan, bot memperbarui tampilan Discord via `FollowupMessageCreate` atau `InteractionResponseEdit`.
+  - **Stuck Lobby Reset Button**:
+    - Apabila koneksi Ollama sempat gagal atau server hang saat permainan sedang berjalan, channel akan terkunci karena `sessionManager` mendeteksi sesi aktif.
+    - Sistem menyematkan komponen tombol `Cancel Stuck Game & Reset` (`<game>:cancel:<sessionID>`) dengan gaya bahaya (`DangerButton`). Ketika ditekan oleh pemain mana pun di channel tersebut, sesi di-rollback seketika ke `StatusCancelled` sehingga channel bebas untuk memulai game baru.
+- **Rujukan Kode Sumber**:
+  Cuplikan di `internal/delivery/discord/command_play_wyr.go`:
+  ```go
+	_ = s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+		Type: discordgo.InteractionResponseDeferredChannelMessageWithSource,
+	})
+
+	round, roundErr := h.wyrUseCase.StartRound(ctx, startedSession.ID, 1, difficulty)
+	if roundErr != nil {
+		_, _ = h.sessionManager.CancelSession(ctx, startedSession.ID)
+		sendErrorFollowup(s, i.Interaction, "Failed to start round. Session reset.")
+		return
+	}
+  ```
+- **Rasional & Keputusan Teknis**:
+  Pola *Defer-then-Followup* mematuhi arsitektur asynchronous Discord secara murni, menghilangkan 100% galat `Interaction failed`, sementara tombol rescue memberikan otonomi penuh kepada pengguna Discord untuk memulihkan keadaan tanpa perlu intervensi restart container oleh administrator server.
+

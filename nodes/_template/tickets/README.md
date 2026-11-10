@@ -1,6 +1,6 @@
 # Local Tickets Directory (`tickets/`)
 
-> **[PRINSIP UTAMA]** Pusat manajemen tugas lokal (*offline-first task management*) yang berfungsi sebagai sumber kebenaran pengerjaan tugas dan disinkronkan ke GitHub Projects.
+> **[PRINSIP UTAMA]** Pusat manajemen tugas lokal (*offline-first task management*) yang berfungsi sebagai sumber kebenaran pengerjaan tugas dan disinkronkan ke GitHub Projects (jika fitur GitHub Project diaktifkan).
 
 ---
 

@@ -37,11 +37,12 @@ INSTRUKSI STARTUP (JANGAN TULIS KODE APLIKASI):
    a. Visi, target pengguna, dan batasan fungsional teknis.
    b. "Mode Operasional mana yang dipilih default? (1) Mode 1: Autonomous Planning (digerakkan roadmap), atau (2) Mode 2: Prompt-Driven (digerakkan instruksi mikro)".
    c. "Apakah ingin menggunakan fitur CLI Graphify untuk pemetaan arsitektur otomatis? (Ya/Tidak)".
-   d. Preferensi testing framework dan linter sesuai teknologi proyek.
-   e. Opsi fitur aksesibilitas yang diinginkan jika proyek berupa web/mobile app.
+   d. "Apakah ingin menginisialisasi dan menyinkronkan manajemen tugas dengan GitHub Project? (Ya/Tidak)".
+   e. Preferensi testing framework dan linter sesuai teknologi proyek.
+   f. Opsi fitur aksesibilitas yang diinginkan jika proyek berupa web/mobile app.
 2.5. Pengecekan Environment (Kondisional): Jika pengguna memilih YA untuk Graphify, jalankan `graphify --version`. Jika belum terpasang, instal via `npm install -g @sentropic/graphify`. Jika TIDAK, lewati.
 3. Susun draf komprehensif `global-docs/prd.md` dan `global-docs/design-system.md` berakar pada tugas nyata bebas estetika klise AI (*Anti-AI-Slop*).
-4. Inisialisasi GitHub Project di bawah kepemilikan User dan tautkan ke repositori ini.
+4. Inisialisasi GitHub Project (Kondisional): Jika pengguna memilih YA untuk GitHub Project, inisialisasi GitHub Project di bawah kepemilikan User dan tautkan ke repositori ini. Jika TIDAK, lewati.
 5. Inisialisasi Node Proyek:
    a. Gandakan `nodes/_template/` menjadi `nodes/[nama-proyek]/`. Tuliskan Mode Operasional terpilih di baris pertama `nodes/[nama-proyek]/main.md`. (DILARANG menghapus folder `nodes/_template/`!).
    b. Pindai source code asli pada Path Codebase untuk memetakan arsitektur dan dependensi.
@@ -75,10 +76,10 @@ B. NODES (Sub-Project Scope)
 
 INSTRUKSI STARTUP (JANGAN TULIS KODE APLIKASI):
 1. Pahami struktur `ai-orchestrator-template` berbasis multi-node.
-2. Wawancara Mandatori: Tanyakan klarifikasi visi global, Mode Operasional default (Mode 1 / Mode 2), persetujuan CLI Graphify, preferensi testing/linter tiap node, dan fitur aksesibilitas jika web/mobile.
-2.5. Pengecekan Environment: Jika Graphify disetujui, verifikasi dan instal `graphify` jika belum ada.
+2. Wawancara Mandatori: Tanyakan klarifikasi visi global, Mode Operasional default (Mode 1 / Mode 2), persetujuan penggunaan CLI Graphify (Ya/Tidak), persetujuan inisialisasi GitHub Project (Ya/Tidak), preferensi testing/linter tiap node, dan fitur aksesibilitas jika web/mobile.
+2.5. Pengecekan Environment (Kondisional): Jika Graphify disetujui, verifikasi dan instal `graphify` jika belum ada. Jika TIDAK, lewati.
 3. Susun draf `global-docs/prd.md` dan `global-docs/design-system.md` berstandar Anti-Slop (pisahkan Global Scope vs Node-Specific Scope).
-4. Inisialisasi GitHub Project dan tautkan ke repositori ini.
+4. Inisialisasi GitHub Project (Kondisional): Jika pengguna memilih YA untuk GitHub Project, inisialisasi GitHub Project di bawah kepemilikan User dan tautkan ke repositori ini. Jika TIDAK, lewati.
 5. Untuk SETIAP Node yang terdaftar:
    a. Gandakan `nodes/_template/` menjadi `nodes/[nama-node]/`. Cantumkan Mode terpilih pada baris pertama `main.md`. (DILARANG menghapus `nodes/_template/`!).
    b. Pindai source code di Path Codebase lokal node tersebut.
@@ -199,3 +200,4 @@ INSTRUKSI AI AGENT:
 - https://github.com/anthropics/skills/blob/main/skills/frontend-design/SKILL.md
 - https://github.com/altamisatmaja/security-audit-skill
 - https://github.com/altamisatmaja/outofthebox
+- https://github.com/nutlope/hallmark

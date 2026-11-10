@@ -55,8 +55,8 @@ AI Agent **WAJIB MENGHENTIKAN SEMENTARA EKSEKUSI DAN MEMBACA ULANG** dokumen `ma
 - **Penulisan pengujian (unit/integration test):** Wajib baca `../../global-guidelines/testing.md` (*TDD Workflow* & *No Vanity Testing*).
 - **Pengelolaan dependensi & lockfile:** Wajib baca `../../global-guidelines/dependencies.md`.
 - **Skema basis data, migrasi, ERD, datetime:** Wajib baca `../../global-guidelines/database.md`.
-- **Perancangan UI, slicing frontend, aset, i18n:** Wajib baca `../../global-guidelines/ui-and-assets.md`, `../../global-guidelines/localization.md`, dan pedoman keahlian visual `../../skills/frontend-design/SKILL.md`.
-- **Audit keamanan, review kerentanan & isolasi data:** Wajib baca `../../global-guidelines/security.md` dan pedoman keahlian audit `../../skills/security-audit/SKILL.md`.
+- **Perancangan UI, slicing frontend, aset, i18n:** Wajib baca `../../global-guidelines/ui-and-assets.md` dan `../../global-guidelines/localization.md`.
+- **Audit keamanan, review kerentanan & isolasi data:** Wajib baca `../../global-guidelines/security.md`.
 - **Manajemen Tiket & Rencana Implementasi (Ticket & Plan):** Wajib baca `tickets/README.md` dan `plans/README.md` secara beriringan (menggunakan pasangan berkas `TICKET-[EPOCH_TIMESTAMP]` dan `PLAN-[EPOCH_TIMESTAMP]`). Untuk pelaporan bug, gunakan format `../../global-docs/templates/bug_report_template.md`.
 - **Pembuatan prototipe antarmuka baru:** Wajib baca `prototypes/README.md`.
 - **Terjebak galat berulang:** Wajib baca `retrospectives/RETROSPECTIVE.md`.
@@ -126,7 +126,7 @@ Sebelum menandai pasangan tiket & rencana menjadi `Done` / `Completed` atau meny
 2. Ubah status tiket menjadi `status: Done` dan status rencana menjadi `status: Completed`.
 3. Tandai seluruh checklist `[x]` pada *Acceptance Criteria* tiket dan verifikasi kelengkapan ringkasan perubahan pada rencana implementasi.
 4. Isi seksi `AI Execution Log & Output` lengkap pada tiket serta perbarui status rencana pasangannya (ringkasan delivery gate, bukti eksekusi terminal, evaluasi UI, dan *Untested List*).
-5. Sinkronkan pasangan tiket & rencana dengan GitHub Projects.
+5. Sinkronkan pasangan tiket & rencana dengan GitHub Projects (jika fitur GitHub Project diaktifkan).
 
 ### 5.8 Pencatatan Riwayat Changelog
 1. Sisipkan catatan baru di baris **PALING ATAS** daftar (*descending*) pada `CHANGELOG.md` node terkait.

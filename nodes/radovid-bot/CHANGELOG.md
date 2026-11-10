@@ -4,6 +4,22 @@
 
 ---
 
+### [2026-11-10 22:15:00] - Feat: Sync Framework Standards with ai-orchestrator-template (Commit c372bfd)
+> **Trigger:** Prompt Driven | **Branch:** `main` | **Repo:** `radovid-bot-ai-orchestrator`
+
+- **Konteks:** Menyelaraskan repositori orchestrator dengan pembaruan template `ai-orchestrator-template` (commit `c372bfd`) tanpa mengganggu atau merusak kemajuan proyek Radovid Bot (seperti PRD, Design System, diagram, tiket, rencana, dan kode implementasi bot).
+- **Perubahan:**
+  - `[Changed]` Memperbarui [README.md](../../README.md) dengan menambahkan opsi kondisional pembuatan GitHub Project dan kredit `nutlope/hallmark`.
+  - `[Changed]` Memperkaya [global-guidelines/security.md](../../global-guidelines/security.md) dengan konsolidasi pedoman audit keamanan dari skill legacy (CSPRNG, constant-time comparison, second-order injection, SSRF, identitas federasi, tenant isolation, protokol audit 6 elemen).
+  - `[Changed]` Memperkaya [global-guidelines/ui-and-assets.md](../../global-guidelines/ui-and-assets.md) dengan konsolidasi pedoman desain frontend dari skill legacy dan standar craft Hallmark (Surface Ladder 4 tingkat, geometri kanvas, token OKLCH, tinted neutrals, re-derivasi dark mode, visualisasi data jujur, stabilitas input, silent success & undo over confirm).
+  - `[Changed]` Menyelaraskan direktori template node [nodes/_template/](../../nodes/_template/) (`CHANGELOG.md`, `main.md`, dan `tickets/README.md`) dengan standar orchestrator terbaru.
+  - `[Changed]` Memperbarui [nodes/radovid-bot/main.md](./main.md) untuk membersihkan tautan usang ke direktori `skills/` yang telah dikonsolidasikan langsung ke dalam pedoman global.
+  - `[Removed]` Mengeliminasi direktori legacy `skills/` (`frontend-design` & `security-audit`) karena seluruh isi pedomannya telah diserap sepenuhnya ke dalam `global-guidelines/`.
+  - `[Added]` Mendokumentasikan seluruh troubleshooting, arsitektur solusi, dan keputusan teknis terkait Ollama ke dalam [global-docs/LEARN.md](../../global-docs/LEARN.md) (`[QA-20261110-01]` s/d `[QA-20261110-03]`) mencakup konektivitas WSL2/Windows, penanganan token truncation/JSON repair, penjinakan halusinasi model 1.5B, dan mitigasi batas waktu interaksi Discord.
+- **Path File:** `README.md`, `global-guidelines/security.md`, `global-guidelines/ui-and-assets.md`, `nodes/_template/CHANGELOG.md`, `nodes/_template/main.md`, `nodes/_template/tickets/README.md`, `nodes/radovid-bot/main.md`, `global-docs/LEARN.md`, `nodes/radovid-bot/CHANGELOG.md`
+
+---
+
 ### [2026-11-10 19:15:00] - Fix Multiplayer Lobby Timeout on Player 2 Join and Add Stuck Session Reset Action (TICKET-1794307528)
 > **Trigger:** Bug Driven | **Branch:** `main` | **Repo:** `radovid-bot-ai-orchestrator` & `radovid-bot-api`
 

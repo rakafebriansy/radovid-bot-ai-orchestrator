@@ -34,6 +34,25 @@ Setiap entri wajib diklasifikasikan ke dalam salah satu kategori:
 
 ---
 
+### [2026-11-06 08:14:00] - Feat: Integration of Hallmark Design & Craft Standards into Global UI Guidelines
+> **Trigger:** Prompt Driven | **Branch:** `main` | **Repo:** `ai-orchestrator-template`
+- **Konteks:** Mengintegrasikan standar kualitas desain dan ketahanan rekayasa frontend dari repositori `hallmark` ke dalam `ai-orchestrator-template` dengan hanya mengambil insight penting yang belum ada (tanpa duplikasi).
+- **Perubahan:**
+  - `[Changed]` Memperkaya [global-guidelines/ui-and-assets.md](../../global-guidelines/ui-and-assets.md) dengan standar baru dari `hallmark`: *Surface Ladder* 4 tingkat & invarian halaman (maksimal 1 gaya tombol primary berisi, larangan menggabungkan border + wide shadow), geometri kanvas & *screen word budget* (~80 kata per 900px, rasio spasi atas judul $\ge 2\times$ spasi bawah, alternatif pembuka seksi tanpa *eyebrow* mekanis, anatomi berbasis tugas), hirarki bukti visual & larangan bingkai browser palsu / ilustrasi SVG dekoratif / *fake form send*, sistem warna OKLCH (*tinted neutrals* tanpa `#000`/`#fff` murni, anggaran aksen $\le 5\%–8\%$), re-derivasi Dark Mode via tingkat kecerahan (*lightness*) tanpa *drop shadow*, standar visualisasi data jujur, stabilitas dimensi input & cadangan ruang `1lh`, pola *Silent Success* & *Undo over Confirm*, ketahanan CSS (`overflow-x: clip`, `dvh`/`svh`, `minmax(0, 1fr)`), transisi khusus `transform`/`opacity`, anggaran tekstur/koreografi scroll, serta disiplin mempertahankan *wiring* saat redesign.
+  - `[Changed]` Menyelaraskan 8 komponen spesifikasi wajib pada [global-docs/design-system.md](../../global-docs/design-system.md) dengan token OKLCH, re-derivasi Dark Mode, *Surface Ladder*, radius konsentris, dan aturan visualisasi data.
+  - `[Changed]` Menambahkan penghargaan kredit `https://github.com/nutlope/hallmark` pada [README.md](../../README.md).
+- **Path File:** `global-guidelines/ui-and-assets.md`, `global-docs/design-system.md`, `README.md`, `nodes/_template/CHANGELOG.md`
+
+### [2026-11-06 07:48:00] - Refactor: Conditional GitHub Project Initialization & Consolidation of Skills into Global Guidelines
+> **Trigger:** Prompt Driven | **Branch:** `main` | **Repo:** `ai-orchestrator-template`
+- **Konteks:** Mengubah inisialisasi GitHub Project pada Fase 1 Startup Prompt menjadi opsi kondisional (ditanyakan kepada pengguna seperti Graphify) serta mengonsolidasikan seluruh insight unik dari direktori `skills/` (`frontend-design` dan `security-audit`) langsung ke dalam `global-guidelines/` tanpa duplikasi.
+- **Perubahan:**
+  - `[Changed]` Memperbarui Fase 1 Startup Prompt (Opsi A Single-Project & Opsi B Multi-Project) pada [README.md](../../README.md), [nodes/_template/main.md](./main.md), dan [nodes/_template/tickets/README.md](./tickets/README.md) agar AI Agent menanyakan persetujuan penggunaan GitHub Project terlebih dahulu sebelum menginisialisasinya secara kondisional.
+  - `[Changed]` Menggabungkan insight baru non-duplikat dari `skills/frontend-design/` ke dalam [global-guidelines/ui-and-assets.md](../../global-guidelines/ui-and-assets.md) (identitas berakar domain, proses perancangan dua tahap, prinsip *restraint*, kalibrasi anti-klise AI terbaru, batas panjang baris `< 80ch`, larangan *typographic AI tells*, spesifisitas selektor CSS, dan kohesi kosakata alur).
+  - `[Changed]` Menggabungkan insight baru non-duplikat dari `skills/security-audit/` ke dalam [global-guidelines/security.md](../../global-guidelines/security.md) (standar kriptografi CSPRNG & *constant-time comparison*, *second-order injection*, SSRF redirect & TOCTOU, keamanan sesi/JWT/OAuth/SAML/MFA/Passkey/mTLS, isolasi data multi-tenant & *derived copies*, keamanan *client-side*/RPC/AI-LLM/native IPC/cloud/CI supply chain, serta protokol audit keamanan defensif 6 elemen).
+  - `[Changed]` Menghapus ketergantungan tautan eksternal ke `skills/` pada [nodes/_template/main.md](./main.md) dan [global-docs/design-system.md](../../global-docs/design-system.md) sehingga `global-guidelines/` menjadi sumber kebenaran tunggal (*Single Source of Truth*).
+- **Path File:** `README.md`, `global-guidelines/ui-and-assets.md`, `global-guidelines/security.md`, `global-docs/design-system.md`, `nodes/_template/main.md`, `nodes/_template/tickets/README.md`, `nodes/_template/CHANGELOG.md`
+
 ### [2026-11-01 11:28:00] - Policy: Prohibition of Terminal Heredoc (CAT EOF) & Mutation Scripts
 > **Trigger:** Prompt Driven | **Branch:** `main` | **Repo:** `ai-orchestrator-template`
 - **Konteks:** Penegakan hukum besi pelarangan pembuatan/pengeditan berkas melalui terminal stdin/heredoc (`cat << 'EOF'`, `echo >`) dan skrip massal (Python/Node/Bash) guna menjamin seluruh perubahan ter-record di preview visual diff platform IDE (contoh: Antigravity IDE).
