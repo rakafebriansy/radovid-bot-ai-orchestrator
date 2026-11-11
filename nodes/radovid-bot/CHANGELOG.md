@@ -4,6 +4,25 @@
 
 ---
 
+### [2026-11-11 12:15:00] - Feat: Add Configurable Round Count and Early-End Support for Would You Rather (TICKET-1794373590)
+> **Trigger:** Feature Driven | **Branch:** `main` | **Repo:** `radovid-bot-ai-orchestrator` & `radovid-bot-api`
+
+- **Konteks:** Menuntaskan `TICKET-1794373590` dan rencana `PLAN-1794373590` untuk menambahkan kapabilitas pemilihan jumlah soal/ronde (1-10 ronde, default 3) pada permainan Would You Rather (`/radovid play would-you-rather`) serta memberikan keleluasaan bagi pemain untuk mengakhiri sesi permainan (*early end*) dan melihat rangkuman hasil kapan saja setelah ronde 1 selesai dijawab.
+- **Perubahan:**
+  - `[Added]` Menambahkan konstanta `DefaultWYRRounds = 3`, `MinAllowedRounds = 1`, `MaxAllowedRounds = 10`, dan struct `WYRSessionConfig` pada `internal/domain/game/wyr_entity.go`.
+  - `[Added]` Mengimplementasikan manajemen state `targetRounds` berbasis mutex aman (`sync.RWMutex`) melalui method `SetTargetRounds` dan `GetTargetRounds` pada `internal/usecase/game/would_you_rather.go`.
+  - `[Changed]` Menyesuaikan logika kelayakan finish `GetSessionSummary` pada `internal/usecase/game/would_you_rather.go` agar mengizinkan penyelesaian permainan sejak minimal 1 ronde selesai (`canFinish := totalRounds >= 1`).
+  - `[Added]` Mendaftarkan opsi integer `rounds` (pilihan 1, 3, 5, 10 ronde) pada subcommand `would-you-rather` di `internal/delivery/discord/command_def.go`.
+  - `[Added]` Menambahkan fungsi helper `BuildWYRFinishOnlyButton` pada `internal/delivery/discord/command_play_wyr.go` untuk menyajikan tombol finish tunggal saat permainan mencapai target ronde.
+  - `[Changed]` Memperbarui `BuildWYRQuestionEmbed` pada `internal/delivery/discord/command_play_wyr.go` agar menampilkan format judul progresif `Round X/N: Would You Rather?`.
+  - `[Changed]` Memperbarui handler `HandlePlayCommand` pada `internal/delivery/discord/command_play_wyr.go` untuk mengekstraksi nilai `rounds`, menyimpannya ke konfigurasi usecase saat lobi dibuat, dan menampilkan target ronde di embed lobi.
+  - `[Changed]` Memperbarui handler voting pada `internal/delivery/discord/interaction_wyr_button.go` agar selalu menyajikan pilihan tombol `Finish & View Summary` dan `Next: Round X` di setiap putaran sebelum target tercapai, dan hanya menyajikan `Finish & View Summary` ketika ronde mencapai `targetRounds`.
+  - `[Changed]` Memperbarui teks panduan game pada `internal/delivery/discord/radovid_help.go` menjadi `(2 players, 1-10 rounds)`.
+  - `[Added]` Menambahkan pengujian komprehensif pada `wyr_entity_test.go`, `would_you_rather_test.go`, `command_test.go`, `command_play_wyr_test.go`, dan `interaction_wyr_button_test.go` yang memvalidasi alur TDD RED -> GREEN tanpa regresi dengan pemenuhan Zero-Comment Policy.
+- **Path File:** `../../../../radovid-bot-api/internal/domain/game/wyr_entity.go`, `../../../../radovid-bot-api/internal/domain/game/wyr_entity_test.go`, `../../../../radovid-bot-api/internal/usecase/game/would_you_rather.go`, `../../../../radovid-bot-api/internal/usecase/game/would_you_rather_test.go`, `../../../../radovid-bot-api/internal/delivery/discord/command_def.go`, `../../../../radovid-bot-api/internal/delivery/discord/command_test.go`, `../../../../radovid-bot-api/internal/delivery/discord/command_play_wyr.go`, `../../../../radovid-bot-api/internal/delivery/discord/command_play_wyr_test.go`, `../../../../radovid-bot-api/internal/delivery/discord/interaction_wyr_button.go`, `../../../../radovid-bot-api/internal/delivery/discord/interaction_wyr_button_test.go`, `../../../../radovid-bot-api/internal/delivery/discord/radovid_help.go`, `tickets/TICKET-1794373590-wyr-configurable-rounds-and-early-end.md`, `plans/PLAN-1794373590-wyr-configurable-rounds-and-early-end.md`, `CHANGELOG.md`
+
+---
+
 ### [2026-11-10 22:15:00] - Feat: Sync Framework Standards with ai-orchestrator-template (Commit c372bfd)
 > **Trigger:** Prompt Driven | **Branch:** `main` | **Repo:** `radovid-bot-ai-orchestrator`
 
