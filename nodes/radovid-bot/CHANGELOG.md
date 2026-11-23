@@ -4,6 +4,20 @@
 
 ---
 
+### [2026-11-23 17:55:00] - Feat: Implement Gemini Flash as Primary LLM with Ollama Fallback (TICKET-1795430610)
+> **Trigger:** Feature Driven | **Branch:** `main` | **Repo:** `radovid-bot-ai-orchestrator` & `radovid-bot-api`
+
+- **Konteks:** Menuntaskan `TICKET-1795430610` dan rencana `PLAN-1795430610` untuk menghadirkan Google Gemini Flash (Google AI Studio) sebagai Primary LLM provider dan otomatis melakukan failover ke Ollama (Qwen lokal) saat layanan cloud gagal atau offline, sehingga generasi konten permainan dan evaluasi bahasa Inggris menjadi sangat cepat (< 1 detik), andal, bebas timeout Discord, dan berbiaya Rp 0 melalui Free Tier resmi.
+- **Perubahan:**
+  - `[Added]` Mengimplementasikan klien native `internal/infrastructure/gemini/client.go` yang memenuhi kontrak antarmuka `gamemaster.LLMClient` via Google AI Studio REST API (`v1beta/models/{model}:generateContent`), mendukung timeout context, sanitasi input, dan parsing respon JSON.
+  - `[Added]` Mengimplementasikan wrapper berjenjang `internal/infrastructure/llm/fallback_client.go` yang membungkus Primary LLM (`gemini.Client`) dan Fallback LLM (`ollama.Client`) dengan mekanisme automatic failover dan logging peringatan saat primary gagal.
+  - `[Added]` Menambahkan variabel konfigurasi `GEMINI_API_KEY` dan `GEMINI_MODEL` (default: `gemini-2.5-flash`) pada `config/config.go` dengan pemuatan aman dari environment variables.
+  - `[Changed]` Mengintegrasikan `llm.NewFallbackClient` pada `cmd/bot/main.go` dan menyuntikkannya ke `GameMaster`, evaluator, serta seluruh 14 usecase game.
+  - `[Added]` Menyediakan rangkaian unit test komprehensif pada `gemini/client_test.go`, `llm/fallback_client_test.go`, dan `config/config_test.go` dengan 100% kelulusan di bawah flag `-race` dan kepatuhan penuh terhadap Zero-Comment Policy.
+- **Path File:** `../../../../radovid-bot-api/config/config.go`, `../../../../radovid-bot-api/config/config_test.go`, `../../../../radovid-bot-api/internal/infrastructure/gemini/client.go`, `../../../../radovid-bot-api/internal/infrastructure/gemini/client_test.go`, `../../../../radovid-bot-api/internal/infrastructure/llm/fallback_client.go`, `../../../../radovid-bot-api/internal/infrastructure/llm/fallback_client_test.go`, `../../../../radovid-bot-api/cmd/bot/main.go`, `tickets/TICKET-1795430610-gemini-primary-llm-with-ollama-fallback.md`, `plans/PLAN-1795430610-gemini-primary-llm-with-ollama-fallback.md`, `CHANGELOG.md`
+
+---
+
 ### [2026-11-23 17:15:00] - Feat: Transform 2-Player Locked Games into Channel-Wide Party Games (TICKET-1795426945)
 > **Trigger:** Feature Driven | **Branch:** `main` | **Repo:** `radovid-bot-ai-orchestrator` & `radovid-bot-api`
 
