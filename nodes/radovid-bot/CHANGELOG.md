@@ -4,6 +4,21 @@
 
 ---
 
+### [2026-11-23 17:15:00] - Feat: Transform 2-Player Locked Games into Channel-Wide Party Games (TICKET-1795426945)
+> **Trigger:** Feature Driven | **Branch:** `main` | **Repo:** `radovid-bot-ai-orchestrator` & `radovid-bot-api`
+
+- **Konteks:** Menuntaskan `TICKET-1795426945` dan rencana `PLAN-1795426945` untuk merombak tiga permainan multiplayer utama (`would-you-rather`, `taboo`, dan `20-questions`) dari pola lobi kaku 2 pemain (`StatusPending`) menjadi **Channel-Wide Party Games** yang langsung aktif seketika (`StatusActive`) dan dinikmati bersama oleh seluruh anggota channel.
+- **Perubahan:**
+  - `[Changed]` Mengeliminasi lobi pending 2 pemain pada `internal/delivery/discord/command_play_wyr.go`, `internal/delivery/discord/command_play_20q.go`, dan `internal/delivery/discord/command_play_taboo.go` sehingga pemanggilan `/radovid play <game>` langsung mengaktifkan sesi permainan secara instan.
+  - `[Changed]` Mengubah mekanisme Would You Rather menjadi *Open Discussion Dilemma*: menghilangkan tombol voting Option A / Option B, menyajikan teks topik untuk konsumsi/debat terbuka seluruh channel, dan menyediakan tombol kontrol Host (`Next: Round X` dan `Finish & View Summary`) via `BuildWYRHostControlButtons`.
+  - `[Changed]` Memperbarui handler tombol `internal/delivery/discord/interaction_wyr_button.go` dan `internal/delivery/discord/interaction_taboo_modal.go` dengan validasi otorisasi Host (`isSessionHost`); aksi navigasi `next` dan `finish` hanya dapat dieksekusi oleh Host sesi, sementara interaksi dari pemain lain ditolak secara elegan via pesan ephemeral.
+  - `[Changed]` Membuka partisipasi game 20 Questions secara kooperatif channel-wide di mana seluruh anggota channel dapat mengajukan pertanyaan (`/radovid ask`) dan menebak topik (`/radovid guess`).
+  - `[Changed]` Memperbarui teks panduan permainan multiplayer pada `internal/delivery/discord/radovid_help.go` agar mencerminkan format Party/Channel Game.
+  - `[Added]` Menambahkan dan memutakhirkan unit test pada `command_play_wyr_test.go`, `interaction_wyr_button_test.go`, `command_play_20q_test.go`, `command_play_taboo_test.go`, dan `interaction_taboo_modal_test.go` yang memvalidasi alur instan start party mode dan kontrol eksklusif Host.
+- **Path File:** `../../../../radovid-bot-api/internal/delivery/discord/command_play_wyr.go`, `../../../../radovid-bot-api/internal/delivery/discord/command_play_wyr_test.go`, `../../../../radovid-bot-api/internal/delivery/discord/interaction_wyr_button.go`, `../../../../radovid-bot-api/internal/delivery/discord/interaction_wyr_button_test.go`, `../../../../radovid-bot-api/internal/delivery/discord/command_play_taboo.go`, `../../../../radovid-bot-api/internal/delivery/discord/command_play_taboo_test.go`, `../../../../radovid-bot-api/internal/delivery/discord/command_play_20q.go`, `../../../../radovid-bot-api/internal/delivery/discord/command_play_20q_test.go`, `../../../../radovid-bot-api/internal/delivery/discord/interaction_taboo_modal.go`, `../../../../radovid-bot-api/internal/delivery/discord/interaction_taboo_modal_test.go`, `../../../../radovid-bot-api/internal/delivery/discord/radovid_help.go`, `tickets/TICKET-1795426945-party-mode-multiplayer-redesign.md`, `plans/PLAN-1795426945-party-mode-multiplayer-redesign.md`, `CHANGELOG.md`
+
+---
+
 ### [2026-11-11 12:15:00] - Feat: Add Configurable Round Count and Early-End Support for Would You Rather (TICKET-1794373590)
 > **Trigger:** Feature Driven | **Branch:** `main` | **Repo:** `radovid-bot-ai-orchestrator` & `radovid-bot-api`
 
