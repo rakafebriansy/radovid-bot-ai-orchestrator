@@ -4,6 +4,20 @@
 
 ---
 
+### [2026-11-24 00:35:00] - Fix: Resolve Gemini Multi-Part Response Truncation and Parser Format Incompatibility (TICKET-1795452322)
+> **Trigger:** Bug Fix | **Branch:** `main` | **Repo:** `radovid-bot-ai-orchestrator` & `radovid-bot-api`
+
+- **Konteks:** Menuntaskan `TICKET-1795452322` dan rencana `PLAN-1795452322` untuk menyelesaikan kendala kegagalan generasi konten game (`AI game generation service produced unparseable output`) akibat respon kandidat Gemini yang terpotong saat terpecah ke dalam beberapa `parts`, serta parser game master yang menolak variasi pemformatan umum dari LLM.
+- **Perubahan:**
+  - `[Fixed]` Memperbaiki ekstraksi teks kandidat pada `internal/infrastructure/gemini/client.go` agar menggabungkan seluruh elemen `parts` menggunakan `strings.Builder`, mencegah hilangnya bagian teks respon yang terpecah.
+  - `[Fixed]` Memperluas toleransi parser `internal/infrastructure/ollama/parser.go` pada `parseWouldYouRather` sehingga mengenali variasi delimiter spasi (`OPTION A:`, `OPTION B:`), penomoran (`1.`, `2.`), dan format alternatif lainnya.
+  - `[Added]` Menambahkan log diagnostik `rawOutput` pada `internal/usecase/game/game_master.go` saat terjadi kegagalan parse output LLM untuk memudahkan pemantauan dan debug.
+  - `[Changed]` Menyelaraskan konstanta `DefaultGeminiModel` pada `config/config.go` menjadi `gemini-3.8-flash`.
+  - `[Added]` Menyediakan unit test regresi di `gemini/client_test.go`, `ollama/parser_test.go`, dan `llm/fallback_client_test.go` yang memvalidasi multi-part concatenation, variasi format opsi, serta penanganan network failure pada fallback client dengan 100% test passing berbendera `-race`.
+- **Path File:** `../../../../radovid-bot-api/internal/infrastructure/gemini/client.go`, `../../../../radovid-bot-api/internal/infrastructure/gemini/client_test.go`, `../../../../radovid-bot-api/internal/infrastructure/ollama/parser.go`, `../../../../radovid-bot-api/internal/infrastructure/ollama/parser_test.go`, `../../../../radovid-bot-api/internal/infrastructure/llm/fallback_client_test.go`, `../../../../radovid-bot-api/internal/usecase/game/game_master.go`, `../../../../radovid-bot-api/config/config.go`, `tickets/TICKET-1795452322-bug-game-generation-fails-when-ollama-unreachable.md`, `plans/PLAN-1795452322-bug-game-generation-fails-when-ollama-unreachable.md`, `CHANGELOG.md`
+
+---
+
 ### [2026-11-23 17:55:00] - Feat: Implement Gemini Flash as Primary LLM with Ollama Fallback (TICKET-1795430610)
 > **Trigger:** Feature Driven | **Branch:** `main` | **Repo:** `radovid-bot-ai-orchestrator` & `radovid-bot-api`
 
